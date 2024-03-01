@@ -1,0 +1,104 @@
+        body {
+            font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    background: radial-gradient(circle, rgba(76,175,80,1) 0%, rgba(247,252,248,1) 0%, rgba(250,253,251,1) 23%, rgba(252,254,253,1) 36%, rgba(255,255,255,1) 47%, rgba(246,251,246,1) 59%, rgba(228,243,229,1) 68%, rgba(171,218,173,1) 100%, rgba(76,175,80,1) 100%);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-size: cover;
+    margin: 8px;
+}
+
+        .container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #45a049;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+             width: calc(100% - 5px);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+             width: calc(100% - 5px);
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .alert {
+            margin-top: 15px;
+            padding: 10px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 15px;
+        }
+      
+        .option {
+            width: 45%;
+            margin-bottom: 20px;
+            background-color: #4caf50;
+            color: #fff;
+            text-align: center;
+           padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            padding-right:5px;
+    
+        }
+        a{
+            text-decoration: none;
+            color:white;
+    
+
+        }
+
+        .option:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 600px) {
+            .option {
+                width: 100%;
+            }
+        }
