@@ -75,7 +75,7 @@
         <form action="" method="post" id="form">
             <table id="table">
                 <tr>
-                    <td><img src="./Images/lotusgreen.png" alt="logo" id="img"></td>
+                    <td><img src="./Images/lotus.png" alt="logo" id="img"></td>
                     <td>
                         <h1 style="color: green;">Lotus</h1>
                     </td>

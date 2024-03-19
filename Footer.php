@@ -6,7 +6,7 @@
     <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
     <title>Loutos</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
@@ -15,7 +15,8 @@
 
     <section class="footer" id="footer">
         <div class="footer-box">
-            <a href="#" class="logo"><i class='bx bxs-florist'></i>Lotus</a>          
+            <a href="#" class="logo">Lotus</a>
+            <!-- <i class='bx bxs-florist'></i> -->
             <h5>Follow Us</h5>
             <div class="social">
                 <a href="#"><i class='bx bxl-facebook'></i></a>
@@ -55,7 +56,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Initialize Swiper -->
 
-    <script src="main.js">
+    <script src="/js/main.js">
 
     </script>
 
