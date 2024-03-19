@@ -84,29 +84,38 @@ h1{
 }
 
 .btn-area{
-    background: var(--green-color);
     color: var(--bg-color);
     position: absolute;
+    border-radius: 50px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.btn2{
+    background: var(--green-color);
     bottom: 20px;
     right: 20px;
     padding: 10px 25px;
-    border-radius: 2px;
-    font-weight: 600;
-    border-radius: 10px;
 }
 
-.btn-area .btn1{
+.btn1{
     background: var(--orange-color);
-    color: var(--bg-color);
-    position: absolute;
     bottom: 60px;
     right: 1px;
     padding: 10px 28px;
-    border-radius: 2px;
-    font-weight: 600;
-    border-radius: 10px;
 }
 
+.btn3{
+    color: var(--bg-color);
+    position:absolute;
+    border-radius: 50px;
+    font-weight: 600;
+    border-radius: 10px;
+    background: var(--orange-color);
+    bottom: 40px;
+    right: 1px;
+    padding: 100px 28px;
+}
 
 .btn-area{
     margin-right: 5px;

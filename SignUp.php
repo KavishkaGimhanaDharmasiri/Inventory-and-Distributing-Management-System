@@ -84,23 +84,23 @@
 
             <h2 style="color: black;" align="center">Sign Up</h1>
 
-                <input type="text" placeholder="User Name" id="text">
+                <input type="text" placeholder="User Name" id="text" name="name">
 
-                <input type="text" placeholder="DD/MM/YYYY" id="text">
+                <input type="text" placeholder="YYYY-MM-DD" id="text" name="dob">
 
-                <input type="text" placeholder="Address" id="text">
+                <input type="email" placeholder="Address" id="text" name="address">
 
-                <input type="text" placeholder="Contact NUmber" id="text">
+                <input type="text" placeholder="Contact NUmber" id="text" name="tnumber">
 
-                <input type="text" placeholder="Email" id="text">
+                <input type="text" placeholder="Email" id="text" name="email">
 
-                <input type="text" placeholder="Postal code" id="text">
+                <input type="text" placeholder="Postal code" id="text" name="postalcode">
 
-                <input type="password" placeholder="Password" id="text">
+                <input type="password" placeholder="Password" id="text" name="password">
 
                 <input type="password" placeholder="Confirm Password" id="text"><br>
 
-                <button type="submit" value="Sign Up" id="button">Sign Up</button><br>
+                <button type="submit" value="Sign Up" id="button" name="signUp">Sign Up</button><br>
                 
                 <table id="table">
                     <tr>
@@ -110,7 +110,46 @@
                 </table>
 
         </form>
+        <br><br>
     </div>
 
 </body>
 </html>
+
+<?php
+if(isset($_POST['signUp']))
+{
+   
+    $name =$_POST['name'];
+    $dob =$_POST['dob'];
+    $address = $_POST['address'];
+    $tnumber = $_POST['tnumber'];
+    $email = $_POST['email'];
+    $postalcode = $_POST['postalcode'];
+    $password = $_POST['password'];
+
+    //connect to DB
+    $host='localhost';
+    $username='root';
+    $password="";
+    $database="retail_website";
+
+    $link=mysqli_connect($host,$username,$password,$database);
+
+        if(!$link){
+            die('could connect'.mysqli_error($link));
+        }
+        echo 'connected successfully';
+
+    $usrer_insert="INSERT INTO user_details(name,dob,address,number,email,postalcode,password) VALUES ('$name', '$dob', '$address','$tnumber','$email','$postalcode','$password')";
+
+
+        if ($link->query($usrer_insert) === TRUE) {
+        echo "New record created successfully";
+        } else {
+        echo "Error: " . $usrer_insert . "<br>" . $link->error;
+    }   
+    
+    mysqli_close($link);
+} 
+?> 
