@@ -26,6 +26,9 @@
             <li class="nav-item active">
               <a class="nav-link" href="AddSuppilers.php">Add Suppilers</a>
             </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="viewSuppliers.php">View Suppliers</a>
+            </li>
             <li class="nav-item ">
                 <a class="nav-link" href="AddRawMaterials.php">Add Raw Materials</a>
               </li>
