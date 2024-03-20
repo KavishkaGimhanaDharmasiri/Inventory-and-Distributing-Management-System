@@ -31,51 +31,46 @@
         </header>
 
         <aside id="sidebar">
-            <div class="sidebar-title">
-                <div class="sidebar-brand">
-                    <span class="material-icons-outlined">shopping_cart</span> STORE
-                </div>
-                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
-            </div>
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <span class="material-icons-outlined">shopping_cart</span> STORE
+          </div>
+          <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
 
-            <ul class="sidebar-list">
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">dashboard</span> Dashboard
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">inventory_2</span> Products
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">category</span> Categories
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">groups</span> Customers
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">fact_check</span> Inventory
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">poll</span> Reports
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="#" target="_blank">
-                        <span class="material-icons-outlined">settings</span> Settings
-                    </a>
-                </li>
-            </ul>
-        </aside>
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="Dashboard.php" target="_blank">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="Categories.php" target="_blank">
+              <span class="material-icons-outlined">category</span> Categories
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" target="">
+              <span class="material-icons-outlined">groups</span> Customers
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" target="_blank">
+              <span class="material-icons-outlined">fact_check</span> Inventory
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" target="_blank">
+              <span class="material-icons-outlined">poll</span> Reports
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" target="_blank">
+              <span class="material-icons-outlined">settings</span> Settings
+            </a>
+          </li>
+        </ul>
+      </aside>
         
 
         <main class="main-container">
@@ -116,7 +111,7 @@ $conn = new mysqli($host, $username, $password, $database);
                                 <h3>'.$row["categoryname"]. '</h3>
                                 <h4>'.$row["quantity"] .' Items</h4>
                                 <p class="btn-area">
-                                    <span class="btn1">Edit</span>
+                                    <span class="btn1">Delete</span>
                                 </p>
                                 <p class="btn-area">
                                     <span class="btn2">More</span> 
@@ -133,8 +128,8 @@ $conn = new mysqli($host, $username, $password, $database);
                     </div>
 
                 </div>
-                     <p class="btn-area">
-                        <span class="btn3">More</span> 
+                     <p class="btn-area2">
+                        <span class="btn3"><img src="Images/add.png" class="img"></span> 
                     </p>
 
             </div>

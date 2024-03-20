@@ -1,6 +1,6 @@
 <head>
     <title>
-        Sign Up
+        Sign In
     </title>
     <style>
         #div1 {
@@ -9,17 +9,14 @@
             border-radius: 10px;
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
                 0 10px 10px rgba(0, 0, 0, 0.22);
+            position: absolute;
             top: 50%;
-            bottom: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-         /*overflow: hidden;*/
-            width: 600px;
-            height:900px;
+            overflow: hidden;
+            width: 400px;
             max-width: 100%;
-            margin-top: 100px;
-           position: relative;
-            
+            min-height: 550px;
         }
 
         #form {
@@ -56,10 +53,39 @@
         }
 
         #img {
-            height: 120px;
-            width: 120px;
+            height: 80px;
+            width: 80px;
         }
 
+        #social-container {
+            margin: 20px 0;
+        }
+
+        #social-container a {
+            border: 0px solid #DDDDDD;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+        }
+
+        #googlelogo {
+            height: 35px;
+            width: 36px;
+        }
+
+        #fblogo {
+            height: 35px;
+            width: 35px;
+        }
+
+        #instalogo {
+            height: 35px;
+            width: 35px;
+        }
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -73,6 +99,7 @@
 <body>
     <div id="div1">
         <form action="" method="post" id="form">
+            <br>
             <table id="table">
                 <tr>
                     <td><img src="./Images/lotus.png" alt="logo" id="img"></td>
@@ -82,30 +109,28 @@
                 </tr>
             </table>
 
-            <h2 style="color: black;" align="center">Sign Up</h1>
 
-                <input type="text" placeholder="User Name" id="text">
+            <h2 style="color: black;" >Sign In</h1>
 
-                <input type="text" placeholder="DD/MM/YYYY" id="text">
+                <input type="text" placeholder="User Name" id="text"><br></td>
 
-                <input type="text" placeholder="Address" id="text">
+                <input type="password" placeholder="Password" id="text"><br>
+                <a href=" ">Forgot Your Password ?</a>
 
-                <input type="text" placeholder="Contact NUmber" id="text">
+                <div id="social-container">
+                    <a href="#" class="social"><img src="./Images/google.png" alt="logo" id="googlelogo"></a>
 
-                <input type="text" placeholder="Email" id="text">
+                    <a href="#" class="social"><img src="./Images/facebook.png" alt="logo" id="fblogo"></a>
 
-                <input type="text" placeholder="Postal code" id="text">
+                    <a href="#" class="social"><img src="./Images/instagram.png" alt="logo" id="instalogo"></a>
+                </div>
 
-                <input type="password" placeholder="Password" id="text">
+                <button type="submit" value="Sign in" id="button">Sign in</button><br>
 
-                <input type="password" placeholder="Confirm Password" id="text"><br>
-
-                <button type="submit" value="Sign Up" id="button">Sign Up</button><br>
-                
                 <table id="table">
                     <tr>
-                        <td>Already have an account ? </td>
-                        <td> <a href="/Sign%20In.html">Sign In</a></td>
+                        <td> Don't have an account ?</td>
+                        <td> <a href="SignUp.php">Sign Up</a></td>
                     </tr>
                 </table>
 
@@ -113,4 +138,3 @@
     </div>
 
 </body>
-</html>

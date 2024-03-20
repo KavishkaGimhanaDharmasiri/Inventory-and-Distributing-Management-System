@@ -37,22 +37,17 @@
 
         <ul class="sidebar-list">
           <li class="sidebar-list-item">
-            <a href="#" target="_blank">
+            <a href="Dashboard.php" target="_blank">
               <span class="material-icons-outlined">dashboard</span> Dashboard
             </a>
           </li>
           <li class="sidebar-list-item">
-            <a href="#" target="_blank">
-              <span class="material-icons-outlined">inventory_2</span> Products
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="#" target="_blank">
+            <a href="Categories.php" target="_blank">
               <span class="material-icons-outlined">category</span> Categories
             </a>
           </li>
           <li class="sidebar-list-item">
-            <a href="#" target="_blank">
+            <a href="#" target="">
               <span class="material-icons-outlined">groups</span> Customers
             </a>
           </li>

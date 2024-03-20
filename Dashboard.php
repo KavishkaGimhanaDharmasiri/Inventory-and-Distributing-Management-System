@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -111,90 +112,55 @@
 
         <div class="products-container">
 
-            <div class="box">
-                <a href="Categories.php">
-                    <img src="Images/cat1.png" alt="">
-                    <h3 class="detail">Antenna</h3>
-                <span>10 Items</span>
-                <h2></h2>
-               
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
+<?php
 
-            <div class="box">
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'retail_website';
+
+$conn = new mysqli($host, $username, $password, $database);
+
+    if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT * FROM categories";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+    
+         while ($row = $result->fetch_assoc()) {
+            $img=$row["image"];
+            $name=$row["categoryname"];
+            $quantity=$row["quantity"];
+
+            echo '<div class="box">
+                            <a href="products.php">
+                            <img src='." ".' alt="">
+                            <div class="content">
+                                <h3>'.$row["categoryname"]. '</h3>
+                                <span>'.$row["quantity"] .' Items</span>
+                                <i class=""bx bx-heart""></i>
+                            </div>
+                        </div>';
+        }
+        
+    } else {
+    echo "0 results";
+}
+?>
+
+
+            <!-- <div class="box">
                 <a href="/Product.html">
                     <img src="Images/cat2.jpg" alt="">
-                    <h3 class="detail">Holder</h3>
-                <span>15 Items</span>
-                <i class='bx bx-heart'></i>
+                    <h3 class="detail">.$row["categoryname"].</h3>
+                <span>.$row["quantity"] . Items</span>
+                 <i class=""bx bx-heart""></i>
                 </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat3.jpg" alt="">
-                    <h3 class="detail">Wire Code</h3>
-                <span>14 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat4.jpg" alt="">
-                    <h3 class="detail">Heaters</h3>
-                <span>8 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat5.jpg" alt="">
-                    <h3 class="detail">Decoration Bulbs</h3>
-                <span>8 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat6.jpg" alt="">
-                    <h3 class="detail">Plug Top</h3>
-                <span>3 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat7.jpg" alt="">
-                    <h3 class="detail">Sunk Box</h3>
-                <span>5 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat8.jpg" alt="">
-                <h3 class="detail">Junction Box</h3>
-                <span>3 Items</span>
-                <h2></h2>
-                
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat9.jpg" alt="">
-                <h3 class="detail">Distribution Box</h3>
-                <span>10 Items</span>
-                <i class='bx bx-heart'></i>
-                </a>
-            </div>
+            </div> -->
 
         </div>
 
@@ -312,7 +278,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Initialize Swiper -->
 
-    <script src="/js/main.js">
+    <script src="js/main.js">
 
     </script>
 

@@ -84,38 +84,38 @@ h1{
 }
 
 .btn-area{
+    background: var(--green-color);
     color: var(--bg-color);
     position: absolute;
-    border-radius: 50px;
-    font-weight: 600;
-    border-radius: 10px;
-}
-
-.btn2{
-    background: var(--green-color);
     bottom: 20px;
     right: 20px;
     padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 10px;
 }
 
-.btn1{
+.btn-area .btn1{
     background: var(--orange-color);
+    color: var(--bg-color);
+    position: absolute;
     bottom: 60px;
     right: 1px;
     padding: 10px 28px;
+    font-weight: 600;
+    border-radius: 10px;
 }
 
 .btn3{
-    color: var(--bg-color);
-    position:absolute;
-    border-radius: 50px;
-    font-weight: 600;
-    border-radius: 10px;
-    background: var(--orange-color);
-    bottom: 40px;
-    right: 1px;
-    padding: 100px 28px;
+    background: var(--green-color);
+    color: black;
+    position: absolute;
+    bottom: 90px;
+    right: 130px;
+    padding: 30px 50px;
+    font-weight: 1000;
+    border-radius: 40px;
 }
+
 
 .btn-area{
     margin-right: 5px;

@@ -183,16 +183,16 @@ img{
     border: 1.5px solid #ddd;
     border-radius: 35px;
     text-align: center;
-    padding: 1rem 8rem;
+    padding: 1rem 4rem;
     outline: 0;
     margin-right: 0.2rem;
     margin-bottom: 1rem;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 200;
 }
 
 .purchase-info input{
-    width: 60px;
+    width: 20px;
 }
 
 .purchase-info .btn{
@@ -201,7 +201,7 @@ img{
 }
 
 .purchase-info .btn:first-of-type{
-    background: var(--green-color)
+    background: var(--bg-color)
 }
 
 /* .purchase-info .btn{

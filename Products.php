@@ -20,8 +20,63 @@
 include 'Header.php';
 ?>
     <section class="products" id="products">
+         <div class="products-container">
 
-        <div class="products-container">
+
+
+        <?php
+
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'retail_website';
+
+$conn = new mysqli($host, $username, $password, $database);
+
+    if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT * FROM products";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+    
+         while ($row = $result->fetch_assoc()) {
+            $product_id=$row["product_id"];
+            $name=$row["product_name"];
+            $price=$row["price"];
+            $quantity=$row["quantity"];
+            $description=$row["product_description"];
+            $img=$row["image"];
+            $discount=$row["discount"];
+
+            echo '<div class="box">
+                    <a href="ProductDetails.php">
+                             <img src="Images/cat1.png" alt="">
+                            <span>'.$name.'</span>
+                            <h3 class="price">'.$price.'</h3>';
+                                ?>
+
+                    <i class='bx bx-cart-alt'></i>
+                <i class='bx bx-heart'></i>
+                <span class="discount"><?php echo$discount."%"; ?></span>
+
+                <?php
+
+                           echo '</a>
+                            </div>';
+        }
+        
+    } else {
+    echo "0 results";
+}
+?>
+
+
+
+       
             <div class="box">
                 <a href="/productProductdetails.html">
                     <img src="Images/cat1.png" alt="">

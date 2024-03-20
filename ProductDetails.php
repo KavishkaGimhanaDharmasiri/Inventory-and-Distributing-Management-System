@@ -19,6 +19,8 @@
 
 include 'Header.php';
 ?>
+
+
     <div class="card-wrapper">
         <div class="card">
             <div class="product-img">
@@ -80,15 +82,18 @@ include 'Header.php';
                 </ul>
             </div>
 
+             <!-- <a href="Cart" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a> -->
+
             <div class="purchase-info">
                 <input type="number" min="0" value="1"><br>
+                <a href="Cart.php" class=" ">
                 <button type="button" class="btn">
                     Add to Cart <i class='bx bx-cart-alt'></i>
-                </button>
+                </button></a>
                 <!-- <button type="button" class="btn">Compare</button> -->
             </div>
         </div>
     </div>
-    <script src="/js/productProductdetails.js"></script>
+    <script src="js/productProductdetails.js"></script>
     <iframe src="Footer.html" frameborder="0" width="100%" height="250"></iframe>
 </body>
