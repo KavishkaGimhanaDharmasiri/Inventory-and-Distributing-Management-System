@@ -104,6 +104,7 @@
 
                 <button type="submit" value="Sign Up" id="button" name="signUp" onclick="check_form()">Sign Up</button><br>
                 
+                
                 <table id="table">
                     <tr>
                         <td>Already have an account ? </td>
@@ -112,6 +113,7 @@
                 </table>
 
         </form>
+        <br>
 
     <script>
 
@@ -211,7 +213,7 @@ if(isset($_POST['signUp']))
     switch ($status) {
         case 0:
             // echo "Student inserted successfully."; 
-        echo '<script>alert("Student inserted successfully.")</script>'; 
+        echo '<script>alert("User inserted successfully.")</script>'; 
             break;
         case 1:
             echo'<script>alert("Error occurred while inserting student.")</script>';

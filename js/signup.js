@@ -24,23 +24,29 @@ function check_form(){
         return false;
     } else if(tnumber == null || tnumber.trim() === ""){
         alert("Please enter your number.");
+        event.preventDefault();
         return false;
     } else if(email == null || email.trim() === ""){
         alert("Please enter your email.");
+        event.preventDefault();
         return false;
     } else if(postalcode == null || postalcode.trim() === ""){
         alert("Please enter your postalcode.");
+        event.preventDefault();
         return false;
     } else if(password1 == null || password1.trim() === ""){
         alert("Please enter your password.");
+        event.preventDefault();
         return false;
     } else if(password2 == null || password2.trim() === ""){
         alert("Please enter your password.");
+        event.preventDefault();
         return false;
     }
   
     if (password1 !== password2) {
         alert("Passwords do not match.");
+        event.preventDefault();
         return false;
     }
     else if(!name.match(letters)){
@@ -50,8 +56,8 @@ function check_form(){
         
      }
      else{
-        return true;
+        window.location.href="Cart.php";
      }
-     return true;
+     window.location.href="Cart.php";
 }
 )};
