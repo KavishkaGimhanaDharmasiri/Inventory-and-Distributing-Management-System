@@ -8,12 +8,24 @@ if(isset($_POST['save_button'])) {
     $supplierId = $_POST['supplier'];
     $unit = $_POST['Unit'];
 
+    // Fetch supplier name based on supplier ID
+    $getSupplierNameQuery = "SELECT supplierName FROM suppliers WHERE supplierId = ?";
+    $stmt = $conn->prepare($getSupplierNameQuery);
+    $stmt->bind_param("i", $supplierId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $supplierName = "";
+    if ($row = $result->fetch_assoc()) {
+        $supplierName = $row['supplierName'];
+    }
+    $stmt->close();
+
     // Prepare SQL statement
-    $sql = "INSERT INTO rawmaterials (RawMaterialstName,CostPrice,SupplierId,Unit) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO rawmaterials (RawMaterialstName, CostPrice, SupplierId, SupplierName, Unit) VALUES (?, ?, ?, ?, ?)";
 
     // Prepare and bind parameters
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssis", $rawMaterialName, $costPrice, $supplierId, $unit);
+    $stmt->bind_param("ssiss", $rawMaterialName, $costPrice, $supplierId, $supplierName, $unit);
 
     // Execute the statement
     if ($stmt->execute()) {

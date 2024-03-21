@@ -17,8 +17,8 @@
 <body>
  
     <!--nav bar  -->
-    <nav class="navbar navbar-dark bg-dark">
-    <!--<nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
+    <!-- <nav class="navbar navbar-dark bg-dark"> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -47,7 +47,7 @@
                 <a class="nav-link" href="rawgrn.php">Raw Good Received Note</a>
               </li>
               <li class="nav-item">
-              <a class="nav-link" href="ViewStocks.php">View Stocks</a>
+              <a class="nav-link" href="ViewRawStocks.php">View Raw Stocks</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="outsourcer.php">Outsourcer</a>

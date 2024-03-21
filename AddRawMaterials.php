@@ -38,9 +38,9 @@ include('header.php');
                                     <label for="inputCity" class="form-group">Unit</label>
                                     <select name="Unit" class="form-control" id="Unit">
                                       <option value="">--Select Unit--</option>
-                                      <option value="KG"> Kilo Gram </option>
-                                      <option value="M">Meters</option>
-                                      <option value="pcs">Pieces</option>
+                                      <option value="1KG">One Kilo Gram </option>
+                                      <option value="1M">One Meters</option>
+                                      <option value="1pcs">One Pieces</option>
 
                                     </select>
                                   </div>

@@ -9,42 +9,58 @@ include('header.php');
 <form class="row g-3" action="saverawgrn.php" method="post">
     <div class="col-md-6">
       <label for="inputEmail4" class="form-label">Raw Materials ID</label>
-      <!--getting supplier from supplier table-->
-      <select id="supplier" name="supplier">
+      <!--getting rawmateril id from raw table
+        just copy the supplier fec array replace with most wanted names
+    -->
+      <select id="rawmaterials" name="rawmaterials">
       <?php
       include('connection.php');
-      $suppliers = mysqli_query($conn, "select * from suppliers");
+      $suppliers = mysqli_query($conn, "select * from rawmaterials");
        while($s = mysqli_fetch_array($suppliers)) {
         ?>
-      <option value= "<?php echo $s['supplierId']?>">
-      <?php echo $s['supplierName']?>
+      <option value= "<?php echo $s['RawMaterialsID']?>">
+      <?php echo $s['RawMaterialstName']?>
       </option>
       <?php } ?>
 
-                                    </select>
+    </select>
     </div>
 
     <div class="col-md-6">
-        <label for="inputCity" class="form-label">Contact Number</label>
-        <input type="tel" name="contactNumber" class="form-control" id="inputContact">
+        <label for="inputCity" class="form-label">Supplier ID</label>
+        <!--getting supplier from supplier table-->
+        <select id="supplier" name="supplier">
+        <?php
+        include('connection.php');
+        $suppliers = mysqli_query($conn, "select * from suppliers");
+         while($s = mysqli_fetch_array($suppliers)) {
+        ?>
+        <option value= "<?php echo $s['supplierId']?>">
+        <?php echo $s['supplierName']?>
+        </option>
+       <?php } ?>
+
+         </select>
       </div>
 
-    <div class="col-md-12">
-      <label for="inputAddress" class="form-label">Address</label>
-      <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    <div class="col-md-6">
+      <label for="inputAddress" class="form-label">Quantity</label>
+      <input type="text" name="Quantity" class="form-control" id="Quantity" placeholder="Enter the Quantity">
     </div>
     <br>
+   
 
   
 
-    <div class="col-sm" >
+    <div class="col-sm-md-6" >
       <button type="submit" class="btn btn-primary">Save</button>
     </div>
 
     <div class="col-sm">
       <button type="reset" class="btn btn-danger"> Clear </button>
     </div>
-
+    </form>
+    <br>
 
 
 

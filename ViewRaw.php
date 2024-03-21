@@ -16,7 +16,9 @@ if($Suppliers){
         $Supplier_List.="<td>{$Supplier['RawMaterialstName']}</td>";
         $Supplier_List.="<td>{$Supplier['CostPrice']}</td>";
         $Supplier_List.="<td>{$Supplier['SupplierId']}</td>";
+        $Supplier_List.="<td>{$Supplier['SupplierName']}</td>";
         $Supplier_List.="<td>{$Supplier['Unit']}</td>";
+        
         $Supplier_List.="</tr>";
 
     }
@@ -39,6 +41,7 @@ if($Suppliers){
             <th>RawMaterial Name</th>
             <th>Cost Price</th>
             <th>Supplier ID</th>
+            <th>Supplier Name</th>
             <th>Unit</th> 
 
         </tr>
