@@ -14,7 +14,10 @@ values('$suppilerName','$contactNumber','$address','$city')");
    if($sql){
     echo '<script type ="text/JavaScript">';  
     echo 'alert("Insert data Successfully")';  
-    echo '</script>'; }
+    echo '</script>';
+    //header('viewSuppliers.php');
+  
+  }
 else {
 echo '<script type ="text/JavaScript">';  
 echo 'alert("Not Insert data Successfully")';  

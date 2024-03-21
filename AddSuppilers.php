@@ -19,11 +19,13 @@
                           <label for="inputAddress" class="form-label">Address</label>
                           <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St">
                         </div>
+
+                        <!--
   
                         <div class="col-md-6">
                           <label for="inputCity" class="form-label">City</label>
                           <input type="text" name="city" class="form-control" id="inputCity">
-                        </div>
+                        </div> -->
 
                       
 
@@ -35,13 +37,14 @@
                           <button type="reset" class="btn btn-danger">&nbsp Clear &nbsp</button>
                         </div>
 
+                        <!--
                         <div class="col-md-3">
                         <button type="edit" class="btn btn-Warning">&nbsp &nbsp Edit &nbsp &nbsp</button>
                         </div>
 
                       <div class="col-md-6">
                         <button type="delect" class="btn btn-dark">Delete</button>
-                      </div>
+                      </div> -->
                       </form>
 
                     

@@ -13,7 +13,7 @@ if($Suppliers){
         $Supplier_List.="<td>{$Supplier['supplierName']}</td>";
         $Supplier_List.="<td>{$Supplier['contactNumber']}</td>";
         $Supplier_List.="<td>{$Supplier['address']}</td>";
-        $Supplier_List.="<td>{$Supplier['city']}</td>";
+      //  $Supplier_List.="<td>{$Supplier['city']}</td>";
         $Supplier_List.="</tr>";
 
     }
@@ -36,7 +36,7 @@ if($Suppliers){
             <th>Supplier Name</th>
             <th>Concact Number</th>
             <th>Supplier Address</th>
-            <th>City</th>
+          <!--  <th>City</th> -->
 
         </tr>
 

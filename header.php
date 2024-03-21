@@ -39,6 +39,10 @@
               <a class="nav-link" href="AddProducts.php">Add Products</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="viewProducts.php">View Products</a>
+            </li>
+            
+            <li class="nav-item">
                 <a class="nav-link" href="grn.php">Good Received Note</a>
               </li>
               <li class="nav-item">

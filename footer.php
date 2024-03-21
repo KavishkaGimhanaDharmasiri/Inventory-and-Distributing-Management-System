@@ -5,7 +5,11 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <footer>
-    <center><p>Lotus Electricals And Distribituted PVT LTD | Horana Road,Kirigala|036******</p></center>
+    <center><p> 	&#169; Lotus Electricals And Distribituted PVT LTD <br>
+        No:-188,Horana Road,Kirigala <br>
+        034 2256124<br>
+        034 2256358
+    </p></center>
 </footer>
 
 </body>
