@@ -53,6 +53,7 @@ include 'Header.php';
                 </div>
             </div>
         </div>
+
         <div class="product-content">
             <h2 class="product-title">Antenna</h2>
             <a href="#" class="product-link">Visit site</a>
@@ -86,7 +87,7 @@ include 'Header.php';
 
             <div class="purchase-info">
                 <input type="number" min="0" value="1"><br>
-                <a href="Cart.php" class=" ">
+                <a href="SignIn.php" class=" ">
                 <button type="button" class="btn">
                     Add to Cart <i class='bx bx-cart-alt'></i>
                 </button></a>
@@ -95,5 +96,5 @@ include 'Header.php';
         </div>
     </div>
     <script src="js/productProductdetails.js"></script>
-    <iframe src="Footer.html" frameborder="0" width="100%" height="250"></iframe>
+    <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe>
 </body>

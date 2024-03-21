@@ -17,7 +17,7 @@
         <div class="bx bx-menu" id="menu-icon"></div>
         <ul class="navbar">
             <li><a><a href="Dashboard.php" class="home-active">Home</a></li>
-            <li><a><a href="Dashboard.php" class="home-active">Catogeries</a></li>
+            <li><a><a href="#" class="home-active">Catogeries</a></li>
             <li><a><a href="#about" class="home-active">About</a></li>
             <li>
                 <form id="SbarForm">

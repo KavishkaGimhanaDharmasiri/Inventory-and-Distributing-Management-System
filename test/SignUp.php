@@ -2,8 +2,8 @@
     <title>
         Sign Up
     </title>
-    <script src="js/signup.js"></script>
-    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="SignUp.js"></script>
+    <script src="jquery-3.6.0.min.js"></script>
     <style>
         #div1 {
             align-items: center;
@@ -115,56 +115,56 @@
 
     <script>
 
-// function check_form(){
+function check_form(){
 
 
-//   var name = document.getElementById("name").value;
-//   var dob = document.getElementById("dob").value;
-//   var address = document.getElementById("address").value;
-//   var tnumber = document.getElementById("tnumber").value;
-//   var email = document.getElementById("email").value;
-//   var postalcode = document.getElementById("postalcode").value;
-//   var password1 = document.getElementById("password1").value;
-//   var password2 = document.getElementById("password2").value;
+  var name = document.getElementById("name").value;
+  var dob = document.getElementById("dob").value;
+  var address = document.getElementById("address").value;
+  var tnumber = document.getElementById("tnumber").value;
+  var email = document.getElementById("email").value;
+  var postalcode = document.getElementById("postalcode").value;
+  var password1 = document.getElementById("password1").value;
+  var password2 = document.getElementById("password2").value;
 
-//   if(name == null || name == ""){
-//       alert("Please enter your name.");
-//       return false;
-//   }
-//   else if(address == null || address == ""){
-//     alert("Please enter your address.");
-//       return false;
-//   }
-//   else if(tnumber == null || tnumber == ""){
-//     alert("Please enter your number.");
-//       return false;
-//   }
-//   else if(email == null || email == ""){
-//     alert("Please enter your email.");
-//       return false;
-//   }
-//   else if(postalcode == null || postalcode == ""){
-//     alert("Please enter your postalcode.");
-//       return false;
-//   }
-//   else if(password1 == null || password1 == ""){
-//     alert("Please enter your password.");
-//       return false;
-//   }
-//    else if(password2 == null || password2 == ""){
-//     alert("Please enter your password.");
-//       return false;
-//   }
+  if(name == null || name == ""){
+      alert("Please enter your name.");
+      return false;
+  }
+  else if(address == null || address == ""){
+    alert("Please enter your address.");
+      return false;
+  }
+  else if(tnumber == null || tnumber == ""){
+    alert("Please enter your number.");
+      return false;
+  }
+  else if(email == null || email == ""){
+    alert("Please enter your email.");
+      return false;
+  }
+  else if(postalcode == null || postalcode == ""){
+    alert("Please enter your postalcode.");
+      return false;
+  }
+  else if(password1 == null || password1 == ""){
+    alert("Please enter your password.");
+      return false;
+  }
+   else if(password2 == null || password2 == ""){
+    alert("Please enter your password.");
+      return false;
+  }
 
   
-//   if (password1 !== password2) {
-//       alert("Passwords do not match.");
-//       return false;
-//   }
+  if (password1 !== password2) {
+      alert("Passwords do not match.");
+      return false;
+  }
 
-//   window.location.href = "Cart.php";
-//   document.getElementById("form").submit();
-// };
+  window.location.href = "Cart.php";
+  document.getElementById("form").submit();
+};
 </script>
     </div>
 </body>
@@ -194,7 +194,7 @@ if(isset($_POST['signUp']))
         if(!$link){
             die('could connect'.mysqli_error($link));
         }
-       // echo 'connected successfully';
+        echo 'connected successfully';
 
 
     $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");

@@ -197,6 +197,10 @@ header {
     margin-bottom: 1rem;
 }
 
+.home-active{
+    display: inline-block;
+}
+
 .btn {
     padding: 0.6rem 1rem;
     background: var(--green-color);
