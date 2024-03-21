@@ -107,7 +107,7 @@
                 <table id="table">
                     <tr>
                         <td>Already have an account ? </td>
-                        <td> <a href="/SignIn.php">Sign In</a></td>
+                        <td> <a href="SignIn.php">Sign In</a></td>
                     </tr>
                 </table>
 

@@ -1,4 +1,6 @@
 function check_form(){
+    document.getElementById("form").addEventListener("submit", function(event) {
+
     var name = document.getElementById("name").value;
     var dob = document.getElementById("dob").value;
     var address = document.getElementById("address").value;
@@ -8,11 +10,17 @@ function check_form(){
     var password1 = document.getElementById("password1").value;
     var password2 = document.getElementById("password2").value;
 
+    var letters = /^[A-Za-z]+$/;
+
     if(name == null || name.trim() === ""){
-        alert("Please enter your name.");
+        alert("Please enter your Name.");
+        //text='Please enter your Name';
+        //document.getElementById("name").innerHTML = text;
+        event.preventDefault();
         return false;
     } else if(address == null || address.trim() === ""){
         alert("Please enter your address.");
+        event.preventDefault();
         return false;
     } else if(tnumber == null || tnumber.trim() === ""){
         alert("Please enter your number.");
@@ -35,9 +43,15 @@ function check_form(){
         alert("Passwords do not match.");
         return false;
     }
-
-    window.location.href = "Cart.php";
-    document.getElementById("form").submit();
-};
-
-document.getElementById("button").addEventListener("click", check_form);
+    else if(!name.match(letters)){
+        alert("You can enter only Characters.");
+        event.preventDefault();
+        return false;
+        
+     }
+     else{
+        return true;
+     }
+     return true;
+}
+)};
