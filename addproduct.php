@@ -1,52 +1,10 @@
+
 <?php
-    //connection
-$con=mysqli_connect("localhost","root","2000",'stock');
-    
-
-
-// Fetch the next auto-incremented ID
-$result = mysqli_query($con, "SELECT AUTO_INCREMENT
-                              FROM information_schema.TABLES
-                              WHERE TABLE_SCHEMA = 'stock'
-                              AND TABLE_NAME = 'products'");
-
-$row = mysqli_fetch_assoc($result);
-$nextID = $row['AUTO_INCREMENT'];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-  $productName=$_POST['productName'];
-  $costPrice=$_POST['costPrice'];
-  $sellingPrice=$_POST['sellingPrice'];
-
-$sql=mysqli_query($con,"insert into products(productName,costPrice,sellingPrice	)
-values('$productName','$costPrice','$sellingPrice')");
-   if($sql){
-    echo '<script type ="text/JavaScript">';  
-    echo 'alert("Insert data Successfully")';  
-    echo '</script>'; }
-else {
-echo '<script type ="text/JavaScript">';  
-echo 'alert("Not Insert data Successfully")';  
-echo '</script>'; }
-}
-?>
-<?php
-// Query to fetch supplier IDs and names
-$query = "SELECT suppilerId, suppilerName FROM suppilers";
-$result = mysqli_query($con, $query);
-
-// Check if query was successful
-if (!$result) {
-    echo "Error in SQL query: " . mysqli_error($con);
-    exit();
-}
-
 include('header.php');
 ?>
 
 
-          <div class="container"><h1>Add Products-Raw Materials</h1></div>
+          <div class="container"><h1>Add Product</h1></div>
 
                             <!--center container-->
                             <div class="container min-vh-100 d-flex justify-content-center align-items-center">
@@ -74,30 +32,36 @@ include('header.php');
                                         <input type="text" name="sellingPrice" class="form-control" id="inputContact">
                                       </div>
 
-                                      <form form class="row g-3" method="post" action="addproduct.php">
-                                      <div class="col-md-6" >
-                                      <label for="inputsselect" class="form-label">Select Supplier:</label>
-                                      <select id="supplierSelect" name="supplierID">
-                                      </div>
-                        
-    
-    
-                                       <?php
-                                      // Populate dropdown options from query result
-                                      while ($row = mysqli_fetch_assoc($result)) {
-                                      echo "<option value='{$row['suppilerId']}'>{$row['suppilerName']}</option>";
-                                      }
+
+                                    <div class="col-md-6">
+                                    <label for="inputSubCategory" class="form-label">Supplier Name</label>
+                                    <!--getting supplier from supplier table-->
+                                    <select name="supplier">
+                                      <?php
+                                        include('connection.php');
+                                        $suppliers = mysqli_query($conn, "select * from suppliers");
+                                        while($s = mysqli_fetch_array($suppliers)) {
                                       ?>
-                                        </select>
+                                      <option value= "<?php echo $s['supplierId']?>">
+                                      <?php echo $s['supplierName']?>
+                                    </option>
+                                    <?php } ?>
 
+                                    </select>
 
-
+                                      <div class="col-md-6"></br>
+                                        <label for="">Product Type</label></br>
+                                        <input type="radio" name="productTpye" value="Inhouse Product" required> Inhouse Product </br>
+                                        <input type="radio" name="productTpye" value="Outsourcer Product" required> Outsourcer Product </br>
+                                        <input type="radio" name="productTpye" value="Import Complete Product" required> Import Complete Product </br>
+                                      </div>
+                                     
             
-                                    <div class="col-12">
-                                      <button type="submit" class="btn btn-primary">Add Product</button>
+                                    <div class="md-6">
+                                      <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="md-6">
                                         <button type="reset" class="btn btn-danger">Clear</button>
                                       </div>
                                   </form>

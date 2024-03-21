@@ -1,25 +1,24 @@
 <?php
 include('connection.php'); // Include the connection file
 
-if(isset($_POST['save_button'])) {
+if(isset($_POST['suppilerName']) && isset($_POST['contactNumber']) && isset($_POST['address'])) {
     // Retrieve form data
-    $rawMaterialName = $_POST['RawMaterialstName'];
-    $costPrice = $_POST['CostPrice'];
-    $supplierId = $_POST['supplier'];
-    $unit = $_POST['Unit'];
+    $supplierName = $_POST['suppilerName'];
+    $contactNumber = $_POST['contactNumber'];
+    $address = $_POST['address'];
 
     // Prepare SQL statement
-    $sql = "INSERT INTO rawmaterials (RawMaterialstName,CostPrice,SupplierId,Unit) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO suppliers (supplierName,contactNumber,address) VALUES (?, ?, ?)";
 
     // Prepare and bind parameters
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssis", $rawMaterialName, $costPrice, $supplierId, $unit);
+    $stmt->bind_param("sss", $supplierName, $contactNumber, $address);
 
     // Execute the statement
     if ($stmt->execute()) {
         // Data inserted successfully
-        echo "Raw material added successfully.";
-        header("Location: viewRaw.php");
+        echo '<script type ="text/JavaScript">';  
+        header("Location: viewSuppliers.php");
     } else {
         // Error occurred while inserting data
         echo "Error: " . $sql . "<br>" . $conn->error;

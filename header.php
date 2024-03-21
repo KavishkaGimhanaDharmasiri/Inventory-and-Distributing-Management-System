@@ -17,14 +17,15 @@
 <body>
  
     <!--nav bar  -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+    <!--<nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="AddSuppilers.php">Add Suppilers</a>
+              <a class="nav-link" href="Addsuppilers.php">Add Suppliers</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="viewSuppliers.php">View Suppliers</a>
@@ -33,20 +34,26 @@
                 <a class="nav-link" href="AddRawMaterials.php">Add Raw Materials</a>
               </li>
               <li class="nav-item">
-              <a class="nav-link" href="ViewRawStocks.php">View Raw Stocks</a>
+              <a class="nav-link" href="ViewRaw.php">View Raw Materials</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="AddProducts.php">Add Products</a>
+              <a class="nav-link" href="addproduct.php">Add Products</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="viewProducts.php">View Products</a>
             </li>
             
             <li class="nav-item">
-                <a class="nav-link" href="grn.php">Good Received Note</a>
+                <a class="nav-link" href="rawgrn.php">Raw Good Received Note</a>
               </li>
               <li class="nav-item">
               <a class="nav-link" href="ViewStocks.php">View Stocks</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="outsourcer.php">Outsourcer</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="AddWarehouse.php">Warehouse</a>
             </li>
 
 
