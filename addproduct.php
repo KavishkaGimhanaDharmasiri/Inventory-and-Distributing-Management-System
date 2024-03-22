@@ -10,26 +10,42 @@ include('header.php');
                             <div class="container min-vh-100 d-flex justify-content-center align-items-center">
 
                                 <form action="addproduct.php" method="POST"class="row g-3">
+                                  <!--
                                     <div class="col-md-6">
                                       <label for="inputEmail4" class="form-label">Product ID</label>
                                       <input type="text" name="productId" class="form-control" id="inputcustomername">
                                     </div>
+                                    -->
+                                    <div class="col-md-6">
+                                      <label for="inputPassword4" class="form-label">Main Category</label>
+                                      <input type="text" name="maincategory" class="form-control" id="maincategory" required>
+                                    </div>
+
 
 
 
                                     <div class="col-md-6">
                                       <label for="inputPassword4" class="form-label">Product Name</label>
-                                      <input type="text" name="productName" class="form-control" id="inputshopname">
+                                      <input type="text" name="productName" class="form-control" id="productName" required>
                                     </div>
               
                                     <div class="col-md-6">
                                       <label for="inputCity" class="form-label">Cost Price</label>
-                                      <input type="text" name="costPrice" class="form-control" id="inputCity">
+                                      <input type="number" name="costPrice" class="form-control" id="costPrice" required>
                                     </div>
+                                    <div class="col-md-6">
+                                      <label for="inputPassword4" class="form-label">Credit Price</label>
+                                      <input type="number" name="creditprice" class="form-control" id="creditprice" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="inputPassword4" class="form-label">Cheque Price</label>
+                                      <input type="number" name="chequeprice" class="form-control" id="chequeprice" required>
+                                    </div>
+                                    
             
                                     <div class="col-md-6">
                                         <label for="inputCity" class="form-label">Selling Price</label>
-                                        <input type="text" name="sellingPrice" class="form-control" id="inputContact">
+                                        <input type="number" name="sellingPrice" class="form-control" id="sellingPrice" required>
                                       </div>
 
 
@@ -73,6 +89,7 @@ include('header.php');
             
             
                               </div>
+                                        </div>
 
 
 

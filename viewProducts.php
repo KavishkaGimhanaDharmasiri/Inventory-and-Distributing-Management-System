@@ -16,6 +16,10 @@ if($Products){
         $Product_List.="<td>{$Product['creditPrice']}</td>";
         $Product_List.="<td>{$Product['checkPrice']}</td>";
         $Product_List.="<td>{$Product['cashPrice']}</td>";
+        $Product_List.="<td>{$Product['productType']}</td>";
+        $Product_List.="<td>{$Product['supplierId']}</td>";
+
+        
         $Product_List.="</tr>";
 
     }
@@ -41,6 +45,8 @@ if($Products){
             <th>Credit Price</th>
             <th>Cheque Price</th>
             <th>Cash Price</th>
+            <th>Product Type</th>
+            <th>Supplier ID</th>
 
         </tr>
 

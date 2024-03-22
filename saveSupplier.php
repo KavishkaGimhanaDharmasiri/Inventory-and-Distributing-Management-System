@@ -17,11 +17,13 @@ if(isset($_POST['suppilerName']) && isset($_POST['contactNumber']) && isset($_PO
     // Execute the statement
     if ($stmt->execute()) {
         // Data inserted successfully
-        echo '<script type ="text/JavaScript">';  
+        echo '<script>alert("Add Supplier Sucessfully")</script>';  
         header("Location: viewSuppliers.php");
     } else {
         // Error occurred while inserting data
-        echo "Error: " . $sql . "<br>" . $conn->error;
+       // echo "Error: " . $sql . "<br>" . $conn->error;
+        echo '<script>alert("Not Sucessfully")</script>';
+
     }
 
     // Close statement

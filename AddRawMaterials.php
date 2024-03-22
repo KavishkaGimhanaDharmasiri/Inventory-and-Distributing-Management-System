@@ -4,6 +4,7 @@ include('header.php');
 <div class="container"><h1>Add Raw Materials</h1></div>
           
                             <!--center container-->
+                            
                             <div class="container min-vh-100 d-flex justify-content-center align-items-center">
 
                               <form id="myForm" action="saveraw.php" method="POST" class="row g-3">
@@ -11,16 +12,16 @@ include('header.php');
 
                                   <div class="col-md-6">
                                     <label for="inputPassword4" class="form-label">Raws Materials Name</label>
-                                    <input type="text" name="RawMaterialstName" class="form-control" id="RawMaterialstName">
+                                    <input type="text" name="RawMaterialstName" class="form-control" id="RawMaterialstName" required>
                                   </div>
                                   <div class="col-md-6">
                                     <label for="inputMainCategory" class="form-label">Cost Price</label>
-                                    <input type="text" name="CostPrice" class="form-control" id="CostPrice">
+                                    <input type="number" name="CostPrice" class="form-control" id="CostPrice"required>
                                   </div>
                                   <div class="col-md-6">
                                     <label for="inputSubCategory" class="form-label">Supplier Name</label>
                                     <!--getting supplier from supplier table-->
-                                    <select id="supplier" name="supplier">
+                                    <select id="supplier" name="supplier" required>
                                       <?php
                                         include('connection.php');
                                         $suppliers = mysqli_query($conn, "select * from suppliers");
@@ -36,7 +37,7 @@ include('header.php');
             
                                   <div class="col-md-6">
                                     <label for="inputCity" class="form-group">Unit</label>
-                                    <select name="Unit" class="form-control" id="Unit">
+                                    <select name="Unit" class="form-control" id="Unit" required>
                                       <option value="">--Select Unit--</option>
                                       <option value="1KG">One Kilo Gram </option>
                                       <option value="1M">One Meters</option>
@@ -51,6 +52,7 @@ include('header.php');
                                   <div class="col-1">
                                         <button type="reset" class="btn btn-danger">Clear</button>
                                     </div>
+                                        </div>
           
 
 

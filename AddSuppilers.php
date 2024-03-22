@@ -6,18 +6,18 @@
 
                     <form class="row g-3" action="saveSupplier.php" method="post">
                         <div class="col-md-6">
-                          <label for="inputEmail4" class="form-label">Suppiler Name</label>
-                          <input type="text" name="suppilerName" class="form-control" id="inputcustomername">
+                          <label for="inputEmail4" class="form-label" >Suppiler Name</label>
+                          <input type="text" name="suppilerName" class="form-control" id="inputcustomername" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="inputCity" class="form-label">Contact Number</label>
-                            <input type="tel" name="contactNumber" class="form-control" id="inputContact">
+                            <input type="number" name="contactNumber" class="form-control" id="inputContact" required>
                           </div>
 
                         <div class="col-md-12">
                           <label for="inputAddress" class="form-label">Address</label>
-                          <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                          <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                         </div>
                         <br>
 

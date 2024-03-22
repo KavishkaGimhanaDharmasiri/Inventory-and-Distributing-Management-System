@@ -12,48 +12,78 @@
       .col-3{
         width: 200px;
       }
+
+      body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background: radial-gradient(circle, rgba(76,175,80,1) 0%, rgba(247,252,248,1) 0%, rgba(250,253,251,1) 23%, rgba(252,254,253,1) 36%, rgba(255,255,255,1) 47%, rgba(246,251,246,1) 59%, rgba(228,243,229,1) 68%, rgba(171,218,173,1) 100%, rgba(76,175,80,1) 100%);
+            padding: 0;
+           
+            align-items: center;
+            margin: 8px;
+        }
+        #navbarNavDropdown{
+          background-color: #45a049;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 1300px;
+            border: 1px solid #45a049;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+             width: calc(100% - 5px);
+        }
     </style>
 </head>
 <body>
- 
+      
     <!--nav bar  -->
-    <!-- <nav class="navbar navbar-dark bg-dark"> -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
+    <!-- <nav class="navbar navbar-dark bg-dark0> -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #45a049;" > 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="Addsuppilers.php">Add Suppliers</a>
+              <a class="nav-link" href="Addsuppilers.php"><b>Add Suppliers</b></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="viewSuppliers.php">View Suppliers</a>
+              <a class="nav-link" href="viewSuppliers.php"><b>View Suppliers</b></a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="AddRawMaterials.php">Add Raw Materials</a>
+                <a class="nav-link" href="AddRawMaterials.php"><b>Add Raw Materials</b></a>
               </li>
               <li class="nav-item">
-              <a class="nav-link" href="ViewRaw.php">View Raw Materials</a>
+              <a class="nav-link" href="ViewRaw.php"><b>View Raw Materials</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="addproduct.php">Add Products</a>
+              <a class="nav-link" href="addproduct.php"><b>Add Products</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="viewProducts.php">View Products</a>
+              <a class="nav-link" href="viewProducts.php"><b>View Products</b></a>
             </li>
             
             <li class="nav-item">
-                <a class="nav-link" href="rawgrn.php">Raw Good Received Note</a>
+                <a class="nav-link" href="rawgrn.php"><b>Raw Good Received Note</b></a>
               </li>
               <li class="nav-item">
-              <a class="nav-link" href="ViewRawStocks.php">View Raw Stocks</a>
+              <a class="nav-link" href="ViewRawStocks.php"><b>View Raw Stocks</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="outsourcer.php">Outsourcer</a>
+              <a class="nav-link" href="outsourcer.php"><b>Outsourcer</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="AddWarehouse.php">Warehouse</a>
+              <a class="nav-link" href="viewOutsourcer.php"><b>View Outsourcer</b></a>
             </li>
 
 

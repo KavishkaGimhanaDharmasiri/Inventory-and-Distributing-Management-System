@@ -60,6 +60,7 @@ include('header.php');
       <button type="reset" class="btn btn-danger"> Clear </button>
     </div>
     </form>
+    </div>
     <br>
 
 
