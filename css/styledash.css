@@ -1,0 +1,255 @@
+
+/*Products*/
+
+
+ /* h1 {
+    margin: 35px 0;
+    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #50C878	,#228B22	);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;  
+} */
+
+
+.products{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.product-text  h1{
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--green-color);
+}
+
+.products-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,auto));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.products-container .box{
+    padding: 20px;
+    box-shadow: 1px 2px 11px 4px rgb(14 55 54/15%);
+    border-radius: 1.5rem;
+    position: relative;
+    text-align: center;
+}
+
+.products-container .box img{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.products-container .box span{
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.products .box h2{
+    font-size: 30px;
+    margin-top: 15px;
+    color: black;
+
+}
+
+.products .box p{
+    color: #91919191;
+    line-height: 21px;
+    margin: 8px 0;
+}
+
+.products .box h3{
+    margin: 7px 0;
+}
+
+.products-container .box .price{
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    color: var(--light-orange-color);
+}
+
+.products-container .box .price span{
+    color: var(--text-color);
+}
+
+.products-container .box .bx-cart-alt{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: var(--green-color);
+    color: var(--bg-color);
+    font-size: 20px;
+    border-radius: 0.5rem 0 0.5rem 0;
+}
+
+.products-container .box .bx-cart-alt:hover{
+    background: var(--orange-color);
+    transition: 0.2s all linear;
+}
+
+.products-container .box .bx-heart{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 20px;
+    color: var(--light-orange-color);
+}
+
+.products-container .box .discount{
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    background: var(--light-orange-color);
+    color: var(--bg-color);
+    padding: 4px 18px;
+    clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 0 100%, 0% 100%, 0 50%, 0 0);
+}
+
+
+/*About*/
+
+
+.about{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(21rem,auto));
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.about-text h1{
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--green-color);
+}
+
+.about-text p{
+    margin: 0.5rem 0 1rem;
+    color: black;
+}
+
+.about img{
+    width: 100;
+    height: 100px;
+}
+
+/*Review*/
+
+
+.review{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.review h2{
+    text-align: center;
+    font-size: 1,6rem;
+    font-weight: 600;
+}
+.review-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,auto));
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.review-container .box{
+    padding: 20px;
+    box-shadow: 1px 2px 11px 4px rgb(14 55 54/15%);
+    border-radius: 0.5rem;
+    border-bottom: 7px solid var(--green-color);
+}
+
+.review-container .box:hover{
+    transform: translate(10px);
+    transition: 0.2a all linear;
+}
+
+.review-container .box .bx{
+    font-size: 24px;
+    color: var(--green-color);
+}
+
+.review-container .box .stars .bx{
+    font-size: 1rem;
+    color: var(--light-orange-color);
+}
+
+.review-container .box p{
+    font-size: 0.938rem;
+}
+
+.review-profile{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    column-gap: 0.5rem;
+}
+
+.review-profile img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.review-profile h3{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/*Services*/
+
+.services{
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 0 10px 0;
+}
+
+
+.services .services_cards{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    top: 50px;
+}
+
+.services .services_box i{
+    font-size: 60px;
+    color: orange;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.services .services_box h3{
+    margin-bottom: 12px;
+    font-size: 19px;
+}
+
+.services .services_box p{
+    text-align: center;
+    color: #919191;
+    margin-bottom: 60px;
+}
+
+

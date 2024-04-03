@@ -21,38 +21,33 @@ include 'Header.php';
 ?>
 
 <br><br><br><br><br><br>
-    <div class="card-wrapper">
-        <div class="card">
-            <div class="product-img">
-                <div class="img-display">
-                    <div class="img-showcase">
-                        <img src="Images/cable3" alt="">
-                        <img src="Images/cable4.jpg" alt="">
-                        <img src="Images/cable5.jpg" alt="">
-                        <!-- <img src="Images/cables2.jpg" alt=""> -->
-                    </div>
+
+    <div class="about" id="About">
+
+        <div class="about_main">
+            <div class="about_image">
+                <div class="about_small_image">
+                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/cable4.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
                 </div>
-                <div class="img-select">
-                    <div class="img-item">
-                        <a href="#" data-id="1">
-                            <img src="Images/cable3.jpg" alt="">
-                        </a>
-                    </div>
 
-                    <div class="img-item">
-                        <a href="#" data-id="2">
-                            <img src="Images/cable4.jpg" alt="">
-                        </a>
-                    </div>
-
-                    <div class="img-item">
-                        <a href="#" data-id="3">
-                            <img src="Images/cable5.jpg" alt="">
-                        </a>
-                    </div>
+                <div class="image_contaner">
+                    <img src="Images/cable5.jpg" id="imagebox" class="Imagebox">
                 </div>
             </div>
         </div>
+
+        <script>
+            function functio(small){
+                var full = document.getElementById("imagebox")
+                full.src = small.src
+            }
+        </script>
+        
+    </div>
+        
         <form action="" method="post" id="form">
         <div class="product-content">
             <h2 class="product-title" name="productname">Cable</h2>
@@ -86,8 +81,8 @@ include 'Header.php';
 
             <div class="purchase-info">
                 <input type="number" min="0" value="1" name="quantity"><br>
-                <a href="Cart.php" class=" ">
-                    <button type="button" class="btn" name="btn">
+                <a href="SignUp.php" class=" ">
+                    <button type="submit" class="btn" name="btn">
                     Add to Cart 
                     <!-- <i class='bx bx-cart-alt'></i> -->
                     </button>
@@ -97,7 +92,7 @@ include 'Header.php';
         </div>
     </form>
     </div>
-    <script src="js/productProductdetails.js"></script>
+    
     <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe>
 </body>
 </html>

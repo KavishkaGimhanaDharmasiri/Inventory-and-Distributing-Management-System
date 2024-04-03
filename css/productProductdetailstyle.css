@@ -18,52 +18,6 @@ body{
     line-height: 1.5;
 }
 
-.card-wrapper{
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-img{
-    width: 100%;
-    display: block;
-}
-
-.img-display{
-    overflow: hidden;
-    height: 600px;
-    width: 700px;
-}
-
-.img-showcase{
-    display: flex;
-    width: 100%;
-    transition: all 0.5s ease;
-}
-
-.img-showcase img{
-    min-width: 100%;
-}
-
-.img-select{
-    display: flex;
-}
-
-.img-item{
-    margin: 0.3rem;
-    height: 500px;
-    width: 300px;
-}
-
-.img-item:nth-child(1),
-.img-item:nth-child(2),
-.img-item:nth-child(3),
-.img-item:nth-child(4){
-    margin-right: 0;
-}
-
-.img-item:hover{
-    opacity: 0.8;
-}
 
 .product-content{
     padding: 2rem 1rem;
@@ -183,16 +137,16 @@ img{
     border: 1.5px solid #ddd;
     border-radius: 35px;
     text-align: center;
-    padding: 1rem 4rem;
+    padding: 1rem 8rem;
     outline: 0;
     margin-right: 0.2rem;
     margin-bottom: 1rem;
     font-size: 20px;
-    font-weight: 200;
+    font-weight: 600;
 }
 
 .purchase-info input{
-    width: 20px;
+    width: 60px;
 }
 
 .purchase-info .btn{
@@ -201,7 +155,7 @@ img{
 }
 
 .purchase-info .btn:first-of-type{
-    background: var(--bg-color)
+    background: var(--green-color)
 }
 
 /* .purchase-info .btn{
@@ -213,28 +167,57 @@ img{
     background: var(--orange-color);
 }
 
-@media screen and(min-width: 1000px) {
-    .card{
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 1.5rem;
-    }
 
-    .card-wrapper{
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 
-    .product-img{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .product-content{
-        padding-top: 0;
-    }
+.about .about_main {
+    position: relative;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
+.about .about_main .about_image {
+    display: flex;
+    margin-top: 50px;
+}
+
+.about .about_main .about_image .about_small_image {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 15px;
+}
+
+.about .about_main .about_image .about_small_image img {
+    height: 92px;
+    margin: 5px 0;
+    cursor: pointer;
+    background: linear-gradient(to right, #a1f6b6, #00380d);
+    display: block;
+    border-radius: 6px;
+    padding: 5px 5px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.about .about_main .about_image .about_small_image img:hover {
+    opacity: 1;
+}
+
+.about .about_main .image_contaner {
+    padding: 10px;
+    display: flex;
+} 
+
+.about .about_main .image_contaner img {
+    border: 3px solid #a1f6b6;
+    border-radius: 20px;
+    height: 410px;
+    width: 410px;
+    padding: 30px;
+    box-shadow: 0 0 8px #00380d;
+}

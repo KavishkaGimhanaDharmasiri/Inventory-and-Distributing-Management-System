@@ -1,27 +1,24 @@
-
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-compatible" content="IE=edge">
-    <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    <title>Loutos</title>
-
-    <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotus</title>
+    <link rel="stylesheet" href="css/styledash.css">
+    <link rel="shortcut icon" href="image/logo.png">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
-
 <body>
-    <!-- <iframe src="Header.php" frameborder="0" width="100%" height="105"></iframe> -->
-
     <?php
 
-        include 'Header.php';
-    ?>
-
-    <br>
-    <section class="home swiper" id="home">
+include 'Header.php';
+?>
+        
+ <section class="home swiper" id="home">
         <div class="swiper-wrapper">
 
             <div class="swiper-slide container">
@@ -29,7 +26,7 @@
                 <div class="home-text">
 
                     <span>Cables</span>
-                    <h1>Order now</h1>
+                    <h2>Order now</h2>
                     <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
                 </div>
                 <img src="Images/cover.jpg" alt="">
@@ -58,118 +55,150 @@
         </div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
-    </section>
+    </section> 
 
-    <!-- <section class="categories" id="categories">
+    <!--Products-->
+
+
+        <div class="products" id="Products">
         <div class="heading">
-            <h1>Brows for More<br><span>categories</h1>
-            <a href="#" class="btn">See All<i class='bx bx-right-arrow-alt'></i></a>
-        </div>
-
-        <div class="categories-container">
-            <div class="box box1">
-                <img src="./Images/heaters2.jpg" alt="">
-                <h2>Heaters</h2>
-                <span>10 Items</span>
-                <i class='bx bx-right-arrow-alt'></i>
+            <div class="product-text">
+            <h1>Brows for More Products</h1>
             </div>
-
-            <div class="box box2">
-                <img src="./Images/bulb2.jpg" alt="">
-                <h2>bulb</h2>
-                <span>10 Items</span>
-                <i class='bx bx-right-arrow-alt'></i>
-            </div>
-
-            <div class="box box3">
-                <img src="./Images/cables2.jpg" alt="">
-                <h2>Cables</h2>
-                <span>10 Items</span>
-                <i class='bx bx-right-arrow-alt'></i>
-            </div>
-
-            <div class="box box4">
-                <img src="./Images/antenna.jpg" alt="">
-                <h2>antenna</h2>
-                <span>10 Items</span>
-                <i class='bx bx-right-arrow-alt'></i>
-            </div>
-
-            <div class="box box1">
-                <img src="./Images/heaters2.jpg" alt="">
-                <h2>Heaters</h2>
-                <span>10 Items</span>
-                <i class='bx bx-right-arrow-alt'></i>
-            </div>
-
-        </div>
-    </section> -->
-
-    <section class="products" id="products">
-        <div class="heading">
-            <h1>Brows for More<br><span>Products</h1>
         </div>
 
         <div class="products-container">
 
-<?php
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'retail_website';
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-$conn = new mysqli($host, $username, $password, $database);
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-    if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-    }
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-    $sql = "SELECT * FROM categories";
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-    $result = $conn->query($sql);
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-    if ($result->num_rows > 0) {
-    
-         while ($row = $result->fetch_assoc()) {
-            $img=$row["image"];
-            $name=$row["categoryname"];
-            $quantity=$row["quantity"];
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-            echo '<div class="box">
-                            <a href="products.php">
-                            <img src='." ".' alt="">
-                            <div class="content">
-                                <h3>'.$row["categoryname"]. '</h3>
-                                <span>'.$row["quantity"] .' Items</span>
-                                <i class=""bx bx-heart""></i>
-                            </div>
-                        </div>';
-        }
-        
-    } else {
-    echo "0 results";
-}
-?>
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
-
-            <!-- <div class="box">
-                <a href="/Product.html">
-                    <img src="Images/cat2.jpg" alt="">
-                    <h3 class="detail">.$row["categoryname"].</h3>
-                <span>.$row["quantity"] . Items</span>
-                 <i class=""bx bx-heart""></i>
-                </a>
-            </div> -->
+            <div class="box">
+                <a href="Categories.php">
+                    <div class="image">
+                    <img src="Images/Cables.jpg">
+                    </a>
+                </div>
+                    <h2>NIKE</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    </p>
+                    <h3>$100.99</h3>
+            </div>
 
         </div>
+    </div>
 
-    </section>
 
-    <section class="about" id="section">
+
+
+    <!--About-->
+    <br><br><br><br><br><br><br><br>
+    <div class="about" id="About">
         <img src="Images/lotus.png" alt="">
         <div class="about-text">
-            <span>About us</span>
+            <h1>About us</h1>
+            <br>
             <p>
                 About Lotus
 
@@ -186,11 +215,14 @@ $conn = new mysqli($host, $username, $password, $database);
                 residential and
                 commercial clients with our extensive range of products.</p>
 
-            <a href="#" class="btn">Learn More<i class='bx bx-right-arrow-alt'></i></a>
+           
         </div>
-    </section>
+    </div>
 
-    <section class="customer" id="customer">
+   <!--Review-->
+
+<br><br><br><br>
+     <div class="review" id="Review">
         <h2>Why Choose Us</h2>
         <div class="customer-container">
             <div class="box">
@@ -266,9 +298,46 @@ $conn = new mysqli($host, $username, $password, $database);
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe>
+
+    <!--Services-->
+
+    <div class="services" id="Servises">
+        <h1>our services</h1>
+
+        <div class="services_cards">
+            <div class="services_box">
+                <i class="fa-solid fa-truck-fast"></i>
+                <h3>Fast Delivery</h3>
+                <p>
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                </p>
+            </div>
+
+            <div class="services_box">
+                <i class="fa-solid fa-rotate-left"></i>
+                <h3>10 Days Replacement</h3>
+                <p>
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                </p>
+            </div>
+
+            <div class="services_box">
+                <i class="fa-solid fa-headset"></i>
+                <h3>24 x 7 Support</h3>
+                <p>
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+<?php
+
+        include 'Footer.php';
+    ?>
 
     <div class="copyright">
         <p>&#169;CarpoolVenom All Right Reserved.</p>
@@ -281,7 +350,6 @@ $conn = new mysqli($host, $username, $password, $database);
     <script src="js/main.js">
 
     </script>
-
+    
 </body>
-
 </html>
