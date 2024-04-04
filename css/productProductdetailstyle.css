@@ -21,6 +21,7 @@ body{
 
 .product-content{
     padding: 2rem 1rem;
+    align-items: center;
 }
 
 .product-title{
@@ -90,7 +91,6 @@ body{
 .product-detail h2{
     text-transform: capitalize;
     color: #12263a;
-    padding-bottom: 0.6rem;
 }
 
 .product-detail p{
@@ -136,13 +136,11 @@ body{
 .purchase-info .btn{
     border: 1.5px solid #ddd;
     border-radius: 35px;
-    text-align: center;
-    padding: 1rem 8rem;
-    outline: 0;
-    margin-right: 0.2rem;
-    margin-bottom: 1rem;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
+    height: 50px;
+    width: 350px;
+    text-align: center;
 }
 
 .purchase-info input{
@@ -158,9 +156,6 @@ body{
     background: var(--green-color)
 }
 
-/* .purchase-info .btn{
-    background-color: #f6a749;
-} */
 
 .purchase-info .btn:hover{
     opacity: 0.9;
@@ -214,10 +209,11 @@ body{
 } 
 
 .about .about_main .image_contaner img {
-    border: 3px solid #a1f6b6;
+    border: 3px;
+    background: linear-gradient(to right, #a1f6b6, #00380d);
     border-radius: 20px;
     height: 410px;
     width: 410px;
-    padding: 30px;
+    padding: 5px;
     box-shadow: 0 0 8px #00380d;
 }

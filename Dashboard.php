@@ -22,11 +22,10 @@ include 'Header.php';
         <div class="swiper-wrapper">
 
             <div class="swiper-slide container">
-                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                 <div class="home-text">
-
-                    <span>Cables</span>
-                    <h2>Order now</h2>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <span>Heaters</span>
+                    <h1>Order now</h1>
                     <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
                 </div>
                 <img src="Images/cover.jpg" alt="">
@@ -60,7 +59,7 @@ include 'Header.php';
     <!--Products-->
 
 
-        <div class="products" id="Products">
+    <div class="products" id="Products">
         <div class="heading">
             <div class="product-text">
             <h1>Brows for More Products</h1>
@@ -69,122 +68,46 @@ include 'Header.php';
 
         <div class="products-container">
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+<?php
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'retail_website';
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+$conn = new mysqli($host, $username, $password, $database);
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+    if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+    }
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+    $sql = "SELECT * FROM categories";
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+    $result = $conn->query($sql);
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+    if ($result->num_rows > 0) {
+    
+         while ($row = $result->fetch_assoc()) {
+            $name=$row["categoryname"];
+            $quantity=$row["quantity"];
+            $img=$row["image"];
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
+            echo '<div class="box">
+                   <a href="Products.php">
+                            <div class="image">
+                             <img src="data:image;base64,'.base64_encode($img).'" alt="">
+                            </div>
+                                
+                            <h2>'.$name.'</h2>
+                            <h3>'.$quantity.' Items</h3></a>
+                            </div> ';
+        }
+        
+    } else {
+    echo "0 results";
+}
+?>
 
-            <div class="box">
-                <a href="Categories.php">
-                    <div class="image">
-                    <img src="Images/Cables.jpg">
-                    </a>
-                </div>
-                    <h2>NIKE</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    </p>
-                    <h3>$100.99</h3>
-            </div>
 
         </div>
     </div>

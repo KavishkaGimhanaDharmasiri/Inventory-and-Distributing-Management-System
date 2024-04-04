@@ -16,7 +16,7 @@
 
 include 'Header.php';
 ?>
-<br><br><br><br><br><br>
+<br><br>
     <div class="wrapper">
         <h1>shopping Cart</h1>
         <div class="cart">

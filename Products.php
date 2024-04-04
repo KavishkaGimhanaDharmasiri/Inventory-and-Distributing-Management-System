@@ -22,9 +22,7 @@ include 'Header.php';
     <section class="products" id="products">
          <div class="products-container">
 
-
-
-        <?php
+<?php
 
 $host = 'localhost';
 $username = 'root';
@@ -54,18 +52,17 @@ $conn = new mysqli($host, $username, $password, $database);
 
             echo '<div class="box">
                     <a href="ProductDetails.php">
-                             <img src="Images/cat1.png" alt="">
-                            <span>'.$name.'</span>
-                            <h3 class="price">'.$price.'</h3>';
-                                ?>
-
-                    <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount"><?php echo$discount."%"; ?></span>
-
-                <?php
-
-                           echo '</a>
+                    <div class="image">
+                             <img src="data:image;base64,'.base64_encode($img).'" alt="">
+                             </a>
+                             </div>
+                             <h2>'.$name.'</h2>
+                             <p>'.$description.'</p>
+                     <h3>'.$price.'</h3>
+                         
+                            <h3 class="price">'.$price.'</h3>
+                            <span class="discount">'.$discount.'</span>
+                                
                             </div>';
         }
         
@@ -74,118 +71,8 @@ $conn = new mysqli($host, $username, $password, $database);
 }
 ?>
 
-
-
-       
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat1.png" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat2.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat3.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat4.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat5.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat6.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat7.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat8.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-            <div class="box">
-                <a href="/productProductdetails.html">
-                    <img src="Images/cat9.jpg" alt="">
-                <span>Holder</span>
-                <h2></h2>
-                <h3 class="price">Rs650</h3>
-                <i class='bx bx-cart-alt'></i>
-                <i class='bx bx-heart'></i>
-                <span class="discount">-25%</span>
-                </a>
-            </div>
-
-        </div>
+           
+</div>
 
     </section>
     <script src="css/productProductdetailstyle.css"></script>

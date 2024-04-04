@@ -20,11 +20,11 @@
         <div class="bx bx-menu" id="menu-icon"></div>
         <ul class="navbar">
             
-                <a href="Dashboard.php" class="home-active" id="Dashboard">Home</a>
-                <a href="#Products" class="home-active" id="Categories">Products</a>
-                <a href="#About" class="home-active" id="about">About</a>
-                <a href="#Review">Review</a>
-                <a href="#Servises">Servises</a>
+                <a href="Dashboard.php" class="home-active" id="Dashboard"><h2>Home</h2></a>
+                <a href="#Products" class="home-active" id="Categories"><h2>Products</h2></a>
+                <a href="#About" class="home-active" id="about"><h2>About</h2></a>
+                <a href="#Review"><h2>Review</h2></a>
+                <a href="#Servises"><h2>Servises</h2></a>
             
             </ul>
             <div class="cart-profile">

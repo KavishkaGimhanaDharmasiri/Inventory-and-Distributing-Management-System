@@ -20,7 +20,7 @@
 include 'Header.php';
 ?>
 
-<br><br><br><br><br><br>
+<br><br><br>
 
     <div class="about" id="About">
 
@@ -34,7 +34,7 @@ include 'Header.php';
                 </div>
 
                 <div class="image_contaner">
-                    <img src="Images/cable5.jpg" id="imagebox" class="Imagebox">
+                    <img src="Images/cable5.jpg" id="imagebox" >
                 </div>
             </div>
         </div>
@@ -48,10 +48,11 @@ include 'Header.php';
         
     </div>
         
-        <form action="" method="post" id="form">
+        
         <div class="product-content">
+            <form action="" method="post" id="form" class="form">
             <h2 class="product-title" name="productname">Cable</h2>
-            <a href="#" class="product-link">Visit site</a>
+            <!-- <a href="#" class="product-link">Visit site</a> -->
 
             <div class="product-rating">
                 <i class='bx bxs-star'></i>
@@ -69,7 +70,8 @@ include 'Header.php';
 
             <div class="product-detail">
                 <h2>About this item: </h2>
-                <p>Product details of USB Extension Cable 1.5m 3m 5m Copper Male to Female USB Extend Adapter Dual Shielding Transparent Blue Anti-interference.</p>
+                <p>Product details of USB Extension Cable 1.5m 3m 5m Copper Male to Female 
+                USB Extend Adapter Dual Shielding Transparent Blue Anti-interference.</p>
                 <ul>
                     <li>Cable Type: Outdoor</li>
                     <li>Model: Yagi</li>
@@ -83,15 +85,15 @@ include 'Header.php';
                 <input type="number" min="0" value="1" name="quantity"><br>
                 <a href="SignUp.php" class=" ">
                     <button type="submit" class="btn" name="btn">
-                    Add to Cart 
+                   <h4> Add to Cart </h4>
                     <!-- <i class='bx bx-cart-alt'></i> -->
                     </button>
                 </a>
                 <!-- <button type="button" class="btn">Compare</button> -->
             </div>
+            </form>
         </div>
-    </form>
-    </div>
+    
     
     <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe>
 </body>

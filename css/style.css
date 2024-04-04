@@ -146,6 +146,11 @@ header {
     transition: 0.5s;
 }
 
+.navbar h2{
+    color: #e9f4e3;
+    position:relative;
+}
+
 .index-cart{
     color: #004225;
     font-size: 40;
