@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label for="otp">OTP Code </label>
-                <input type="text" name="otp" class="form-control" required>
+                <input type="text" name="otp" class="form-control" required maxlength="5">
             </div>
 
             <button type="submit">Submit</button>

@@ -4,85 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Button Click</title>
-  <style>
-    #successModal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background-color: white;
-      color:#4CAF50 ;
-      z-index: 1;
-      border-radius: 10px;
-      border: 2px solid #4CAF50;
-      height: 150px;
-      width: 200px;
-    }
-
-    .sucess{
-      width: 50px;
-            padding: 10px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-             width: calc(100% - 5px);
-    }
-
-.gif{
-     background: url('gif4.gif') no-repeat center center;
-   margin-left: 25%;
-    align-content: center;
-    height: 95px;
-    width: 95px;
-    margin-bottom: 20px;
-}
-
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-     // background-color: white;
-      backdrop-filter: blur(2px);
-      z-index: 1;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="divs.css">
 </head>
 <body>
-
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 <div id="overlay"></div>
 
 <div id="successModal">
   <div class="gif"></div>
   <button onclick="redirectToIndex()" class="sucess">OK</button>
 </div>
+<br>
 
-<script>
-  function showSuccess() {
-    var overlay = document.getElementById('overlay');
-    var successModal = document.getElementById('successModal');
-
-    overlay.style.display = 'block';
-    successModal.style.display = 'block';
-  }
-
-  function hideSuccess() {
-    var overlay = document.getElementById('overlay');
-    var successModal = document.getElementById('successModal');
-
-    overlay.style.display = 'none';
-    successModal.style.display = 'none';
-  }
-
-function redirectToIndex() {
-    hideSuccess();
-    // Redirect to index.php
-    window.location.href = 'option.php';
-  }
+<script src="divs.js">
 </script>
 
 </body>

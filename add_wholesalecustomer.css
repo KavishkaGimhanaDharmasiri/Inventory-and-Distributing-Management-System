@@ -1,0 +1,105 @@
+body {
+            height: 100%;
+        }
+        .container {
+           background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            min-width: 320px;
+            overflow-y: auto;
+            overflow: visible;
+            border: 1px solid #4caf50;
+            border-radius: 15px;
+        }
+        select, input, button {
+            width: calc(100% - 1px); /* Adjusted width to account for padding */
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 0px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            border:1px solid #4caf50;   
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .alert {
+            margin-top: 15px;
+            padding: 10px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 15px;
+        }
+        a{
+            text-decoration: none;
+            color:white;
+            }
+        
+        .form-control{
+            margin-left: 0;
+        }
+
+        @media (max-width: 600px) {
+            .option {
+                width: 100%;
+            }
+        }
+        hr{
+            background-color: red;
+            color: red;
+            line-height: 2px;
+        }
+        #successModel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: white;
+      color:#4CAF50 ;
+      z-index: 1;
+      border-radius: 15px;
+      border: 2px solid indianred;
+      height: 150px;
+      width: 210px;
+    }
+      .suces{
+      width: 50px;
+            padding: 10px;
+            background-color: indianred;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+             width: calc(100% - 5px);
+    }

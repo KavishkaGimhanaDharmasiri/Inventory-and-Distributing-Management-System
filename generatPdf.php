@@ -38,6 +38,8 @@ function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaym
     $login_fname=$_SESSION["user_log_fname"];
     $login_lname=$_SESSION["user_log_lname"];
 
+    
+
     // Set document information
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor('Lotus Electricals (PVT) LTD');

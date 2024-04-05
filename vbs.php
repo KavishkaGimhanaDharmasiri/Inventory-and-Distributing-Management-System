@@ -1,5 +1,4 @@
 <?php
-session_start();
 	ob_start();
     include("db_connection.php");
     require_once('tcpdf/tcpdf.php');
@@ -13,11 +12,11 @@ session_start();
     $totalAmount = $_SESSION['totalAmount'];
     $selectedPaymentMethod =$_SESSION['selected_payment_method'];
 
-
-
 // Now call the function
-generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod,$connection);
+
+
 date_default_timezone_set('Asia/Colombo');
+generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod,$connection);
 
 function getPaymentMethodPriced($mainCategory, $subCategory, $connection)
 {
@@ -32,7 +31,9 @@ function getPaymentMethodPriced($mainCategory, $subCategory, $connection)
 }
 
 
+
 function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod, $connection){
+    include("db_connection.php");
 	 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $storename=$_SESSION['selected_store'];
     $totalAmount = $_SESSION['totalAmount'];
@@ -171,12 +172,23 @@ function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaym
 
     $pdf->writeHTML($html, true, false, true, false, '');
 
-    // Save the PDF to a file (modify the filename as needed)
-    $pdfFileName = $storename.'_order_receipt.pdf';
+    //$pdfDirectory = $_SERVER['DOCUMENT_ROOT'] . 'pdf/';  // Use the server's document root
+    $orderID = 1; //$_SESSION['ord_id'];  // Replace this with your actual order ID
+    $pdfFileName = $storename . '_order_receipt_' . $orderID . '.pdf';  // Include order ID in the filename
+    $pdfFilePath = $pdfDirectory . $pdfFileName;
 
+   // $pdf->Output($pdfFilePath, 'F');  // Save the PDF file on the server
+
+    // Store the file name in the database
+    $insertQuery = "INSERT INTO generated_pdfs (ord_id, pdf_path) VALUES ('$orderID', '$pdfFileName')";
+    mysqli_query($connection, $insertQuery);
+
+    // Output the PDF to the browser for download
     $pdf->Output($pdfFileName, 'D');
-   // header('Location:divs.php');
+
+   //header('Location:divs.php');
 }
+
 
 
 ?>

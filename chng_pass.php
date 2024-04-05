@@ -2,6 +2,7 @@
 session_start();
 include("db_connection.php");
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Include your database connection file
 
@@ -23,14 +24,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result) {
             // Password update successful
-           $sucess_message="Password Change Sucessfully.";
-           echo '<script>window.location.href = "divs.php";</script>';
+          // header('Location:divs.php');
+            echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+                    <button onclick="redirectToIndex()" class="sucess">OK</button>
+                    </div>';
         } else {
-            // Password update failed
+            
             $error_message = "Password update failed. Please try again.";
         }
     }
-
+unset($_SESSION['code']);
+session_write_close();
     // Close the database connection
     mysqli_close($connection);
 }
@@ -43,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Change Password</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="divs.css">
     <style type="text/css">
         .alertsucess {
             margin-top: 15px;
@@ -50,9 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #fff;
             background-color: #4caf50;
             border: 1px solid #f5c6cb;
-            border-radius: 4px;
+            border-radius: 15px;
             text-align: center;
         }
+    
     </style>
 </head>
 <body>
@@ -65,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '<div class="alert alert-danger">' . $error_message . '</div>';
         }
          else if (isset($sucess_message)) {
-            echo '<div class="alertsucess">' . $sucess_message . '</div>';
+    
+            
         }
 
         ?>
@@ -76,15 +83,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php
 
 // Check if the 'username' key exists in the $_SESSION array
-if (isset($_SESSION["user_log_fname"])) {
     // If it exists, assign its value to the $username variable
-    $username=$_SESSION["user_log_fname"];
+    $username=$_SESSION["username"];
     // Output the input field with the username value
     echo "<input type='text' name='username' class='form-control' required value='" . $username . "' readonly>";
-} else {
-    // If the 'username' key doesn't exist, you can provide a default value or handle it accordingly
-    echo "<input type='text' name='username' class='form-control' required value='Username not found. Enter Your Username'>";
-}
 ?>
 
 
@@ -106,5 +108,28 @@ if (isset($_SESSION["user_log_fname"])) {
             <button type="reset">Clear</button>
         </form>
     </div>
+    <script>
+function showSuccess() {
+    var overlay = document.getElementById('overlay');
+    var successModal = document.getElementById('successModal');
+
+    overlay.style.display = 'block';
+    successModal.style.display = 'block';
+  }
+
+  function hideSuccess() {
+    var overlay = document.getElementById('overlay');
+    var successModal = document.getElementById('successModal');
+
+    overlay.style.display = 'none';
+    successModal.style.display = 'none';
+  }
+
+function redirectToIndex() {
+    hideSuccess();
+    // Redirect to index.php
+    window.location.href = 'option.php';
+  }
+    </script>
 </body>
 </html>

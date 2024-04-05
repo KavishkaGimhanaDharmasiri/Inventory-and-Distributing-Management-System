@@ -1,8 +1,24 @@
 <?php
 session_start();
 include("db_connection.php");
+require_once('den_fun.php');
+require_once('seq.php');
+
+if(!isset($_SESSION['index_visit']) || !$_SESSION['index_visit'] || !isset($_SESSION["user_id"] ) || !isset($_SESSION["state"]) ){
+    
+acess_denie();
+    exit();
+
+}
+if(window.back()){
+    
+}
+else{
 
 $user_idn=$_SESSION["user_id"];
+
+$_SESSION['option_visit']=true;
+}
 
 $query = "SELECT * FROM users WHERE user_id = '$user_idn'";
     $result = mysqli_query($connection, $query);
@@ -19,15 +35,15 @@ $query = "SELECT * FROM users WHERE user_id = '$user_idn'";
             $_SESSION["user_log_email"] = $row["email"];
 }
 }
-unset($_SESSION['order_details']);
-unset($_SESSION['totalAmount']);
-unset($_SESSION['paymentAmount']);
-unset($_SESSION['balance']);
-unset($_SESSION['selected_payment_method']);
-unset($_SESSION['selected_store']);
+    unset($_SESSION['order_details']);
+    unset($_SESSION['totalAmount']);
+    unset($_SESSION['paymentAmount']);
+    unset($_SESSION['balance']);
+    unset($_SESSION['selected_payment_method']);
+    unset($_SESSION['selected_store']);
 
-// End the session
-session_write_close();
+    // End the session
+    session_write_close();
 ?>
 
 <!DOCTYPE html>
@@ -37,103 +53,83 @@ session_write_close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Options</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .options-container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            border: 2px solid #4caf50;
-           
-        }
+    <link rel="stylesheet" type="text/css" href="option.css">
+    <link rel="stylesheet" type="text/css" href="sidebarnav.css">
+    <link rel="stylesheet" type="text/css" href="seqnav.css">
+       <style>
+       
+  </style>
 
-        .option {
-            width: 45%;
-            margin-bottom: 20px;
-            background-color: #4caf50;
-            color: #fff;
-            text-align: center;
-           padding: 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            padding-right:5px;
-            
-    
-        }
-        a{
-            text-decoration: none;
-            color:white;
-    
-
-        }
-
-        .option:hover {
-            background-color: #45a049;
-        }
-
-        @media (max-width: 600px) {
-            .option {
-                width: 100%;
-            }
-        }
-
-        .profile-icon {
-            background-image: url('profile.png');
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            height: 20px;
-            width: 20px;
-            margin-bottom: 500px;
-            
-        }
-        .profile-icon {
-            
-        }
-
-        .profile-panel {
-            display: none;
-            position: fixed;
-            top: 32%;
-            left: 67%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            width: 190px;
-                border:1px solid #45a049;
-        }
-
-    </style>
     </head>
 <body>
+    <?php 
+sequence();
+?>
+
+
+<a href="" onclick="logout()">logout</a>
     
+
+
+   
+
     <div class="options-container">
-    <div class="option" ><a href="new_order.php " class="option">Add Order</a></div>
-    <div class="option"><a href="view_order.php">View Order</a></div>
-    <div class="option"><a href="add_customer.php">Add Customer</a></div>
-    <div class="option"><a href="report.php">Generate Report</a></div>
-    <div class="option"><a href="summery.php">Summary</a></div>
+
+    <a href="new_order.php" class="option" id="option1" style="display: none;"><div>Add Order</div></a>
+    <a href="view_order.php" class="option" id="option2" style="display: none;"><div>View Order</div></a>
+    <a href="add_wholesalecustomer.php" class="option" id="option3" style="display: none;"><div>Add Customer</div></a>
+    <a href="report.php" class="option" id="option4" style="display: none;"><div >Generate Report</div></a>
+    <a href="summery.php" class="option" id="option5" style="display: none;"><div >Summary/Info</div></a>
+    <a href="Admin_feed.php" class="option" id="option6" style="display: none;"><div>Distribute Products</div></a>
+    <a href="create_order.php" class="option" id="option7" style="display: none;"><div >Pre Order</div></a>
+    <a href="my_order.php" class="option" id="option8" style="display: none;"><div>My Orders</div></a>
+    <a href="System_Manage.php" class="option" id="option9" style="display: none;"><div>System Manage</div></a>
+    
 </div>
-<!--<div class="back-button" onclick="history.back()"><h4>Back</h4></div>-->
-    <div class="profile-icon" onclick="toggleProfilePanel()" ><button style="background-color: transparent;" ><b><b><font size="15px" color="black">₪</font></b><b></button></div>
+
+    </div>
 
     <div id="profilePanel" class="profile-panel">
-        <h4 style="text-align: center;">User Profile</h4>
-        <div id="profileDataContainer"></div>
-        <?php echo '<h5> Logging :'. $_SESSION["state"].'<br><h5> Name : '. $_SESSION["user_log_fname"]." ".$_SESSION["user_log_lname"]. '<br><br>Email : '.$_SESSION["user_log_email"].'</h5>'; ?>
-        <button onclick="changePassword()" class="changePass">Change Password</button>
-        <br><br>
+
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="our-team">
+        <div class="picture">
+          <img class="img-fluid" style="height: 100px; width: 100px;" src="https://picsum.photos/id/77/1631/1102">
+        </div>
+        <div class="team-content">
+          <?php  echo '<h3 class="name">'.$_SESSION["user_log_fname"]." ".$_SESSION["user_log_lname"].'</h3>
+          <h4 class="title">'. $_SESSION["state"].'</h4><h4 class="title">'.$_SESSION["user_log_email"].'</h4>'; ?>
+<button onclick="changePassword()" class="changePass">Change Password</button>
         
-        <button type="submit"  onclick="logout()" name="logout" id="logout" style="background: transparent;border: 2px solid red;color: red;" >Logout</button>
+        <button type="submit"  onclick="logout()" name="logout" id="logout" style="background: transparent;color: green;" >Logout</button>
+        </div>
+      </div>
+       
     </div>
+      </div>
+
+
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+        <?php if ($_SESSION["state"] === 'seller')  : ?>
+            document.getElementById("option1").style.display = "block";
+            document.getElementById("option2").style.display = "block";
+            document.getElementById("option3").style.display = "block";
+            document.getElementById("option4").style.display = "block";
+            document.getElementById("option5").style.display = "block";
+        <?php elseif ($_SESSION["state"] === 'admin'): ?>
+            document.getElementById("option4").style.display = "block";
+            document.getElementById("option5").style.display = "block";
+            document.getElementById("option6").style.display = "block";
+            document.getElementById("option9").style.display = "block";
+            
+        <?php elseif ($_SESSION["state"] === 'wholeseller'): ?>
+            document.getElementById("option7").style.display = "block";
+            document.getElementById("option8").style.display = "block";
+        <?php endif; ?>
+
+    });
      
         function toggleProfilePanel() {
         var profilePanel = document.getElementById('profilePanel');
@@ -155,9 +151,33 @@ session_write_close();
             window.location.href = "index.php";
         }
     };
-    xmlhttp.open("GET", "index.php", true);
+
+    // Send a request to a PHP script that destroys the session
+    xmlhttp.open("GET", "logout.php", true); //  logout.php is the script that destroys the session
     xmlhttp.send();
 }
+  function showSuccess() {
+    var overlay = document.getElementById('overlay');
+    var successModal = document.getElementById('successModel');
+
+    overlay.style.display = 'block';
+    successModal.style.display = 'block';
+  }
+
+  function hideSuccess() {
+    var overlay = document.getElementById('overlay');
+    var successModal = document.getElementById('successModel');
+
+    overlay.style.display = 'none';
+    successModal.style.display = 'none';
+  }
+
+function redirectToIndex() {
+    hideSuccess();
+    // Redirect to index.php
+    window.location.href = 'index.php';
+  }
+  
 </script>
 </body>
 </html>

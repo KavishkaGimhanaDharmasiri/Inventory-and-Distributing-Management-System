@@ -1,0 +1,114 @@
+.order-form {
+          background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            min-width: 320px;
+            overflow-y: auto;
+            overflow: visible;
+            border: 1px solid #4caf50;
+ 
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        select, input, button {
+            width: calc(100% - 1px); /* Adjusted width to account for padding */
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            border:1px solid #4caf50;     
+        }
+           
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .subcategory-container {
+            margin-top: 15px;
+        }
+
+        /* Additional style for table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        /* Additional style for the Confirm Order button */
+        .confirm-order-button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .confirm-order-button:hover {
+            background-color: #45a049;
+        }
+      
+        input[type='checkbox'] {
+             accent-color: #45a049;
+        }
+        #confirm_check{
+            margin-right: 20px;
+            float: left:10px;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            text-align: center;
+            margin-left: 20%;
+            
+        }
+
+         .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 100%;
+            background-color: white;
+            color: #4caf50;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+          .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }

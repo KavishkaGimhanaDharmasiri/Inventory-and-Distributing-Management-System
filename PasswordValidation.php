@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-// Include your database connection file
-//require_once('email_sms.php');
+require_once('email_sms.php');
 include("db_connection.php");
 
 function generateRandomCode($length = 5) {
@@ -38,13 +37,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $firstname=$row["firstName"];
 
      $Subject="Password Change Request";
-            $body="Vertify your Email address\n\n Enter Below Vertification Code to Continue Change Password \n\nVertification code is :  ".$code."\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+            $body="Vertify your Email address\n\nEnter Below Vertification Code to Continue Change Password \n\nVertification code is :  ".$code."\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
 
-        // sendmail($Subject,$body,$user,$firstname);
+
+        sendmail($Subject,$body,$user,$firstname);
 
         // Redirect to the OTP validation page
         header("Location: otp_validation.php");
-        exit();
+        //exit();
     } else {
         // Display an error message if credentials are invalid
         $error_message = "Invalid Email Address.";
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label for="email">E-Mail Address </label>
-                <input type="text" name="email" class="form-control" required>
+                <input type="email" name="email" class="form-control" required placeholder="noreply@gmail.com">
             </div>
 
             <button type="submit">Submit</button>

@@ -1,5 +1,12 @@
 <?php 
 session_start();
+require_once('den_fun.php');
+if(!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])  ){
+    acess_denie();
+    exit();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -8,6 +15,7 @@ session_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="divs.css">
     <style>
         body{
             height: 100%;
@@ -17,13 +25,10 @@ session_start();
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 100%;
             min-width: 320px;
+            border: 1px solid #4caf50;
             overflow-y: auto;
-            overflow: visible;
-            border: 2px solid #4caf50;
-            border-radius: 15px;
-            
+            overflow: visible; 
         }
 
         label {
@@ -31,7 +36,6 @@ session_start();
             margin-bottom: 10px;
             color: #333;
         }
-
         select, input, button {
             width: calc(100% - 1px); /* Adjusted width to account for padding */
             padding: 10px;
@@ -59,7 +63,7 @@ session_start();
         }
 
         .order-details-table th, .order-details-table td {
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
@@ -69,20 +73,52 @@ session_start();
             color: #fff;
         }
     
-    
     </style>
+
     <title>Payment Information</title>
 </head>
 <body>
     <div class="payment-form">
-        <form  action="" method="post">
+        <form  action="vm.php" method="post">
         <h2>Order Details</h2>
+    
 
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include("db_connection.php");
 
+require_once('email_sms.php');
 
-//require_once('email_sms.php');
+if(!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])  ){
+    echo'<div id="overlay"></div>
+
+<div  style ="position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: white;
+      color:#4CAF50 ;
+      z-index: 1;
+      border-radius: 15px;
+      border: 2px solid indianred;
+      height: 70px;
+      width: 150px;">
+  <p style="color: indianred; font-size: 13pt; font-weight: bold; font-family: Calibri; margin-top: 0px; text-align: center;">Acess Denied</p>
+  <button  style="width: 50px;
+            padding: 8px;
+            background-color: indianred;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+             width: calc(100% - 5px);"><a href="index.php" style="font-weight: bold; text-decoration: none;color: white;">OK</a></button>
+</div> ';
+    exit();
+}
+else{
 
 // Fetch main categories from the database (you might want to include this in your db_connection.php)
 $query = "SELECT DISTINCT main_cat FROM product";
@@ -91,7 +127,6 @@ $result = mysqli_query($connection, $query);
 if (!$result) {
     die("Database query failed: " . mysqli_error($connection));
 }
-
 
 
 // Function to get subcategories for a main category
@@ -126,11 +161,9 @@ function getPaymentMethodPrices($mainCategory, $subCategory,$connection)
     return mysqli_fetch_assoc($result);
 }
 
-
 $orderDetails = $_SESSION['order_details'] ?? [];
 //$totalAmount = $_SESSION['total_amount'] ?? 0;
 $select_store=$_SESSION['selected_store'];
-
 
 function determinePriceRange($price)
 {
@@ -145,11 +178,10 @@ function determinePriceRange($price)
     }
 }
 
-
 if (!empty($orderDetails)) {
     echo "<table class='order-details-table'>";
     echo "<thead>";
-    echo "<tr><th>Product</th><th>Unit Price</th><th>Count</th><th>Subtotal</th></tr>";
+    echo "<tr><th style='text-align:center;'>Product</th><th>Unit Price</th><th>Count</th><th>Subtotal</th></tr>";
     echo "</thead>";
     echo "<tbody id='order_details_body'>";
 
@@ -161,10 +193,6 @@ if (!empty($orderDetails)) {
 
    foreach ($orderDetails as $order) {
     $prices = getPaymentMethodPrices($order['main_category'], $order['sub_category'],$connection);
-
-    //echo "<pre>";
-   // print_r($prices); // Debug line: Print prices array
-   // $_SESSION['selected_payment_method']=$selectedPaymentMethod;
 
     switch ($selectedPaymentMethod) {
         case 'cash':
@@ -229,10 +257,10 @@ if (!empty($orderDetails)) {
 
         echo "<tr>";
        // echo "<td>{$order['main_category']}</td>";
-        echo "<td>{$order['sub_category']}</td>";
-        echo "<td>{$unitprice}</td>";
-        echo "<td>{$order['count']}</td>";
-        echo "<td>{$subtotal}</td>"; // Display Subtotal
+        echo "<td><b>{$order['sub_category']}</td>";
+        echo "<td><b>{$unitprice}</td>";
+        echo "<td><b>{$order['count']}</td>";
+        echo "<td><b>{$subtotal}</td>"; // Display Subtotal
         echo "</tr>";
     }
 
@@ -278,114 +306,148 @@ if ($result && mysqli_num_rows($result) == 1) {
 }
 }
 
-function insertdata(){
+
+function insertdata() {
     include("db_connection.php");
     $orderDetails = $_SESSION['order_details'] ?? [];
+
     try {
         $pdo->beginTransaction();
-    // Extract values from the form
+
+        // Extract values from the form
         $route_id = $_SESSION["route_id"];
         $store_name = $_SESSION['selected_store'];
         $total = $_SESSION['totalAmount'];
-        $payment_date = date('Y-m-d H:i:s'); // Adjusted the date format
+        $payment_date = date('Y-m-d H:i:s');
         $payment_method = $_SESSION['selected_payment_method'];
-        $payment_amout = $_SESSION['paymentAmount']; // Added a missing semicolon
+        $payment_amount = $_SESSION['paymentAmount'];
         $pay_period = ($payment_method == 'credit') ? $_POST['credit_period'] : null;
         $balance = $_SESSION['balance'];
 
-    // Your INSERT query for the 'payment' table
-        $query1 = "INSERT INTO payment(route_id, store_name, total, payment_date, payment_method, pay_period, payment_amout, balance) 
-               VALUES (:route_id, :store_name, :total, :payment_date, :payment_method, :pay_period, :payment_amout, :balance)";
+        foreach ($orderDetails as $order) {
+            $mainCategory = $order['main_category'];
+            $subCategory = $order['sub_category'];
+            $count = $order['count'];
 
-    // Prepare and execute the query
-    $stmt = $pdo->prepare($query1);
-    $stmt->bindParam(':route_id', $route_id);
-    $stmt->bindParam(':store_name', $store_name);
-    $stmt->bindParam(':total', $total);
-    $stmt->bindParam(':payment_date', $payment_date);
-    $stmt->bindParam(':payment_method', $payment_method);
-    $stmt->bindParam(':pay_period', $pay_period);
-    $stmt->bindParam(':payment_amout', $payment_amout);
-    $stmt->bindParam(':balance', $balance); // Assuming balance starts at 0, adjust as needed
-    $stmt->execute();
+            // Update feed_item table
+            $query = "UPDATE feed_item SET count = count - :count WHERE main_cat = :main_cat AND sub_cat = :sub_cat";
 
-    // Get the last inserted ID (ord_id) from the 'payment' table
-    $ord_id = $pdo->lastInsertId();
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':count', $count);
+            $stmt->bindParam(':main_cat', $mainCategory);
+            $stmt->bindParam(':sub_cat', $subCategory);
 
-    foreach ($orderDetails as $orderDetail) {
-        $mainCategory = $orderDetail['main_category'];
-        $subCategory = $orderDetail['sub_category'];
-        $count = $orderDetail['count'];
+            if ($stmt->execute()) {
+                // Successful update
+            } else {
+                // Error occurred while updating the database
+                echo '<script>alert("Error: Unable to update product quantity.\n\nContact Adminstrator");</script>';
+                return; // Exit function
+            }
+}
 
-        // Your INSERT query for the 'orders' table
-        $query2 = "INSERT INTO orders (ord_id, route_id, store_name, main_cat, sub_cat, order_count) 
-                   VALUES (:ord_id, :route_id, :store_name, :main_cat, :sub_cat, :order_count)";
+        // Insert into primary_orders table
+        $ord_type = "sale";
+        $ord_state = "complete";
+        $ord_date = date('Y-m-d');
+        $query3 = "INSERT INTO primary_orders (route_id, ord_date, store_name, order_type, order_state)
+                   VALUES (:route_id, :ord_date, :store_name, :order_type, :order_state)";
 
-        $stmt2 = $pdo->prepare($query2);
-        $stmt2->bindParam(':ord_id', $ord_id);
-        $stmt2->bindParam(':route_id', $route_id);
-        $stmt2->bindParam(':store_name', $store_name);
-        $stmt2->bindParam(':main_cat', $mainCategory);
-        $stmt2->bindParam(':sub_cat', $subCategory);
-        $stmt2->bindParam(':order_count', $count);
-        $stmt2->execute();
+        $stmt1 = $pdo->prepare($query3);
+        $stmt1->bindParam(':route_id', $route_id);
+        $stmt1->bindParam(':ord_date', $ord_date);
+        $stmt1->bindParam(':store_name', $store_name);
+        $stmt1->bindParam(':order_type', $ord_type);
+        $stmt1->bindParam(':order_state', $ord_state);
+        $stmt1->execute();
+        $ord_id = $pdo->lastInsertId();
+
+        // Insert into orders table
+        foreach ($orderDetails as $orderDetail) {
+            $mainCategory = $orderDetail['main_category'];
+            $subCategory = $orderDetail['sub_category'];
+            $count = $orderDetail['count'];
+
+            $query2 = "INSERT INTO orders (ord_id, main_cat, sub_cat, order_count) 
+                       VALUES (:ord_id, :main_cat, :sub_cat, :order_count)";
+            $stmt2 = $pdo->prepare($query2);
+            $stmt2->bindParam(':ord_id', $ord_id);
+            $stmt2->bindParam(':main_cat', $mainCategory);
+            $stmt2->bindParam(':sub_cat', $subCategory);
+            $stmt2->bindParam(':order_count', $count);
+            $stmt2->execute();
+        }
+
+        // Insert into payment table
+        $query1 = "INSERT INTO payment (ord_id, route_id, store_name, total, payment_date, payment_method, pay_period, payment_amout, balance) VALUES (:ord_id, :route_id, :store_name, :total, :payment_date, :payment_method, :pay_period, :payment_amount, :balance)";
+        $stmt = $pdo->prepare($query1);
+        $stmt->bindParam(':ord_id', $ord_id);
+        $stmt->bindParam(':route_id', $route_id);
+        $stmt->bindParam(':store_name', $store_name);
+        $stmt->bindParam(':total', $total);
+        $stmt->bindParam(':payment_date', $payment_date);
+        $stmt->bindParam(':payment_method', $payment_method);
+        $stmt->bindParam(':pay_period', $pay_period);
+        $stmt->bindParam(':payment_amount', $payment_amount);
+        $stmt->bindParam(':balance', $balance);
+        $stmt->execute();
+
+        // Commit the transaction
+        $pdo->commit();
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an error
+        $pdo->rollBack();
+        echo "Failed: " . $e->getMessage();
     }
-
-    // Commit the transaction
-    $pdo->commit();
-
-} catch (Exception $e) {
-    // Rollback the transaction in case of an error
-    $pdo->rollBack();
-    echo "Failed: " . $e->getMessage();
 }
 
-}
 
 if (isset($_POST['generate_pdf'])) {
-
+    // Insert data
     insertdata();
-        echo '<script>window.location.href = "vbs.php";</script>';
 
-   /* ob_end_clean();
-    require_once('vbs.php');
-    ob_end_clean();
-    generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod,$connection);
-    header("Location: divs.php");*/
-        
-    
-
-
-    
-
-
-    $telephone=$_SESSION['telephone'];
+    // Initialize session variables
+    $telephone = $_SESSION['telephone'];
     $modifiedNumber = '94' . substr($telephone, 0);
-    $email=$_SESSION['email'];
+    $email = $_SESSION['email'];
     $totalAmount = $_SESSION['totalAmount'];
-    $paymentAmout=$_SESSION['paymentAmount'] ;
-    $balance=$_SESSION['balance'];
-    $select_store=$_SESSION['selected_store'];
-    $Subject="Order Details";
-    $body="\n\nDear Customer,\n\nThe Purchase that ".$select_store." make on ".$localTime." is Total Amount is : Rs." .$totalAmount. " And You have Paid Rs.". $paymentAmout." And Your Outstanding Balance is : Rs. ".$balance."\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+    $paymentAmout = $_SESSION['paymentAmount'];
+    $balance = $_SESSION['balance'];
+    $select_store = $_SESSION['selected_store'];
+    $selectedPaymentMethod=$_SESSION['selected_payment_method'];
+    $localTime = date("Y-m-d H:i:s");
+    $Subject = "Order Details";
 
-    //sendmail($Subject,$body,$_SESSION['email'],$_SESSION['firstname']);
+    // Email body
+    $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+
+    // Send email
+   sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
+
+    // Prepare SMS body
     $smsbody = urlencode($body);
-   //sendsms($modifiedNumber,$smsbody);
+
+    // Send SMS
+    sendsms($modifiedNumber, $smsbody);
+
+    // Start PDF generation in a separate process
+    //direct to option.php
     
 
-    exit(); // exit to prevent further execution of the script
+  
+}
 
-    }
+}
+
 ?>
 
-  <form>
-
-<h2>Payment Information</h2>
-        
-                
-<label for="payment_method">Payment Method:</label>
+<h2>Payment Information</h2>             
+<label for="payment_method"><b>Payment Method:</label>
 <select name="payment_method" id="payment_method"  onchange="toggleCustomPaymentFields()">
+    <?php
+                if (isset($_SESSION['selected_payment_method'])){ 
+                    echo "<option value='{$_SESSION['selected_payment_method']}' selected>{$_SESSION['selected_payment_method']}</option>";
+                }?>
     <option value="">Select Payment Method</option>
     <option value="cash">Cash</option>
     <option value="check">Check</option>
@@ -409,9 +471,7 @@ if (isset($_POST['generate_pdf'])) {
             <input type="text" name="credit_period" id="credit_period" style="display: none;">
 
 
-            <button type="submit" name="submit_payment">Confirm Payment Method</button>
-
-            
+            <button type="submit" name="submit_payment"><b>Confirm Payment Method</button>
 
             <label for="total_amount">Total Amount : Rs.</label>
             <input type="text" name="total_amount" id="total_amount" value="<?php echo isset($totalAmount) ? $totalAmount : ''; ?>" readonly>
@@ -447,7 +507,7 @@ if (isset($_POST['generate_pdf'])) {
         });
     });
 
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         var paymentMethodSelect = document.getElementById('payment_method');
         var range1 = document.getElementById('custom_payment_fields');
 
@@ -460,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
- document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         var paymentMethodSelect = document.getElementById('payment_method');
         var custompayment = document.getElementById('custom_payment');
        
@@ -515,8 +575,15 @@ function toggleCustomPaymentFields() {
     }
 }
 
-
-
+ document.addEventListener('DOMContentLoaded', function() {
+    // Disable form elements after submission
+    document.getElementById('paymentform').addEventListener('submit', function() {
+        var formElements = this.elements;
+        for (var i = 0; i < formElements.length; i++) {
+            formElements[i].disabled = true;
+        }
+    });
+});
 </script>
 </body>
 </html>

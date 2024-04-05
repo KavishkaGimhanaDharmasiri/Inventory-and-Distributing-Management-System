@@ -1,9 +1,9 @@
 <?php
 
-$dbhost = 'fdb1034.awardspace.net';
-$dbname = '4435655_lotus';
-$dbuser = '4435655_lotus';
-$dbpass = 'WEhfT7?dW#y*RZ8';
+$dbhost = 'localhost';
+$dbname = 'lotus';
+$dbuser = 'root';
+$dbpass = '';
 
 // Create a PDO connection
 try {
@@ -19,6 +19,4 @@ $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 if (!$connection) {
     die("MySQLi Connection failed: " . mysqli_connect_error());
 }
-
-
 ?>

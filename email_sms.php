@@ -3,7 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require('vendor/phpmailer/phpmailer/src/Exception.php');
+require'vendor/phpmailer/phpmailer/src/Exception.php';
 require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/phpmailer/src/SMTP.php';
 
@@ -68,7 +68,7 @@ function sendsms($number,$message){
 // Replace these values with your actual user ID, API key, and sender ID
 $userId = '';
 $apiKey = '';
-$senderId = '';
+$senderId = 'NotifyDEMO';
 
 
 // Get custom content from the form or any source

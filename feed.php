@@ -13,6 +13,13 @@ if (!$result) {
     die("Database query failed: " . mysqli_error($connection));
 }
 
+$route_query = "SELECT * FROM route";
+$result1 = mysqli_query($connection, $route_query);
+
+if (!$result1) {
+    die("Database query failed: " . mysqli_error($connection));
+}
+
 // Fetch subcategories for the selected main category
 function getSubcategories($mainCategory, $connection)
 {
@@ -91,18 +98,22 @@ date_default_timezone_set('Asia/Colombo');
 // Get the current local time
 $localTime = date('Y-F-d');
 
-    $feed_query = "INSERT INTO feed (route_id, feed_date) 
-                             VALUES ('$route_id','$localTime')";
+    $feed_query = "INSERT INTO feed (route_id, feed_date) VALUES ('$route_id','$localTime')";
     mysqli_query($conn, $feed_query);
 
+    // Get the user_id of the inserted order
+    $feed_id = mysqli_insert_id($conn);
 
-    
+    foreach ($orderDetails as $orderDetail) {
+        $mainCategory = $orderDetail['main_category'];
+        $subCategory = $orderDetail['sub_category'];
+        $count = $orderDetail['count'];
 
-    // Get the user_id of the inserted customer
-    $user_id = mysqli_insert_id($conn);
+        $query2 = "INSERT INTO feed_item (feed_id, main_cat, sub_cat, order_count) 
+                   VALUES ($feed_id, $mainCategory, $subCategory, $count)";
+         mysqli_query($conn, $query2);
 
-
-
+    }
 
     // Get necessary data for redirection
     $mainCategory = $_POST['main_category'];
@@ -123,36 +134,22 @@ $localTime = date('Y-F-d');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            background: radial-gradient(circle, rgba(76,175,80,1) 0%, rgba(247,252,248,1) 0%, rgba(250,253,251,1) 23%, rgba(252,254,253,1) 36%, rgba(255,255,255,1) 47%, rgba(246,251,246,1) 59%, rgba(228,243,229,1) 68%, rgba(171,218,173,1) 100%, rgba(76,175,80,1) 100%);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            max-height: 200vh;
-            background-size:inherit ;
-            
-        }
-
-
         .order-form {
-           background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 100%;
-    max-width: 400px;
-    
-            }
+          background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            min-width: 320px;
+            overflow-y: auto;
+            overflow: visible;
+            border: 1px solid #4caf50;
+ 
+        }
         .form-group {
-    margin-bottom: 15px;
-}
+            margin-bottom: 15px;
+        }
 
         label {
             display: block;
@@ -166,14 +163,14 @@ $localTime = date('Y-F-d');
             box-sizing: border-box;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 15px;
         }
 
         button {
             background-color: #4caf50;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 15pxpx;
             cursor: pointer;
         }
 
@@ -184,8 +181,6 @@ $localTime = date('Y-F-d');
         .subcategory-container {
             margin-top: 15px;
         }
-
-        /* Additional style for table */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -208,7 +203,7 @@ $localTime = date('Y-F-d');
             background-color: #4caf50;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 15px;
             padding: 10px;
             cursor: pointer;
             margin-top: 15px;
@@ -222,8 +217,19 @@ $localTime = date('Y-F-d');
 </head>
 <body>
     <div class="order-form">
-        <form method="POST" action="new_order.php">
-            <label for="main_category">Main Category:</label>
+        <form method="POST" action="feed.php">
+         <label for="Route_name">Route</label>
+            <select name="route" id="route">
+                <option value="">Select Route</option>
+                <?php
+                while ($row = mysqli_fetch_assoc($result1)) {
+                    $selected = (isset($_POST['route']) && $_POST['route'] == $row['route']) ? 'selected' : '';
+                    echo "<option value='{$row['route']}' $selected>{$row['route']}</option>";
+                }
+                ?>
+            </select>
+
+            <label for="main_category">Main Product</label>
             <select name="main_category" id="main_category">
                 <option value="">Select Main Category</option>
                 <?php
@@ -259,14 +265,10 @@ $localTime = date('Y-F-d');
             </div>
 
             <button type="submit" name="add_order">Feed Stock</button>
-            <button type="submit" name="clear_order">Clear Stock</button>
+           
 
             <!-- Display Confirm Order button if there are items in the order -->
-            <?php
-            if (!empty($_SESSION['order_details'])) {
-                echo "<button class='confirm-order-button' type='submit' name='confirm_order'>Confirm Order</button>";
-            }
-            ?>
+
         </form>
 
         <!-- Display orders table -->
@@ -288,6 +290,11 @@ $localTime = date('Y-F-d');
 
             echo "</tbody>";
             echo "</table>";
+
+            if (!empty($_SESSION['order_details'])) {
+                echo "<button class='confirm-order-button' type='submit' name='confirm_order'>Confirm Order</button>";
+                 echo '<button type="button" name="clear_order" style="color:green; background-color:transparent; border:2px solid green">Clear Order</button>';
+            }
         }
         ?>
     </div>
