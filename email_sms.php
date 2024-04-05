@@ -66,7 +66,7 @@ function sendsms($number,$message){
     $apiEndpoint = 'https://app.notify.lk/api/v1/send';
 
 // Replace these values with your actual user ID, API key, and sender ID
-$userId = '';
+$userId = '26835';
 $apiKey = '';
 $senderId = 'NotifyDEMO';
 
