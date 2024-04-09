@@ -102,7 +102,7 @@
             <br>
             <table id="table">
                 <tr>
-                    <td><img src="./Images/lotus.png" alt="logo" id="img"></td>
+                    <td><img src="./Images/Decoration/lotus.png" alt="logo" id="img"></td>
                     <td>
                         <h1 style="color: green;">Lotus</h1>
                     </td>
@@ -111,21 +111,22 @@
 
 
             <h2 style="color: black;" >Sign In</h1>
+                <span id = "username_msg" style="color:red"> </span>
+                <input type="text" placeholder="User Name" id="text" name="username"><br></td>
 
-                <input type="text" placeholder="User Name" id="text"><br></td>
-
-                <input type="password" placeholder="Password" id="text"><br>
+                <span id = "pwd_msg" style="color:red"> </span>
+                <input type="password" placeholder="Password" id="text" name="pwd"><br>
                 <a href=" ">Forgot Your Password ?</a>
 
                 <div id="social-container">
-                    <a href="#" class="social"><img src="./Images/google.png" alt="logo" id="googlelogo"></a>
+                    <a href="#" class="social"><img src="./Images/Decoration/google.png" alt="logo" id="googlelogo"></a>
 
-                    <a href="#" class="social"><img src="./Images/facebook.png" alt="logo" id="fblogo"></a>
+                    <a href="#" class="social"><img src="./Images/Decoration/facebook.png" alt="logo" id="fblogo"></a>
 
-                    <a href="#" class="social"><img src="./Images/instagram.png" alt="logo" id="instalogo"></a>
+                    <a href="#" class="social"><img src="./Images/Decoration/instagram.png" alt="logo" id="instalogo"></a>
                 </div>
 
-                <button type="submit" value="Sign in" id="button">Sign in</button><br>
+                <button type="submit" value="Sign in" id="button" name="signIn">Sign in</button><br>
 
                 <table id="table">
                     <tr>
@@ -138,3 +139,47 @@
     </div>
 
 </body>
+
+<?php
+if(isset($_POST['signIn'])) {
+    $un = $_POST['username'];
+    $pwd = $_POST['pwd'];
+
+    if(empty($un)) {
+        echo "<script type='text/javascript'> text='**Enter username**';
+            document.getElementById('username_msg').innerHTML = text;</script>";
+    }
+
+    if(empty($pwd)) {
+        echo "<script type='text/javascript'> text='**Enter password**';
+            document.getElementById('pwd_msg').innerHTML = text;</script>";
+    }
+
+    if(!empty($un) && !empty($pwd)) {
+        $host = 'localhost';
+        $username = 'root';
+        $password = '';
+        $database = 'retail_website';
+
+        $conn = new mysqli($host, $username, $password, $database);
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        $sql = "SELECT first_name, password FROM user_details WHERE email='$un' AND password='$pwd'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            echo "string";
+            echo "<script type='text/javascript'>window.location.href='Cart.php';</script>";
+            exit;
+        } else {
+            echo "<script type='text/javascript'> text='**Invalide Username or Password**';
+            document.getElementById('pwd_msg').innerHTML = text;</script>";
+        }
+
+        $conn->close();
+    }
+}
+?> 

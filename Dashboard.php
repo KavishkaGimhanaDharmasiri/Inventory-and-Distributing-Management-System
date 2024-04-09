@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lotus</title>
     <link rel="stylesheet" href="css/styledash.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="image/logo.png">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
    
@@ -15,7 +16,7 @@
 <body>
     <?php
 
-include 'Header.php';
+include 'Navibar.php';
 ?>
         
  <section class="home swiper" id="home">
@@ -28,7 +29,7 @@ include 'Header.php';
                     <h1>Order now</h1>
                     <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
                 </div>
-                <img src="Images/cover.jpg" alt="">
+                <img src="Images/Decoration/cover1.jpg" alt="">
             </div>
 
             <div class="swiper-slide container">
@@ -38,7 +39,7 @@ include 'Header.php';
                     <h1>Order now</h1>
                     <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
                 </div>
-                <img src="Images/heaters.jpg" alt="">
+                <img src="Images/Decoration/cover2.jpg" alt="">
             </div>
 
             <div class="swiper-slide container">
@@ -48,7 +49,7 @@ include 'Header.php';
                     <h1>Order now</h1>
                     <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
                 </div>
-                <img src="Images/bulb.jpg" alt="">
+                <img src="Images/Decoration/cover3.jpg" alt="">
             </div>
 
         </div>
@@ -57,7 +58,6 @@ include 'Header.php';
     </section> 
 
     <!--Products-->
-
 
     <div class="products" id="Products">
         <div class="heading">
@@ -93,14 +93,19 @@ $conn = new mysqli($host, $username, $password, $database);
             $img=$row["image"];
 
             echo '<div class="box">
-                   <a href="Products.php">
+                   
                             <div class="image">
                              <img src="data:image;base64,'.base64_encode($img).'" alt="">
                             </div>
                                 
                             <h2>'.$name.'</h2>
-                            <h3>'.$quantity.' Items</h3></a>
-                            </div> ';
+                            <h3>'.$quantity.' Items</h3>
+
+                            <div class="home-text">
+                                <a href="Products.php" class="btn">Shop Now<i class="bx bx-right-arrow-alt"></i></a>
+                            </div>
+
+                    </div> ';
         }
         
     } else {
@@ -118,7 +123,7 @@ $conn = new mysqli($host, $username, $password, $database);
     <!--About-->
     <br><br><br><br><br><br><br><br>
     <div class="about" id="About">
-        <img src="Images/lotus.png" alt="">
+        <img src="Images/Decoration/lotus.png" alt="">
         <div class="about-text">
             <h1>About us</h1>
             <br>
@@ -138,7 +143,6 @@ $conn = new mysqli($host, $username, $password, $database);
                 residential and
                 commercial clients with our extensive range of products.</p>
 
-           
         </div>
     </div>
 
@@ -162,7 +166,7 @@ $conn = new mysqli($host, $username, $password, $database);
                     to search elsewhere.</p>
 
                 <div class="review-profile">
-                    <img src="Images/cus1.jpg" alt="">
+                    <img src="Images/Customer_Img/cus1.jpg" alt="">
                     <h3>Charli</h3>
                 </div>
             </div>
@@ -180,7 +184,7 @@ $conn = new mysqli($host, $username, $password, $database);
                     stringent quality standards for performance and reliability.</p>
 
                 <div class="review-profile">
-                    <img src="Images/cus2.jpg" alt="">
+                    <img src="Images/Customer_Img/cus2.jpg" alt="">
                     <h3>Roy</h3>
                 </div>
             </div>
@@ -198,7 +202,7 @@ $conn = new mysqli($host, $username, $password, $database);
                     provide expert advice and guidance to help you make informed decisions.</p>
 
                 <div class="review-profile">
-                    <img src="Images/cus3.jpg" alt="">
+                    <img src="Images/Customer_Img/cus3.jpg" alt="">
                     <h3>Jhone</h3>
                 </div>
             </div>
@@ -216,7 +220,7 @@ $conn = new mysqli($host, $username, $password, $database);
                     seamless shopping experience, from browsing to checkout and beyond.</p>
 
                 <div class="review-profile">
-                    <img src="Images/cus4.jpg" alt="">
+                    <img src="Images/Customer_Img/cus4.jpg" alt="">
                     <h3>Siri</h3>
                 </div>
             </div>
@@ -257,13 +261,9 @@ $conn = new mysqli($host, $username, $password, $database);
 
     </div>
 
-<?php
-
-        include 'Footer.php';
-    ?>
 
     <div class="copyright">
-        <p>&#169;CarpoolVenom All Right Reserved.</p>
+        <p>&#169;KJ All Right Reserved.</p>
     </div>
 
     <!-- Swiper JS -->

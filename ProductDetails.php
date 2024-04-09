@@ -1,40 +1,35 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Product_Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/productdetails.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+  </head>
+  <body>
+    <?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-compatible" content="IE=edge">
-    <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    <title>Loutos</title>
-
-    <link rel="stylesheet" href="css/productProductdetailstyle.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-</head>
-
-<body>
-<?php
-
-include 'Header.php';
+include 'Navibar.php';
 ?>
-
-<br><br><br>
-
-    <div class="about" id="About">
+<div>
+    <div class = "card-wrapper">
+      <div class = "card">
+        <!-- card left -->
+        <div class="about" id="About">
 
         <div class="about_main">
             <div class="about_image">
                 <div class="about_small_image">
-                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
-                    <img src="Images/cable4.jpg" class="productImage" onclick="functio(this)">
-                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
-                    <img src="Images/cable3.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/Cables/cable3.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/Cables/cable4.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/Cables/cable5.jpg" class="productImage" onclick="functio(this)">
+                    <img src="Images/Cables/cable3.jpg" class="productImage" onclick="functio(this)">
                 </div>
 
                 <div class="image_contaner">
-                    <img src="Images/cable5.jpg" id="imagebox" >
+                    <img src="Images/Cables/cables2.jpg" id="imagebox" >
                 </div>
             </div>
         </div>
@@ -48,58 +43,43 @@ include 'Header.php';
         
     </div>
         
-        
-        <div class="product-content">
-            <form action="" method="post" id="form" class="form">
-            <h2 class="product-title" name="productname">Cable</h2>
-            <!-- <a href="#" class="product-link">Visit site</a> -->
+        <!-- card right -->
+        <div class = "product-content">
+          <h2 class = "product-title">nike shoes</h2>
+          <div class = "product-rating">
+            <i class = "fas fa-star"></i>
+            <i class = "fas fa-star"></i>
+            <i class = "fas fa-star"></i>
+            <i class = "fas fa-star"></i>
+            <i class = "fas fa-star-half-alt"></i>
+            <span>4.7(21)</span>
+          </div>
 
-            <div class="product-rating">
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star-half'></i>
-                <span>4.7(21)</span>
-            </div>
+          <div class = "product-price">
+            <p class = "new-price">Price: <span>$249.00 (5%)</span></p>
+          </div>
 
-            <div class="product-price">
-                <p class="last-price">Old price: <span>Rs.170</span></p>
-                <p class="new-price" name="price">New price: <span>Rs.150</span></p>
-            </div>
+          <div class = "product-detail">
+         
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi ipsa!</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius. Dignissimos, labore suscipit. Unde.</p>
 
-            <div class="product-detail">
-                <h2>About this item: </h2>
-                <p>Product details of USB Extension Cable 1.5m 3m 5m Copper Male to Female 
-                USB Extend Adapter Dual Shielding Transparent Blue Anti-interference.</p>
-                <ul>
-                    <li>Cable Type: Outdoor</li>
-                    <li>Model: Yagi</li>
-                    <li>Brand: No Brand</li>
-                </ul>
-            </div>
+          </div>
 
-             <!-- <a href="Cart" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a> -->
-
-            <div class="purchase-info">
-                <input type="number" min="0" value="1" name="quantity"><br>
-                <a href="SignUp.php" class=" ">
-                    <button type="submit" class="btn" name="btn">
-                   <h4> Add to Cart </h4>
-                    <!-- <i class='bx bx-cart-alt'></i> -->
-                    </button>
-                </a>
-                <!-- <button type="button" class="btn">Compare</button> -->
-            </div>
-            </form>
+          <div class = "purchase-info">
+            <input type = "number" min = "0" value = "1"><br>
+            <a href="SignIn.php"><button type = "button" class = "btn">Add to Cart
+               <i class = "fas fa-shopping-cart"></i>
+            </button></a>
+          </div>
         </div>
-    
-    
-    <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe>
-</body>
+    <script src="script.js"></script>
+</div>
+
+  </body>
 </html>
 
-<!-- <?php
+<?php
 if(isset($_POST['btn']))
 {
     $id= $_POST['productname'];
@@ -131,4 +111,4 @@ if(isset($_POST['btn']))
     
     mysqli_close($link);
 } 
-?>   -->
+?>

@@ -2,8 +2,9 @@
     <title>
         Sign Up
     </title>
-    <script src="js/signup.js"></script>
+    
     <script src="js/jquery-3.6.0.min.js"></script>
+   <!-- <script src="js/signup.js"></script>  -->
     <style>
         #div1 {
             align-items: center;
@@ -35,7 +36,7 @@
             text-align: center;
         }
 
-        #name, #dob,#tnumber,#address,#address,#email,#postalcode,#password1,#password2 {
+        #fname,#lname, #dob,#tnumber,#address,#address,#email,#postalcode,#password1,#password2 {
             background-color: #eee;
             border: none;
             border-radius: 20px;
@@ -77,7 +78,7 @@
         <form action="" method="post" id="form">
             <table id="table">
                 <tr>
-                    <td><img src="./Images/lotus.png" alt="logo" id="img"></td>
+                    <td><img src="./Images/Decoration/lotus.png" alt="logo" id="img"></td>
                     <td>
                         <h1 style="color: green;">Lotus</h1>
                     </td>
@@ -86,21 +87,29 @@
 
             <h2 style="color: black;" align="center">Sign Up</h1>
 
-                <input type="text" placeholder="User Name" id="name" name="name">
+                <span id="fname_msg" style="color: red; font-size: 12px;"> </span>
+                <input type="text" placeholder="First Name" id="fname" name="fname">
 
-                <input type="text" placeholder="YYYY-MM-DD" id="dob" name="dob">
+                <span id="lname_msg" style="color: red; font-size: 12px;"> </span>
+                <input type="text" placeholder="Last Name" id="lname" name="lname">
 
+                <span id = "dob_msg" style="color:red"> </span>
+                <input type="text" placeholder="Date of Birth" id="dob" name="dob">
+
+                <span id = "address_msg" style="color:red"> </span>
                 <input type="text" placeholder="Address" id="address" name="address">
 
+                <span id = "number_msg" style="color:red"> </span>
                 <input type="text" placeholder="Contact NUmber" id="tnumber" name="tnumber">
 
+                <span id = "email_msg" style="color:red"> </span>
                 <input type="text" placeholder="Email" id="email" name="email">
 
-                <input type="text" placeholder="Postal code" id="postalcode" name="postalcode">
+                <span id = "pwd1_msg" style="color:red"> </span>
+                <input type="password" placeholder="Password" id="password1" name="password" >
 
-                <input type="password" placeholder="Password" id="password1" name="password">
-
-                <input type="password" placeholder="Confirm Password" id="password2"><br>
+                <span id = "pwd2_msg" style="color:red"> </span>
+                <input type="password" placeholder="Confirm Password" id="password2" ><br>
 
                 <button type="submit" value="Sign Up" id="button" name="signUp" onclick="check_form()">Sign Up</button><br>
                 
@@ -117,56 +126,117 @@
 
     <script>
 
-// function check_form(){
+function check_form(){
+    document.getElementById("form").addEventListener("submit", function(event) {
+
+    var fname = document.getElementById("fname").value;
+    var lname = document.getElementById("lname").value;
+    var dob = document.getElementById("dob").value;
+    var address = document.getElementById("address").value;
+    var tnumber = document.getElementById("tnumber").value;
+    var email = document.getElementById("email").value;
+    var password1 = document.getElementById("password1").value;
+    var password2 = document.getElementById("password2").value;
+
+    var letters = /^[A-Za-z]+$/;
+    var pattern =/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+    var phoneno = /^\d{10}$/;
+    var mailFormat =  /\S+@\S+\.\S+/;
+
+    if(fname == null || fname == "" ){
+        text='**Please enter your Name**';
+        document.getElementById("name_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    } else if(!fname.match(letters)){
+        text='**Enter Characters Only**';
+        document.getElementById("name_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
 
 
-//   var name = document.getElementById("name").value;
-//   var dob = document.getElementById("dob").value;
-//   var address = document.getElementById("address").value;
-//   var tnumber = document.getElementById("tnumber").value;
-//   var email = document.getElementById("email").value;
-//   var postalcode = document.getElementById("postalcode").value;
-//   var password1 = document.getElementById("password1").value;
-//   var password2 = document.getElementById("password2").value;
 
-//   if(name == null || name == ""){
-//       alert("Please enter your name.");
-//       return false;
-//   }
-//   else if(address == null || address == ""){
-//     alert("Please enter your address.");
-//       return false;
-//   }
-//   else if(tnumber == null || tnumber == ""){
-//     alert("Please enter your number.");
-//       return false;
-//   }
-//   else if(email == null || email == ""){
-//     alert("Please enter your email.");
-//       return false;
-//   }
-//   else if(postalcode == null || postalcode == ""){
-//     alert("Please enter your postalcode.");
-//       return false;
-//   }
-//   else if(password1 == null || password1 == ""){
-//     alert("Please enter your password.");
-//       return false;
-//   }
-//    else if(password2 == null || password2 == ""){
-//     alert("Please enter your password.");
-//       return false;
-//   }
+    else if(lname == null || lname == "" ){
+        text='**Please enter your Name**';
+        document.getElementById("name_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    } else if(!lname.match(letters)){
+        text='**Enter Characters Only**';
+        document.getElementById("name_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
 
-  
-//   if (password1 !== password2) {
-//       alert("Passwords do not match.");
-//       return false;
-//   }
 
-//   window.location.href = "Cart.php";
-//   document.getElementById("form").submit();
-// };
+
+    else if(!pattern.test(dob)){
+        text='**Invalide Date of Birth (DD-MM-YYYY)**';
+        document.getElementById("dob_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
+
+
+    
+    else if(address == null || address.trim() === ""){
+        text='**Enter Your Address**';
+        document.getElementById("address_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
+
+
+
+    else if(tnumber == null || tnumber.trim() === ""){
+        text='**Enter Your Number**';
+        document.getElementById("number_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }else if(!tnumber.match(phoneno)){
+        text='**Enter Numbers Only**';
+        document.getElementById("number_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
+
+    
+
+    else if(email == null || email.trim() === ""){
+        text='**Enter Your Email**';
+        document.getElementById("email_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }else if(!email.match(mailFormat)){
+        text='**Invalide Email Format**';
+        document.getElementById("email_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
+
+
+
+    else if(password1 == null || password1.trim() === ""){
+        text='**Enter Your Password**';
+        document.getElementById("pwd1_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    } else if(password2 == null || password2.trim() === ""){
+        text='**Enter Your Confirm Password**';
+        document.getElementById("pwd2_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }
+    else if (password1 !== password2) {
+        text='**Password do not match**';
+        document.getElementById("pwd1_msg").innerHTML = text;
+        event.preventDefault();
+        return false;
+    }else if()
+
+    }
+)};
 </script>
     </div>
 </body>
@@ -176,12 +246,12 @@
 if(isset($_POST['signUp']))
 {
    
-    $name =$_POST['name'];
+    $fname =$_POST['fname'];
+    $lname =$_POST['lname'];
     $dob =$_POST['dob'];
     $address = $_POST['address'];
     $tnumber = $_POST['tnumber'];
     $email = $_POST['email'];
-    $postalcode = $_POST['postalcode'];
     $password = $_POST['password'];
 
 
@@ -201,7 +271,7 @@ if(isset($_POST['signUp']))
 
     $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
 
-      $stmt->bind_param("sssisis", $name, $dob, $address, $tnumber, $email, $postalcode, $password);
+      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
 
     $stmt->execute();
 

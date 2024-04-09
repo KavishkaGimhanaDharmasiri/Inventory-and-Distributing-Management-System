@@ -1,20 +1,4 @@
 
-/*Products*/
-
-
- /* h1 {
-    margin: 35px 0;
-    font-size: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    background: linear-gradient(to right, #50C878	,#228B22	);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;  
-} */
-
-
 .products{
     max-width: 968px;
     margin-left: auto;
@@ -22,7 +6,7 @@
 }
 
 .product-text  h1{
-    font-weight: 600;
+    font-weight: 800;
     text-transform: uppercase;
     color: var(--green-color);
 }
@@ -53,7 +37,10 @@
     font-weight: 500;
     font-size: 13px;
 }
+.products h1{
+    color: var(--green-color);
 
+}
 .products .box h2{
     font-size: 30px;
     margin-top: 15px;
@@ -119,7 +106,6 @@
 
 /*About*/
 
-
 .about{
     max-width: 968px;
     margin-left: auto;
@@ -146,8 +132,8 @@
     height: 100px;
 }
 
-/*Review*/
 
+/*Review*/
 
 .review{
     max-width: 968px;
@@ -214,6 +200,7 @@
     font-weight: 600;
 }
 
+
 /*Services*/
 
 .services{
@@ -222,7 +209,6 @@
     text-align: center;
     padding: 80px 0 10px 0;
 }
-
 
 .services .services_cards{
     width: 80%;
