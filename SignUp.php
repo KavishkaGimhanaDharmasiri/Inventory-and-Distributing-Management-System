@@ -1,3 +1,78 @@
+<?php
+
+session_start();
+?>
+<?php
+
+if(isset($_POST['signUp']))
+{
+   
+    $fname =$_POST['fname'];
+    $lname =$_POST['lname'];
+    $dob =$_POST['dob'];
+    $address = $_POST['address'];
+    $tnumber = $_POST['tnumber'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+     $_SESSION['usrname'] = $email;
+
+    //connect to DB
+    $host='localhost';
+    $username='root';
+    $password="";
+    $database="retail_website";
+
+    $link=mysqli_connect($host,$username,$password,$database);
+
+        if(!$link){
+            die('could connect'.mysqli_error($link));
+        }
+       // echo 'connected successfully';
+
+    $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
+
+      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
+
+    $stmt->execute();
+
+    $stmt->close();
+    $result = $link->query("SELECT @status AS status");
+    $row = $result->fetch_assoc();
+    $status = $row['status'];
+
+    switch ($status) {
+        case 0:
+            // echo "Student inserted successfully."; 
+        echo '<script>window.alert("User inserted successfully.");
+        window.location.href="Cart.php";
+        exit();</script>'; 
+        
+            break;
+        case 1:
+            echo'<script>window.alert("Error occurred while inserting student.");
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+        case 2:
+            echo'<script>window.alert("Email already exists in the database.");
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+        default:
+            echo'<script>window.alert("Unknown status returned.")
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+    }
+
+    $link->close();
+}
+?>
+
+
 <head>
     <title>
         Sign Up
@@ -100,13 +175,16 @@
                 <input type="text" placeholder="Address" id="address" name="address">
 
                 <span id = "number_msg" style="color:red"> </span>
-                <input type="text" placeholder="Contact NUmber" id="tnumber" name="tnumber">
+                <input type="tel" placeholder="Contact NUmber" id="tnumber" name="tnumber">
 
                 <span id = "email_msg" style="color:red"> </span>
                 <input type="text" placeholder="Email" id="email" name="email">
 
                 <span id = "pwd1_msg" style="color:red"> </span>
                 <input type="password" placeholder="Password" id="password1" name="password" >
+                <label for="showPassword">
+                <input type="checkbox" id="showPassword"> Show Password
+                </label>
 
                 <span id = "pwd2_msg" style="color:red"> </span>
                 <input type="password" placeholder="Confirm Password" id="password2" ><br>
@@ -124,179 +202,93 @@
         </form>
         <br>
 
-    <script>
+  
+<script>
+        document.getElementById('showPassword').addEventListener('change', function() {
+            var passwordInput = document.getElementById('password1');
+            if (this.checked) {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        });
+   
 
-function check_form(){
+function check_form() {
     document.getElementById("form").addEventListener("submit", function(event) {
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+        var dob = document.getElementById("dob").value;
+        var address = document.getElementById("address").value;
+        var tnumber = document.getElementById("tnumber").value;
+        var email = document.getElementById("email").value;
+        var password1 = document.getElementById("password1").value;
+        var password2 = document.getElementById("password2").value;
 
-    var fname = document.getElementById("fname").value;
-    var lname = document.getElementById("lname").value;
-    var dob = document.getElementById("dob").value;
-    var address = document.getElementById("address").value;
-    var tnumber = document.getElementById("tnumber").value;
-    var email = document.getElementById("email").value;
-    var password1 = document.getElementById("password1").value;
-    var password2 = document.getElementById("password2").value;
+        var letters = /^[A-Za-z]+$/;
+        var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+        var phoneno = /^\d{10}$/;
+        var mailFormat = /\S+@\S+\.\S+/;
 
-    var letters = /^[A-Za-z]+$/;
-    var pattern =/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
-    var phoneno = /^\d{10}$/;
-    var mailFormat =  /\S+@\S+\.\S+/;
+        if (fname == null || fname == "") {
+            text = '**Please enter your Name**';
+            document.getElementById("fname_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (!fname.match(letters)) {
+            text = '**Enter Characters Only**';
+            document.getElementById("fname_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (lname == null || lname == "") {
+            text = '**Please enter your Name**';
+            document.getElementById("lname_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (!lname.match(letters)) {
+            text = '**Enter Characters Only**';
+            document.getElementById("lname_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (!pattern.test(dob)) {
+            text = '**Invalid Date of Birth (DD-MM-YYYY)**';
+            document.getElementById("dob_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (address == null || address.trim() === "") {
+            text = '**Enter Your Address**';
+            document.getElementById("address_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (tnumber == null || tnumber.trim() === "") {
+            text = '**Enter Your Number**';
+            document.getElementById("number_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (!tnumber.match(phoneno)) {
+            text = '**Enter Numbers Only**';
+            document.getElementById("number_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (email == null || email.trim() === "") {
+            text = '**Enter Your Email**';
+            document.getElementById("email_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (!email.match(mailFormat)) {
+            text = '**Invalid Email Format**';
+            document.getElementById("email_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (password1 == null || password1.trim() === "") {
+            text = '**Enter Your Password**';
+            document.getElementById("pwd1_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (password2 == null || password2.trim() === "") {
+            text = '**Enter Your Confirm Password**';
+            document.getElementById("pwd2_msg").innerHTML = text;
+            event.preventDefault();
+        } else if (password1 !== password2) {
+            text = '**Passwords do not match**';
+            document.getElementById("pwd1_msg").innerHTML = text;
+            event.preventDefault();
+        }
 
-    if(fname == null || fname == "" ){
-        text='**Please enter your Name**';
-        document.getElementById("name_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    } else if(!fname.match(letters)){
-        text='**Enter Characters Only**';
-        document.getElementById("name_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
+    });
+}
 
-
-
-    else if(lname == null || lname == "" ){
-        text='**Please enter your Name**';
-        document.getElementById("name_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    } else if(!lname.match(letters)){
-        text='**Enter Characters Only**';
-        document.getElementById("name_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-
-
-
-    else if(!pattern.test(dob)){
-        text='**Invalide Date of Birth (DD-MM-YYYY)**';
-        document.getElementById("dob_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-
-
-    
-    else if(address == null || address.trim() === ""){
-        text='**Enter Your Address**';
-        document.getElementById("address_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-
-
-
-    else if(tnumber == null || tnumber.trim() === ""){
-        text='**Enter Your Number**';
-        document.getElementById("number_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }else if(!tnumber.match(phoneno)){
-        text='**Enter Numbers Only**';
-        document.getElementById("number_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-
-    
-
-    else if(email == null || email.trim() === ""){
-        text='**Enter Your Email**';
-        document.getElementById("email_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }else if(!email.match(mailFormat)){
-        text='**Invalide Email Format**';
-        document.getElementById("email_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-
-
-
-    else if(password1 == null || password1.trim() === ""){
-        text='**Enter Your Password**';
-        document.getElementById("pwd1_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    } else if(password2 == null || password2.trim() === ""){
-        text='**Enter Your Confirm Password**';
-        document.getElementById("pwd2_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }
-    else if (password1 !== password2) {
-        text='**Password do not match**';
-        document.getElementById("pwd1_msg").innerHTML = text;
-        event.preventDefault();
-        return false;
-    }else if()
-
-    }
-)};
 </script>
     </div>
 </body>
 </html>
-
-<?php
-if(isset($_POST['signUp']))
-{
-   
-    $fname =$_POST['fname'];
-    $lname =$_POST['lname'];
-    $dob =$_POST['dob'];
-    $address = $_POST['address'];
-    $tnumber = $_POST['tnumber'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-
-    //connect to DB
-    $host='localhost';
-    $username='root';
-    $password="";
-    $database="retail_website";
-
-    $link=mysqli_connect($host,$username,$password,$database);
-
-        if(!$link){
-            die('could connect'.mysqli_error($link));
-        }
-       // echo 'connected successfully';
-
-
-    $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
-
-      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
-
-    $stmt->execute();
-
-    $stmt->close();
-    $result = $link->query("SELECT @status AS status");
-    $row = $result->fetch_assoc();
-    $status = $row['status'];
-
-    switch ($status) {
-        case 0:
-            // echo "Student inserted successfully."; 
-        echo '<script>alert("User inserted successfully.")</script>'; 
-            break;
-        case 1:
-            echo'<script>alert("Error occurred while inserting student.")</script>';
-            break;
-        case 2:
-            echo'<script>alert("Email already exists in the database.")</script>';
-            break;
-        default:
-            echo'<script>alert("Unknown status returned.")</script>';
-            break;
-    }
-
-    $link->close();
-}
-?>
 

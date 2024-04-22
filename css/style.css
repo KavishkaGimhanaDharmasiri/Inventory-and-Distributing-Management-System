@@ -227,11 +227,12 @@
 .about-text span{
     font-weight: 600;
     text-transform: uppercase;
-    color: var(--green-color);
+    color: var(--orange-color);
 }
 
 .about-text p{
     margin: 0.5rem 0 1rem;
+    
 }
 
 .customer{
@@ -307,7 +308,7 @@
     grid-template-columns: repeat(auto-fit,minmax(200px,auto));
     gap: 1.5rem;
     margin-top: 2rem;
-    background: #fef4ea;
+    background: #abfbab;
     border-radius: 0.5rem;
     padding: 20px;
 }
@@ -320,6 +321,12 @@
 .footer-box p{
     font-size: 0.938;
     margin: 0.5rem 0 1rem;
+}
+
+.feedback{
+    width: 70px;
+    height: 70px;
+    color: #ffffff;
 }
 
 .social{
@@ -361,10 +368,10 @@
 }
 
 .footer-box a:hover{
-    color: var(--light-orange-color);
+    color: var(--green-color);
 }
 
-.footer-box form{
+.Feedback .footer-box form{
     border-bottom: 1px solid var(--text-color);
     padding: 10px;
     display: flex;

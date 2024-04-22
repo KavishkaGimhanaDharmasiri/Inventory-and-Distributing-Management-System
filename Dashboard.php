@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,46 +19,15 @@
 
 include 'Navibar.php';
 ?>
+
+<!--Slidebar-->
+<?php
+
+include 'slidebar.php';
+?>
         
- <section class="home swiper" id="home">
-        <div class="swiper-wrapper">
 
-            <div class="swiper-slide container">
-                <div class="home-text">
-                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                    <span>Heaters</span>
-                    <h1>Order now</h1>
-                    <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
-                </div>
-                <img src="Images/Decoration/cover1.jpg" alt="">
-            </div>
-
-            <div class="swiper-slide container">
-                <div class="home-text">
-                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                    <span>Heaters</span>
-                    <h1>Order now</h1>
-                    <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
-                </div>
-                <img src="Images/Decoration/cover2.jpg" alt="">
-            </div>
-
-            <div class="swiper-slide container">
-                <div class="home-text">
-                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                    <span>Bulb</span>
-                    <h1>Order now</h1>
-                    <a href="#" class="btn">Shop Now<i class='bx bx-right-arrow-alt'></i></a>
-                </div>
-                <img src="Images/Decoration/cover3.jpg" alt="">
-            </div>
-
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </section> 
-
-    <!--Products-->
+<!--Products-->
 
     <div class="products" id="Products">
         <div class="heading">
@@ -88,6 +58,7 @@ $conn = new mysqli($host, $username, $password, $database);
     if ($result->num_rows > 0) {
     
          while ($row = $result->fetch_assoc()) {
+            $catnum=$row["catid"];
             $name=$row["categoryname"];
             $quantity=$row["quantity"];
             $img=$row["image"];
@@ -102,7 +73,7 @@ $conn = new mysqli($host, $username, $password, $database);
                             <h3>'.$quantity.' Items</h3>
 
                             <div class="home-text">
-                                <a href="Products.php" class="btn">Shop Now<i class="bx bx-right-arrow-alt"></i></a>
+                                <a href="Products.php?categoryid='.$catnum.'" class="btn">Shop Now<i class="bx bx-right-arrow-alt"></i></a>
                             </div>
 
                     </div> ';
@@ -112,8 +83,6 @@ $conn = new mysqli($host, $username, $password, $database);
     echo "0 results";
 }
 ?>
-
-
         </div>
     </div>
 
@@ -123,12 +92,11 @@ $conn = new mysqli($host, $username, $password, $database);
     <!--About-->
     <br><br><br><br><br><br><br><br>
     <div class="about" id="About">
-        <img src="Images/Decoration/lotus.png" alt="">
+        <img src="Images/Decoration/cover5.jpg" alt="">
         <div class="about-text">
             <h1>About us</h1>
             <br>
             <p>
-                About Lotus
 
                 Welcome to Lotus, your premier destination for all things electrical. At Lotus, we pride ourselves on
                 offering a
@@ -150,7 +118,7 @@ $conn = new mysqli($host, $username, $password, $database);
 
 <br><br><br><br>
      <div class="review" id="Review">
-        <h2>Why Choose Us</h2>
+        <h1>Why Choose Us</h1>
         <div class="customer-container">
             <div class="box">
                 <i class='bx bxs-quote-alt-left'></i>
@@ -261,11 +229,6 @@ $conn = new mysqli($host, $username, $password, $database);
 
     </div>
 
-
-    <div class="copyright">
-        <p>&#169;KJ All Right Reserved.</p>
-    </div>
-
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Initialize Swiper -->
@@ -273,6 +236,9 @@ $conn = new mysqli($host, $username, $password, $database);
     <script src="js/main.js">
 
     </script>
-    
+    <?php
+
+include 'Footer.php';
+?>
 </body>
 </html>

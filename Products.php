@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -14,20 +15,24 @@
 
 </head>
 
-<body>
+<body class="product-background">
+
 <?php
 
 include 'Navibar.php';
 ?>
+
     <section class="products" id="products">
          <div class="products-container">
 
-         <?php
+<?php
+
+$catnum=$_GET['categoryid'];
 
 $host = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'invenroty'; // corrected spelling of 'inventory'
+$database = 'retail_website'; // corrected spelling of 'inventory'
 
 $conn = new mysqli($host, $username, $password, $database);
 
@@ -35,7 +40,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM product WHERE main_cat='Antenna and Accessories'"; // corrected table name 'product'
+$sql = "SELECT * FROM product WHERE main_cat=$catnum";
 
 $result = $conn->query($sql);
 
@@ -52,7 +57,8 @@ if ($result) { // Check if the query was successful
             $discount = $row["Discount"];
 
             echo '<div class="box">
-                    <a href="ProductDetails.php">
+                    <a href="Productdetails.php?categoryid='.$product_id.'">
+
                     <div class="image">
                              <img src="data:image;base64,' . base64_encode($img) . '" alt="">
                     </div> 

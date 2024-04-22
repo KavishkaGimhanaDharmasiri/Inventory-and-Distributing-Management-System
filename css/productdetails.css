@@ -22,9 +22,9 @@
 }
 body{
     line-height: 1.5;
-    padding-right: 550px;
 }
-.card-wrapper{
+
+.card{
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -43,30 +43,6 @@ body{
     margin-top: 50px;
 }
 
-.about .about_main .about_image .about_small_image {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    top: 15px;
-}
-
-.about .about_main .about_image .about_small_image img {
-    height: 92px;
-    margin: 5px 0;
-    cursor: pointer;
-    /* background: linear-gradient(to right, #a1f6b6, #00380d); */
-    display: block;
-    /* border-radius: 6px; */
-    padding: 5px 5px;
-    box-shadow: 0 0 8px #000000;
-    opacity: 0.8;
-    transition: 0.3s;
-}
-
-.about .about_main .about_image .about_small_image img:hover {
-    opacity: 1;
-}
-
 .about .about_main .image_contaner {
     padding: 10px;
     display: flex;
@@ -74,16 +50,16 @@ body{
 
 .about .about_main .image_contaner img {
     border: 3px;
-    /* background: linear-gradient(to right, #a1f6b6, #00380d);
-    border-radius: 20px; */
     height: 410px;
     width: 410px;
     padding: 5px;
     box-shadow: 0 0 8px #000000;
 }
+
 .product-content{
-    padding: 2rem 1rem;
+    padding: 2rem 1rem;  
 }
+
 .product-title{
     font-size: 3rem;
     text-transform: capitalize;
@@ -92,6 +68,7 @@ body{
     color: #12263a;
     margin: 1rem 0;
 }
+
 .product-title::after{
     content: "";
     position: absolute;
@@ -123,20 +100,23 @@ body{
     font-weight: 600;
     color: #252525;
 }
-.product-price{
+.new-product-price{
     margin: 1rem 0;
-    font-size: 1rem;
+    font-size: 2rem;
     font-weight: 700;
 }
 .product-price span{
-    font-weight: 400;
+    font-weight: 500;
 }
 .last-price span{
-    color: #f64749;
+    color: #5047f6;
     text-decoration: line-through;
 }
 .new-price span{
-    color: #256eff;
+    color: #ff2525;
+}
+.product-detail h2{
+    background-color: #c0eb7b;
 }
 .product-detail h2{
     text-transform: capitalize;
@@ -148,23 +128,7 @@ body{
     padding: 0.3rem;
     opacity: 0.8;
 }
-.product-detail ul{
-    margin: 1rem 0;
-    font-size: 0.9rem;
-}
-.product-detail ul li{
-    margin: 0;
-    list-style: none;
-    background: url(shoes_images/checked.png) left center no-repeat;
-    background-size: 18px;
-    padding-left: 1.7rem;
-    margin: 0.4rem 0;
-    font-weight: 600;
-    opacity: 0.9;
-}
-.product-detail ul li span{
-    font-weight: 400;
-}
+
 .purchase-info{
     margin: 1.5rem 0;
 }
@@ -202,29 +166,11 @@ body{
     background: var(--green-color)
 }
 
-
 .purchase-info .btn:hover{
     opacity: 0.9;
     background: var(--orange-color);
 }
-.social-links{
-    display: flex;
-    align-items: center;
-}
-.social-links a{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    color: #000;
-    border: 1px solid #000;
-    margin: 0 0.2rem;
-    border-radius: 50%;
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: all 0.5s ease;
-}
+
 .social-links a:hover{
     background: #000;
     border-color: transparent;

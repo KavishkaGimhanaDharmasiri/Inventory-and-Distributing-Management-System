@@ -15,7 +15,7 @@
     <section>
         <nav>
         <header class="index-body">
-        <a href="#" class="logo"><img src="Images/Decoration/lotus.png" height="100px" >Lotus</a>
+        <div class="logo"><img src="Images/Decoration/lotus.png" height="100px" >Lotus</div>
 
         <div class="bx bx-menu" id="menu-icon"></div>
         <ul class="navbar">
@@ -28,8 +28,9 @@
             
             </ul>
             <div class="cart-profile">
-            <a href="Cart.php" class="index-cart"><i class='bx bx-cart'></i></a>
-             </div>
+            <a href="" class=""><img src="Images/Decoration/profile.png" style="width: 50px; height: 50px;"></a>&nbsp&nbsp
+            <a href="Cart.php" class="index-cart"><i class='bx bx-cart' ></i></a> 
+            </div>
 
         </header>
 
