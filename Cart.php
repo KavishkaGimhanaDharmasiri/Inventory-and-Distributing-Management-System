@@ -1,9 +1,13 @@
 
 <?php
 session_start();
-include 'Navibar.php';
-$un=$_SESSION['usrname'];
-$p_id=$_SESSION['p_id'];
+//include 'Navibar.php';
+$product_id = $_SESSION['product_id']; 
+$quantity= $_SESSION['quantity'] ;
+$un = $_SESSION['email'];
+echo '1)'.$product_id;
+echo '2)'.$quantity;
+echo '3)'.$un;
 ?>
 <html>
 
@@ -46,7 +50,7 @@ $stmt->execute();
 // Get the result set
 $result = $stmt->get_result();
 
-
+$total2=0;
 $total=0;
 $shipping=200;
 

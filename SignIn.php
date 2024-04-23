@@ -1,3 +1,9 @@
+<?php
+session_start();
+$product_id = $_SESSION['product_id'];
+$quantity= $_SESSION['quantity'] ;
+echo $product_id,$quantity;
+?>
 <head>
     <title>
         Sign In
@@ -141,9 +147,10 @@
 </body>
 
 <?php
-if(isset($_POST['signIn'])) {
+if(isset($_POST['signIn'])){
     $un = $_POST['username'];
     $pwd = $_POST['pwd'];
+    $_SESSION['email'] = $un;
 
     if(empty($un)) {
         echo "<script type='text/javascript'> text='**Enter username**';
