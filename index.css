@@ -1,0 +1,135 @@
+.fodpass {
+  color: #4caf50;
+}
+.fodpass:hover {
+  color: darkgreen;
+}
+body {
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  justify-items: center;
+  margin: 8px;
+}
+.card {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  display: flex;
+  border-radius: 25px;
+  position: relative;
+}
+.card h2 {
+  margin: 0;
+}
+.card .title {
+  padding: 1rem;
+  text-align: right;
+  color: green;
+  font-weight: bold;
+  font-size: 12px;
+}
+.card .desc {
+  font-size: 14px;
+  max-width: 450px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.card .actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+}
+.card svg {
+  width: 85px;
+  height: 85px;
+  margin: 0 auto;
+}
+
+.img-avatar {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  border-radius: 50%;
+  top: 15px;
+  left: 20%;
+  display: inline-flex;
+}
+.card-text {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.title-total {
+  padding: 20px;
+}
+.img-portada {
+  width: 100%;
+}
+
+.portada {
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-image: url("wires_6302557.jpg");
+  background-position: bottom center;
+  background-size: cover;
+}
+body {
+  font-family: Roboto, sans-serif;
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  margin: 8px;
+}
+
+.title {
+  padding: 1rem;
+  text-align: center;
+  font-size: 12px;
+}
+.desc {
+  font-size: 14px;
+  max-width: 450px;
+  margin-left: 10px;
+  margin-top: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+}
+.cahepx {
+  margin: 0 auto;
+}
+.card-text {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.title-total {
+  padding: 20px;
+}
+
+path {
+  fill: white;
+}
+
+.img-portada {
+  width: 100%;
+}
+
+.portada {
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-image: url("wires_6302557.jpg");
+  background-position: bottom center;
+  background-size: cover;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: inset 0 0 0px 9999px white;
+}
