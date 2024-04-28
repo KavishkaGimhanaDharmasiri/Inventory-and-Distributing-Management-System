@@ -599,7 +599,3 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 </body>
 
 </html>
-<?php
-// Close the database connection
-mysqli_close($connection);
-?>
