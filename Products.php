@@ -1,4 +1,9 @@
-
+<?php
+session_start();
+$un=$_SESSION['email'];
+// var_dump($_SESSION);
+// var_dump($_SESSION);
+?>
 <html>
 
 <head>
@@ -12,7 +17,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    div.label1 {
+   position: absolute;
+    right: 60px;
+    color: red;
+    transform: rotate(45deg);
+    top: 120px;
+    background-color: pink;
+    -webkit-transform: rotate(30deg);
 
+    font-size: 25px;
+    font-weight: bold;
+}
+div.label2 {
+   position: absolute;
+    right: 60px;
+    color: orange;
+    transform: rotate(45deg);
+    top: 120px;
+    background-color: yellow;
+
+    -webkit-transform: rotate(30deg);
+
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+</style> 
 </head>
 
 <body class="product-background">
@@ -50,6 +83,7 @@ if ($result) { // Check if the query was successful
             $product_id = $row["product_id"];
             $main_cat = $row["main_cat"];
             $sub_cat = $row["sub_cat"];
+            $stock=$row["stock"];
             $quantity = $row["stock"];
             $price = $row["cashPrice"];
             $description = $row["productType"];
@@ -70,6 +104,17 @@ if ($result) { // Check if the query was successful
              { // Added condition to check if discount exists
                 echo '<span class="discount">' . $discount . '%</span></a>'; 
             }
+//echo $stock;
+            if ($stock==0)
+             { 
+                echo '<div class="label1">OUT OF STOCK !</div>'; 
+            }
+
+            if ($stock<=5 && $stock>0)
+             { 
+                echo '<div class="label2">LIMITED STOCK !</div>'; 
+            }
+
             
             echo '
                 </div>';

@@ -47,7 +47,7 @@
 
         .box h3{
             align:center;
-             font-size: 1.5rem;
+             font-size: 1.2rem;
               color:#FF5722;
             
         }
@@ -65,11 +65,23 @@
             to { transform: translateX(100%); }
             from { transform: translateX(-100%); }
         }
+
+        h1 {
+              padding-left: 40px;
+              padding-bottom: 40px;
+              font-size: 30px;
+              background: -webkit-linear-gradient(#FF8A65, #E64A19);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            }
     </style>
 </head>
 <body>
+    <h1>Relevent Products</h1>
     <div class="container">
+
         <div class="products-container">
+
             <?php
             $host = 'localhost';
             $username = 'root';

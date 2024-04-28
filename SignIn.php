@@ -1,8 +1,15 @@
 <?php
 session_start();
-$product_id = $_SESSION['product_id'];
-$quantity= $_SESSION['quantity'] ;
-echo $product_id,$quantity;
+
+
+//if (isset($_POST)) {
+ //   $product_id = $_POST['product_id'];
+  //  $quantity = $_POST['quantity'];
+//} 
+
+//var_dump($_SESSION);
+//var_dump($_GET);
+//var_dump($_POST);
 ?>
 <head>
     <title>
@@ -119,6 +126,7 @@ echo $product_id,$quantity;
             <h2 style="color: black;" >Sign In</h1>
                 <span id = "username_msg" style="color:red"> </span>
                 <input type="text" placeholder="User Name" id="text" name="username"><br></td>
+                 <!-- <input type="hidden" name="quantity" value="<?php echo $quantity?>"> -->
 
                 <span id = "pwd_msg" style="color:red"> </span>
                 <input type="password" placeholder="Password" id="text" name="pwd"><br>
@@ -148,9 +156,8 @@ echo $product_id,$quantity;
 
 <?php
 if(isset($_POST['signIn'])){
-    $un = $_POST['username'];
+     $un = $_POST['username'];
     $pwd = $_POST['pwd'];
-    $_SESSION['email'] = $un;
 
     if(empty($un)) {
         echo "<script type='text/javascript'> text='**Enter username**';
@@ -174,12 +181,22 @@ if(isset($_POST['signIn'])){
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "SELECT first_name, password FROM user_details WHERE email='$un' AND password='$pwd'";
+
+       
+        $sql = "SELECT userid,first_name FROM user_details WHERE email='$un' AND password='$pwd'";
         $result = $conn->query($sql);
+        
 
         if ($result->num_rows > 0) {
-            echo "string";
-            echo "<script type='text/javascript'>window.location.href='Cart.php';</script>";
+            $row = $result->fetch_assoc();
+            $id = $row["userid"];
+            $f_name = $row["first_name"];
+            
+            $_SESSION['email'] = $un;
+            $_SESSION['username'] = $un;
+            $_SESSION['user_id']=$id;
+            $_SESSION['f_name']=$f_name;
+            echo "<script type='text/javascript'>window.location.href='Dashboard.php';</script>";
             exit;
         } else {
             echo "<script type='text/javascript'> text='**Invalide Username or Password**';

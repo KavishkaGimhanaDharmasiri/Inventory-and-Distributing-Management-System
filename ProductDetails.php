@@ -1,5 +1,8 @@
 <?php
 session_start();
+$un=$_SESSION['email'];
+//var_dump($_SESSION);
+//var_dump($_SESSION);
 ?>
 <html>
   <head>
@@ -40,6 +43,7 @@ $productid=$_GET['categoryid'];
                 $product_id = $row["product_id"];
                 $main_cat = $row["main_cat"];
                 $sub_cat = $row["sub_cat"];
+                $stock=$row["stock"];
                 $quantity = $row["stock"];
                 $price = $row["cashPrice"];
                 $description = $row["productType"];
@@ -95,17 +99,74 @@ $productid=$_GET['categoryid'];
    <div class = "product-detail">
                           
                         </div>
-                        <form action="SignIn.php" method="post" id="form">
+                        <form action=" " method="post" id="form">
                         <div class = "purchase-info">
-                           <input type="number" min="0" value="1" name="quantity" id="quantity"><br>
-                           <a href="SignIn.php?product_id='.$product_id.'"><button type="submit" name="btn" class="btn">Add to Cart <i class="fas fa-shopping-cart"></i></button></a>
+                           <input type="number" min="0" max="<?php echo $stock; ?>" value="0" name="quantity" id="quantity"><br>
+                           <input type="hidden" name="product_id" value="<?php echo $product_id?>">
+
+                           <a href="SignIn.php"><button type="submit" name="btn" class="btn">Add to Cart <i class="fas fa-shopping-cart"></i></button></a>
                          </div></form>
                         </div></div></div>
 
 <?php
 if(isset($_POST['btn'])){
+    $host='localhost';
+    $username='root';
+    $password="";
+    $database="retail_website";
+
+    $link=mysqli_connect($host,$username,$password,$database);
+
+        if(!$link){
+            die('could connect'.mysqli_error($link));
+        }
+       // echo 'connected successfully';
     $quantity = $_POST['quantity'];
-    $_SESSION['quantity'] = $quantity;
+    $userid=$_SESSION['user_id'];
+
+        $stmt = $link->prepare("CALL add_to_cart(?, ?, ?, @status)");
+
+    // Assign values to variables
+    echo $userid;
+    echo $product_id;
+    echo $quantity;
+
+    $stmt->bind_param("ssi", $userid, $product_id, $quantity);
+
+    $stmt->execute();
+
+    $stmt->close();
+    $result = $link->query("SELECT @status AS status");
+    $row = $result->fetch_assoc();
+    $status = $row['status'];
+     echo "<script type='text/javascript'>window.location.href='Cart.php';</script>";
+    // switch ($status) {
+    //     case 0:
+    //         // echo "Student inserted successfully."; 
+    //     echo '<script>window.alert("User inserted successfully.");
+    //     window.location.href="Cart.php";
+    //     exit();</script>'; 
+        
+    //         break;
+    //     case 1:
+    //         echo'<script>window.alert("Error occurred while inserting student.");
+    //         event.preventDefault();
+    //         return false;
+    //         </script>';
+    //         break;
+    //     case 2:
+    //         echo'<script>window.alert("Email already exists in the database.");
+    //         event.preventDefault();
+    //         return false;
+    //         </script>';
+    //         break;
+    //     default:
+    //         echo'<script>window.alert("Unknown status returned.")
+    //         event.preventDefault();
+    //         return false;
+    //         </script>';
+    //         break;
+    // }
  }
 include 'Sameproducts.php';
 ?> 

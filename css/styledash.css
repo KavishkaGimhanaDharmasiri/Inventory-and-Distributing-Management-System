@@ -405,3 +405,15 @@
     outline: none;
 }
 
+div.a {
+    position: absolute;
+     right: 60px;
+     color: red;
+     transform: rotate(45deg);
+     top: 120px;
+ 
+     -webkit-transform: rotate(30deg);
+ 
+     font-size: 25px;
+     font-weight: bold;
+ }

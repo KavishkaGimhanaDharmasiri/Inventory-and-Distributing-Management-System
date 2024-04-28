@@ -1,13 +1,11 @@
-
 <?php
 session_start();
 //include 'Navibar.php';
-$product_id = $_SESSION['product_id']; 
-$quantity= $_SESSION['quantity'] ;
-$un = $_SESSION['email'];
-echo '1)'.$product_id;
-echo '2)'.$quantity;
-echo '3)'.$un;
+
+var_dump($_POST);
+
+ $un=$_SESSION['username'];
+
 ?>
 <html>
 
@@ -30,7 +28,6 @@ echo '3)'.$un;
         <div class="cart">
             <div class="shop">
                 
-
 <?php
 
 $host = 'localhost';
