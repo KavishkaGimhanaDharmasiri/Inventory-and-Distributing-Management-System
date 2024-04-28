@@ -25,6 +25,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="mobile.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style>
         .order-form {
             background-color: #fff;
@@ -80,6 +81,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             border-radius: 15px;
             cursor: pointer;
             width: 100%;
+            font-weight: bold;
         }
 
         button:hover {
