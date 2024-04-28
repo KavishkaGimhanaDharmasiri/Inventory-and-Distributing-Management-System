@@ -34,7 +34,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         th,
         td {
             padding: 6px;
-
             text-align: left;
         }
 
@@ -54,10 +53,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
             background-color: #45a049;
         }
 
-        input[type='checkbox'] {
-
-            accent-color: #45a049;
-        }
 
         li {
             font-weight: bold;

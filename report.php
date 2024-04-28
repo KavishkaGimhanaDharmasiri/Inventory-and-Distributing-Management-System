@@ -24,80 +24,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .mobile-container {
-            max-width: 480px;
-            margin: auto;
-            background-color: white;
-            height: 100vh;
-            border-radius: 10px;
-        }
-
-        .topnav {
-            overflow: hidden;
-            background-color: white;
-            position: relative;
-            color: black;
-
-
-        }
-
-        .topnav a {
-            color: black;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-            display: block;
-        }
-
-        .topnav a.icon {
-            background: white;
-            display: block;
-            position: absolute;
-            right: 0;
-            top: 0;
-            color: black;
-        }
-
-        .sidepanel {
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            height: 150px;
-            top: 0;
-            right: 0;
-            background-color: black;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 40px;
-            margin: auto;
-        }
-
-        .sidepanel a {
-            padding: 8px 8px 8px 20px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidepanel a:hover {
-            color: #f1f1f1;
-        }
-
-        .sidepanel .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-        }
-
         .order-container h3 {
             color: #333;
         }
