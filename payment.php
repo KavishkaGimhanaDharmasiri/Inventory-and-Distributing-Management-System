@@ -43,7 +43,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             font-weight: bold;
         }
 
-        h2 {
+        h3 {
             text-align: center;
             color: black;
         }
@@ -273,7 +273,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         }
         echo '<div class="order-form ">';
         echo '<form  action="payment.php" method="post">';
-        echo '<h2>Order Details</h2>';
+        echo '<h3>Order Details</h3>';
 
 
         if (!empty($orderDetails)) {
@@ -528,16 +528,16 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         ?>
 
 
-        <h2>Payment Information</h2>
+        <h3>Payment Information</h3>
 
-        <label for="total_amount">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
+        <label for="total_amount" style="color: indianred;">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
 
 
         <br>
-        <label for="payment_amount">Payment Amount: Rs.</label>
+        <label for=" payment_amount">Payment Amount: Rs.</label>
         <input type="text" name="payment_amount" id="payment_amount" oninput="calculateBalance()">
 
-        <label for="balance">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
+        <label for="balance" style="color: indianred;">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
 
         <table>
             <tr style="background-color:white;">
