@@ -48,6 +48,7 @@ session_write_close();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="mobile.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
   <style>
     .options-container {
       background-color: #fff;
@@ -106,108 +107,6 @@ session_write_close();
 
     .option:hover {
       background-color: #45a049;
-    }
-
-    @media (max-width: 600px) {
-      .option {
-        width: 100%;
-      }
-    }
-
-    .profile-icon {
-      background-image: url('profile.png');
-      position: absolute;
-      top: 40px;
-      right: 40px;
-      height: 20px;
-      width: 20px;
-      margin-bottom: 400px;
-
-    }
-
-    .profile-panel {
-      display: none;
-      position: fixed;
-      top: 45%;
-      left: 85%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 10px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      width: 200px;
-      height: 320px;
-
-    }
-
-
-    .our-team {
-      margin-bottom: 5px;
-      background-color: transparent;
-      text-align: center;
-      overflow: hidden;
-      position: relative;
-      border-radius: 15px;
-    }
-
-    .our-team .picture {
-      display: inline-block;
-      height: 100px;
-      width: 100px;
-      margin-bottom: 10px;
-      z-index: 1;
-      position: relative;
-    }
-
-    .our-team .picture::before {
-      content: "";
-      width: 100%;
-      height: 0;
-      border-radius: 50%;
-      background-color: #4caf50;
-      position: absolute;
-      bottom: 135%;
-      right: 0;
-      left: 0;
-      opacity: 0.9;
-      transform: scale(3);
-      transition: all 0.3s linear 0s;
-    }
-
-    .our-team:hover .picture::before {
-      height: 100%;
-    }
-
-    .our-team .picture::after {
-      content: "";
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background-color: #4caf50;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-
-    .our-team .picture img {
-      width: 100%;
-      height: auto;
-      border-radius: 50%;
-      transform: scale(1);
-      transition: all 0.9s ease 0s;
-    }
-
-    .our-team:hover .picture img {
-      box-shadow: 0 0 0 14px #4caf50;
-      transform: scale(0.7);
-    }
-
-    .our-team .title {
-      display: block;
-      font-size: 15px;
-      color: #4e5052;
-      text-transform: capitalize;
     }
   </style>
 </head>

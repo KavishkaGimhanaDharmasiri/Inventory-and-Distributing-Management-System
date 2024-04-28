@@ -25,164 +25,11 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="mobile.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style>
-        .order-form {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            overflow-y: auto;
-            overflow: visible;
-            margin-top: 5%;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        h2 {
+        h3 {
             text-align: center;
             color: black;
-        }
-
-        select,
-        input,
-        button {
-            width: calc(100% - 1px);
-            /* Adjusted width to account for padding */
-            padding: 10px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            border: none;
-            border-block: none;
-            outline: none;
-            border-bottom: 1px solid #4caf50;
-
-
-        }
-
-        input {
-            border-bottom: 1px solid green;
-        }
-
-        select:hover {
-            border-bottom: 1px solid red;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-
-        /* Additional style for table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border: none;
-        }
-
-        th {
-            text-align: center;
-            padding: 10px;
-
-        }
-
-        th {
-            background-color: #4caf50;
-            color: #fff
-        }
-
-        td {
-            padding: 5px;
-            color: black;
-        }
-
-
-        /* Additional style for the Confirm Order button */
-        .confirm-order-button {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-            padding: 10px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .confirm-order-button:hover {
-            background-color: #45a049;
-        }
-
-        input[type='checkbox'] {
-            accent-color: #45a049;
-        }
-
-        #r {
-            font-weight: bold;
-        }
-
-        #leftth {
-            border-top-left-radius: 10px;
-        }
-
-        #rightth {
-
-            border-top-right-radius: 10px;
-        }
-
-
-        /* Additional style for the Confirm Order button */
-
-        .confirm-order-button:hover {
-            background-color: green;
-        }
-
-        input[type='checkbox'] {
-            accent-color: #45a049;
-        }
-
-        #confirm_check {
-            margin-right: 20px;
-            float: left;
-        }
-
-        #leftth {
-            border-top-left-radius: 10px;
-        }
-
-        #rightth {
-
-            border-top-right-radius: 10px;
-        }
-
-        tr {
-            padding: 20px;
-        }
-
-        tr:hover {
-            background: hsla(207, 88%, 23%, 1);
-
-            background: radial-gradient(circle, hsla(207, 88%, 23%, 1) 0%, hsla(115, 50%, 70%, 1) 0%, hsla(0, 0%, 100%, 1) 100%);
-
-            background: -moz-radial-gradient(circle, hsla(207, 88%, 23%, 1) 0%, hsla(115, 50%, 70%, 1) 0%, hsla(0, 0%, 100%, 1) 100%);
-
-            background: -webkit-radial-gradient(circle, hsla(207, 88%, 23%, 1) 0%, hsla(115, 50%, 70%, 1) 0%, hsla(0, 0%, 100%, 1) 100%);
-
-            filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#074170", endColorstr="#92D88B", GradientType=1);
         }
     </style>
 </head>
@@ -273,7 +120,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         }
         echo '<div class="order-form ">';
         echo '<form  action="payment.php" method="post">';
-        echo '<h2>Order Details</h2>';
+        echo '<h3>Order Details</h3>';
 
 
         if (!empty($orderDetails)) {
@@ -528,16 +375,16 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         ?>
 
 
-        <h2>Payment Information</h2>
+        <h3>Payment Information</h3>
 
-        <label for="total_amount">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
+        <label for="total_amount" style="color: indianred;">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
 
 
         <br>
-        <label for="payment_amount">Payment Amount: Rs.</label>
+        <label for=" payment_amount">Payment Amount: Rs.</label>
         <input type="text" name="payment_amount" id="payment_amount" oninput="calculateBalance()">
 
-        <label for="balance">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
+        <label for="balance" style="color: indianred;">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
 
         <table>
             <tr style="background-color:white;">
@@ -599,7 +446,3 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 </body>
 
 </html>
-<?php
-// Close the database connection
-mysqli_close($connection);
-?>
