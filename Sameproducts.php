@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<?php
+
+$maincat=$_SESSION['categoryid'];
+
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -83,6 +88,7 @@
         <div class="products-container">
 
             <?php
+            $catnum=$_GET['categoryid'];
             $host = 'localhost';
             $username = 'root';
             $password = '';
@@ -94,7 +100,7 @@
                 die("Connection failed: " . $conn->connect_error);
             }
 
-            $sql = "SELECT * FROM product WHERE main_cat='001'";
+            $sql = "SELECT * FROM product WHERE main_cat=$maincat";
             $result = $conn->query($sql);
 
             if ($result) { // Check if the query was successful
@@ -133,9 +139,7 @@
         </div>
          <path id="curve" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97" />
     <text width="500">
-      <textPath xlink:href="#curve">
-        Dangerous Curves Ahead
-      </textPath>
+      
     </text>
     </div>
 </body>

@@ -61,7 +61,7 @@ include 'Navibar.php';
 <?php
 
 $catnum=$_GET['categoryid'];
-
+$_SESSION['categoryid']=$catnum;
 $host = 'localhost';
 $username = 'root';
 $password = '';

@@ -28,7 +28,7 @@
             
             </ul>
             <div class="cart-profile">
-            <a href="" class=""><img src="Images/Decoration/profile.png" style="width: 50px; height: 50px;"></a>&nbsp&nbsp
+            <a href="" class=""><img src="Images/Decoration/profile.jpg" style="width: 50px; height: 50px;"></a>&nbsp&nbsp
             <a href="Cart.php" class="index-cart"><i class='bx bx-cart' ></i></a> 
             </div>
 

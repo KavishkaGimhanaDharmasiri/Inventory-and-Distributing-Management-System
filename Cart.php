@@ -69,7 +69,7 @@ if ($result) { // Check if the query was successful
                     <div class="content">
                         <h3>'.$sub_cat.'</h3>
                         <h4>Price: Rs. '.$subtotal.'</h4>
-                        <p class="unit">Quantity <input value= '.$quantity.'></p>
+                        <p class="unit">Quantity: '.$quantity.'</p>
                         <p class="btn-area">
                             <i class="bx bxs-trash"></i>
                             <span class="btn2">Remove</span>

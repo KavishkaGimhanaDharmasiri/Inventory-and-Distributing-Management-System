@@ -2,75 +2,6 @@
 
 session_start();
 ?>
-<?php
-
-if(isset($_POST['signUp']))
-{
-   
-    $fname =$_POST['fname'];
-    $lname =$_POST['lname'];
-    $dob =$_POST['dob'];
-    $address = $_POST['address'];
-    $tnumber = $_POST['tnumber'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-     $_SESSION['usrname'] = $email;
-
-    //connect to DB
-    $host='localhost';
-    $username='root';
-    $password="";
-    $database="retail_website";
-
-    $link=mysqli_connect($host,$username,$password,$database);
-
-        if(!$link){
-            die('could connect'.mysqli_error($link));
-        }
-       // echo 'connected successfully';
-
-    $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
-
-      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
-
-    $stmt->execute();
-
-    $stmt->close();
-    $result = $link->query("SELECT @status AS status");
-    $row = $result->fetch_assoc();
-    $status = $row['status'];
-
-    switch ($status) {
-        case 0:
-            // echo "Student inserted successfully."; 
-        echo '<script>window.alert("User inserted successfully.");
-        window.location.href="Cart.php";
-        exit();</script>'; 
-        
-            break;
-        case 1:
-            echo'<script>window.alert("Error occurred while inserting student.");
-            event.preventDefault();
-            return false;
-            </script>';
-            break;
-        case 2:
-            echo'<script>window.alert("Email already exists in the database.");
-            event.preventDefault();
-            return false;
-            </script>';
-            break;
-        default:
-            echo'<script>window.alert("Unknown status returned.")
-            event.preventDefault();
-            return false;
-            </script>';
-            break;
-    }
-
-    $link->close();
-}
-?>
 
 
 <head>
@@ -169,7 +100,7 @@ if(isset($_POST['signUp']))
                 <input type="text" placeholder="Last Name" id="lname" name="lname">
 
                 <span id = "dob_msg" style="color:red"> </span>
-                <input type="text" placeholder="Date of Birth" id="dob" name="dob">
+                <input type="date" placeholder="Date of Birth" id="dob" name="dob">
 
                 <span id = "address_msg" style="color:red"> </span>
                 <input type="text" placeholder="Address" id="address" name="address">
@@ -246,11 +177,11 @@ function check_form() {
             text = '**Enter Characters Only**';
             document.getElementById("lname_msg").innerHTML = text;
             event.preventDefault();
-        } else if (!pattern.test(dob)) {
-            text = '**Invalid Date of Birth (DD-MM-YYYY)**';
-            document.getElementById("dob_msg").innerHTML = text;
-            event.preventDefault();
-        } else if (address == null || address.trim() === "") {
+        // } else if (!pattern.test(dob)) {
+        //     text = '**Invalid Date of Birth (DD-MM-YYYY)**';
+        //     document.getElementById("dob_msg").innerHTML = text;
+        //     event.preventDefault();
+         } else if (address == null || address.trim() === "") {
             text = '**Enter Your Address**';
             document.getElementById("address_msg").innerHTML = text;
             event.preventDefault();
@@ -291,4 +222,77 @@ function check_form() {
     </div>
 </body>
 </html>
+<?php
+
+if(isset($_POST['signUp']))
+{
+   
+    $fname =$_POST['fname'];
+    $lname =$_POST['lname'];
+    $dob =$_POST['dob'];
+    $address = $_POST['address'];
+    $tnumber = $_POST['tnumber'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+     $_SESSION['usrname'] = $email;
+     $_SESSION['email'] = $email;
+            
+            //$_SESSION['user_id']=$id;
+            $_SESSION['f_name']=$fname;
+
+    //connect to DB
+    $host='localhost';
+    $username='root';
+    $password="";
+    $database="retail_website";
+
+    $link=mysqli_connect($host,$username,$password,$database);
+
+        if(!$link){
+            die('could connect'.mysqli_error($link));
+        }
+        //echo 'connected successfully';
+
+    $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
+
+      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
+
+    $stmt->execute();
+
+    $stmt->close();
+    $result = $link->query("SELECT @status AS status");
+    $row = $result->fetch_assoc();
+    $status = $row['status'];
+
+    switch ($status) {
+        case 0:
+            // echo "Student inserted successfully."; 
+        echo '<script>window.alert("User inserted successfully.");
+        window.location.href="SignIn.php";
+        exit();</script>'; 
+        
+            break;
+        case 1:
+            echo'<script>window.alert("Error occurred while inserting student.");
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+        case 2:
+            echo'<script>window.alert("Email already exists in the database.");
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+        default:
+            echo'<script>window.alert("Unknown status returned.")
+            event.preventDefault();
+            return false;
+            </script>';
+            break;
+    }
+
+    $link->close();
+}
+?>
 
