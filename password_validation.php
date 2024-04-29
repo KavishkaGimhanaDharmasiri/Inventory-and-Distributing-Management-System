@@ -65,89 +65,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-  <div class="area" style="z-index:1;">
-    <ul class="circles">
 
-      <!-- Simulate a smartphone / tablet -->
-      <div class="mobile-container">
+  <!-- Simulate a smartphone / tablet -->
+  <div class="mobile-container">
 
-        <!-- Top Navigation Menu -->
-        <div class="topnav">
+    <!-- Top Navigation Menu -->
+    <div class="topnav">
 
-          <?php
-          if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:20px; "><i class="fa fa-angle-left"></i></a>';
-          } else {
-            // If no referrer is set, provide a default back link
-            echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-          }
-          ?>
-          <div id="mySidepanel" class="sidepanel">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
-          </div>
-
-          <a href="javascript:void(0);" class="icon" onclick="openNav()">
-            <i class="fa fa-bars"></i>
-          </a>
-
-        </div>
-
-        <div class="container">
-          <h3>Email Validation</h3>
-
-          <?php
-          // Display error message if set
-          if (isset($error_message)) {
-            echo '<div class="alert alert-danger">' . $error_message . '</div>';
-          }
-          ?>
-
-          <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;">
-
-            <div class="form-group">
-
-              <label for="email">E-Mail Address </label>
-              <input type="email" name="email" class="form-control" required placeholder="noreply@gmail.com">
-            </div>
-
-            <button type="submit">Get Code</button>
-          </form>
-
-        </div>
-
-
-
+      <?php
+      if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
+        // Generate back navigation link using HTTP_REFERER
+        echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:20px; "><i class="fa fa-angle-left"></i></a>';
+      } else {
+        // If no referrer is set, provide a default back link
+        echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
+      }
+      ?>
+      <div id="mySidepanel" class="sidepanel">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
       </div>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-  </div>
 
+      <a href="javascript:void(0);" class="icon" onclick="openNav()">
+        <i class="fa fa-bars"></i>
+      </a>
 
-  <script>
-    function openNav() {
-      document.getElementById("mySidepanel").style.width = "150px";
-    }
+    </div>
 
-    function closeNav() {
-      document.getElementById("mySidepanel").style.width = "0";
-    }
-  </script>
+    <div class="container">
+      <h3>Email Validation</h3>
+
+      <?php
+      // Display error message if set
+      if (isset($error_message)) {
+        echo '<div class="alert alert-danger">' . $error_message . '</div>';
+      }
+      ?>
+
+      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;">
+
+        <div class="form-group">
+
+          <label for="email">E-Mail Address </label>
+          <input type="email" name="email" class="form-control" required placeholder="noreply@gmail.com">
+        </div>
+
+        <button type="submit">Get Code</button>
+      </form>
+
+    </div>
+
+    <script>
+      function openNav() {
+        document.getElementById("mySidepanel").style.width = "150px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidepanel").style.width = "0";
+      }
+    </script>
 
 </body>
 

@@ -86,7 +86,7 @@ button {
   /* Adjusted width to account for padding */
   padding: 10px;
   box-sizing: border-box;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   border-radius: 15px;
   border: none;
   border-block: none;
@@ -130,18 +130,16 @@ table {
 th {
   text-align: center;
   padding: 10px;
-}
-
-th {
   background-color: #4caf50;
   color: #fff;
 }
 
 td {
-  padding: 5px;
   color: black;
 }
-
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 /* Additional style for the Confirm Order button */
 .confirm-order-button {
   background-color: #4caf50;
@@ -166,11 +164,11 @@ input[type="checkbox"] {
 }
 
 #leftth {
-  border-top-left-radius: 10px;
+  border-top-left-radius: 8px;
 }
 
 #rightth {
-  border-top-right-radius: 10px;
+  border-top-right-radius: 8px;
 }
 
 tr:hover {

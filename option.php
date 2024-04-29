@@ -36,6 +36,9 @@ unset($_SESSION['paymentAmount']);
 unset($_SESSION['balance']);
 unset($_SESSION['selected_payment_method']);
 unset($_SESSION['selected_store']);
+unset($_SESSION['process_payment']);
+//unset($_SESSION['sales_recipt_download']);
+unset($_SESSION['send_massage']);
 
 // End the session
 session_write_close();
@@ -73,9 +76,9 @@ session_write_close();
       border-radius: 0;
       border-bottom-left-radius: 15px;
       border-top-right-radius: 15px;
-      background: linear-gradient(301deg, #3cba68, #fefefe, #ffffff);
-      background-size: 180% 180%;
-      animation: gradient-animation 7s ease infinite;
+      background: linear-gradient(300deg,#3bb52d,#3bb52d,#3bb52d,#fcfcfc,#33a133,#33a133);
+  background-size: 360% 360%;
+  animation: gradient-animation 12s ease infinite;
       color: black;
       border-left: 1px solid green;
       border-bottom: 1px solid green;

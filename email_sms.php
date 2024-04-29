@@ -60,17 +60,18 @@ function sendmail($Subject, $body, $user, $firstname)
     } catch (Exception $e) {
         echo $e;
         echo '<script> alert("Message could not be sent. No Internet Connection Found. Please Go Online");</script>';
+        $_SESSION['send_massage'] = true;
     }
 }
 
 function sendsms($number, $message)
 {
-    $apiEndpoint = '';
+    $apiEndpoint = 'https://app.notify.lk/api/v1/send';
 
     // Replace these values with your actual user ID, API key, and sender ID
-    $userId = ''; //enter user id
-    $apiKey = ''; //api key
-    $senderId = ''; //sender id 
+    $userId = '';
+    $apiKey = '';
+    $senderId = '';
 
 
     // Get custom content from the form or any source

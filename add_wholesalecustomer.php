@@ -130,7 +130,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
                     <button onclick="redirectToIndex()" class="sucess">OK</button>
                     </div>';
-    mysqli_close($connection);
 
     if (isset($error_message)) {
         echo '<div class="alert alert-danger">' . $error_message . '</div>';

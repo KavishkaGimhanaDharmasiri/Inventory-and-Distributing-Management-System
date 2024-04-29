@@ -181,15 +181,15 @@ function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaym
     $pdf->writeHTML($html, true, false, true, false, '');
 
     $pdfDirectory = $_SERVER['DOCUMENT_ROOT'] . 'pdf/';  // Use the server's document root
-    $orderID = 72; //$_SESSION['ord_id'];  // Replace this with your actual order ID
+    $orderID = $_SESSION['ord_id'];  // Replace this with your actual order ID
     $pdfFileName = 'order_' . $orderID . '.pdf';  // Include order ID in the filename
     $pdfFilePath = $pdfDirectory . $pdfFileName;
 
-    // $pdf->Output($pdfFilePath, 'F');  // Save the PDF file on the server
+    $pdf->Output($pdfFilePath, 'F');  // Save the PDF file on the server
 
     // Store the file name in the database
-    // $insertQuery = "INSERT INTO generated_pdfs (ord_id, pdf_path) VALUES ('$orderID', '$pdfFileName')";
-    // mysqli_query($connection, $insertQuery);
+    $insertQuery = "INSERT INTO generated_pdfs (ord_id, pdf_path) VALUES ('$orderID', '$pdfFileName')";
+    mysqli_query($connection, $insertQuery);
 
     // Output the PDF to the browser for download
     $pdf->Output($pdfFileName, 'D');

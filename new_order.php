@@ -358,16 +358,17 @@ function displayOrderTable()
                 <!-- Display Confirm Order button if there are items in the order -->
                 <?php
                 if (!empty($_SESSION['order_details'])) {
+                    echo "<button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
+                }
+                ?>
+                <?php
+                if (!empty($_SESSION['order_details'])) {
                     echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><b>Clear Order</button>";
                 }
                 ?>
 
                 <!-- Confirm Order button -->
-                <?php
-                if (!empty($_SESSION['order_details'])) {
-                    echo "<button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
-                }
-                ?>
+
             </form>
 
 
@@ -375,7 +376,7 @@ function displayOrderTable()
         <?php
         if (!isset($_SESSION["ad_state"])) {
             echo '<div style="border:1px solid green; color:green;background-color:#d9fcd2; " class="order-form" id="advertise">
-            <p style="color: green;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close"></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
+            <p style="color: green; font-weight: normal;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;";></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
             c).Add disired item count in each box below item then click Add order button the previously enterd details are shown in table below Add order Button. <br><br>
             d.)Again you can perform b). And c). steps to add multipel items to order. 
             <br><br>if You want remove any Items from order click check box and click Clear Order Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
