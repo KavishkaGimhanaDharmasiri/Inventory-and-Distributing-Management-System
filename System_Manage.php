@@ -30,9 +30,9 @@
             border-radius: 0;
             border-bottom-left-radius: 15px;
             border-top-right-radius: 15px;
-            background: linear-gradient(49deg, #5fe75f, #184218, #5cff5c, #000000, #75f775);
-            background-size: 300% 300%;
-            animation: gradient-animation 10s ease infinite;
+            background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
+            background-size: 360% 360%;
+            animation: gradient-animation 12s ease infinite;
 
         }
 

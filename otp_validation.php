@@ -101,22 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <div class="area" style=" z-index:1;">
-            <ul class="circles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
-        </div>
     </div>
 
 

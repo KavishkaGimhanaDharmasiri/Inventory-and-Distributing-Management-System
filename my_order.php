@@ -29,25 +29,6 @@
             margin-bottom: 0;
         }
 
-        /* Style for alternating row colors */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
-
-        th,
-        td {
-            padding: 6px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4caf50;
-            color: #fff;
-        }
-
-        /* Hide order details tables by default */
         .order-details {
             display: none;
         }

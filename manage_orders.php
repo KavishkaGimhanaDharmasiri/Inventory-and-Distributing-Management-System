@@ -46,9 +46,9 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
             border-radius: 0;
             border-bottom-left-radius: 15px;
             border-top-right-radius: 15px;
-            background: linear-gradient(301deg, #3cba68, #fefefe, #ffffff);
-            background-size: 180% 180%;
-            animation: gradient-animation 7s ease infinite;
+            background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
+            background-size: 360% 360%;
+            animation: gradient-animation 12s ease infinite;
             color: black;
             font-weight: bold;
             border-left: 1px solid green;
