@@ -4,6 +4,7 @@ session_start();
 // Include your database connection file
 include("db_connection.php");
 require_once('den_fun.php');
+require 'notification_area.php';
 if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])) {
     acess_denie();
     exit();
@@ -249,13 +250,7 @@ function displayOrderTable()
         <div class="topnav">
 
             <?php
-            if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-                // Generate back navigation link using HTTP_REFERER
-                echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:20px; "><i class="fa fa-angle-left"></i></a>';
-            } else {
-                // If no referrer is set, provide a default back link
-                echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-            }
+            topnavigation();
             ?>
             <div id="mySidepanel" class="sidepanel">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>

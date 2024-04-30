@@ -5,6 +5,7 @@ require('fpdf/fpdf.php');
 // Fetch customer data
 // Include database connection file
 include("db_connection.php");
+
 $route_id = $_SESSION['route_id'];
 $customer = $_SESSION['customer'];
 
@@ -41,11 +42,11 @@ while ($row = mysqli_fetch_assoc($customerResult)) {
     $pdf->Cell(0, 6, 'Location: ' . $row['sto_loc'], 0, 1);
     $pdf->Ln();
     $pdf->SetLineWidth(0.2); // Set line width
-$pdf->SetDrawColor(0, 0, 0); // Set color (black)
-$pdf->Line($pdf->GetX(), $pdf->GetY(), $pdf->GetX() + $pdf->GetPageWidth() - 20, $pdf->GetY());    $pdf->Ln(); // Line break
+    $pdf->SetDrawColor(0, 0, 0); // Set color (black)
+    $pdf->Line($pdf->GetX(), $pdf->GetY(), $pdf->GetX() + $pdf->GetPageWidth() - 20, $pdf->GetY());
+    $pdf->Ln(); // Line break
 }
 
 // Output PDF as download
 $pdf->Output('customer_data_report.pdf', 'D');
 echo '<script>alert("completed");</script>';
-?>

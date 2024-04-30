@@ -1,3 +1,8 @@
+<?php
+session_start();
+include("db_connection.php");
+require 'notification_area.php';
+?>
 <!DOCTYPE html>
 <html>
 
@@ -71,13 +76,7 @@
         <div class="topnav">
 
             <?php
-            if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-                // Generate back navigation link using HTTP_REFERER
-                echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            } else {
-                // If no referrer is set, provide a default back link
-                echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-            }
+            topnavigation();
             ?>
             <div id="mySidepanel" class="sidepanel">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
@@ -93,8 +92,6 @@
         </div>
         <div class="containers">
             <?php
-            session_start();
-            include("db_connection.php");
             $user_id = $_SESSION["user_id"];
             $store_quary = "SELECT c.sto_name FROM customers c LEFT JOIN users u ON u.user_id=c.user_id WHERE u.user_id=$user_id";
             $store_quary_result = mysqli_query($connection, $store_quary);

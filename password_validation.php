@@ -4,6 +4,7 @@ session_start();
 require_once('email_sms.php');
 include("db_connection.php");
 require_once('den_fun.php');
+require 'notification_area.php';
 if (!isset($_SESSION['index_visit'])) {
   acess_denie();
   exit();
@@ -73,21 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="topnav">
 
       <?php
-      if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-        // Generate back navigation link using HTTP_REFERER
-        echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:20px; "><i class="fa fa-angle-left"></i></a>';
-      } else {
-        // If no referrer is set, provide a default back link
-        echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-      }
+      topnavigation();
       ?>
-      <div id="mySidepanel" class="sidepanel">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
-      </div>
 
       <a href="javascript:void(0);" class="icon" onclick="openNav()">
         <i class="fa fa-bars"></i>

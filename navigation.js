@@ -13,11 +13,6 @@
         xmlhttp.send();
     }
 
-    function closeintro() {
-        document.getElementById("notificationPanel").style.display = "none";
-
-    }
-
     function closediv() {
         document.getElementById("notifications").style.display = "none";
 
@@ -26,6 +21,7 @@
     function back() {
         window.history.back();
     }
+
     $(document).ready(function() {
         // Load notification count
         $.ajax({
@@ -40,11 +36,7 @@
         });
 
         // When clicking on the notification bell
-        function shownotf() {
-            // Show the notification panel
-            $('.notification-panel').toggle();
 
-        }
 
         $('.view').click(function() {
             document.getElementById("notificationPanel").style.display = "none";
