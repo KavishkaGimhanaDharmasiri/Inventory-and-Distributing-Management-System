@@ -75,7 +75,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         a {
             text-decoration: none;
             color: white;
-            text-align: center;
 
 
         }
@@ -103,13 +102,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
             <?php
             topnavigation();
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
 
             <a href="javascript:void(0);" class="icon" onclick="openNav()">
                 <i class="fa fa-bars"></i>
@@ -125,17 +117,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 
         </div>
     </div>
-
-
-    <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-    </script>
 
 </body>
 
