@@ -2,6 +2,7 @@
 session_start();
 include("db_connection.php");
 require_once('den_fun.php');
+require 'notification_area.php';
 
 if (!isset($_SESSION['index_visit']) || !$_SESSION['index_visit'] || !isset($_SESSION["user_id"]) || !isset($_SESSION["state"])) {
 
@@ -65,9 +66,12 @@ session_write_close();
     }
 
     .option {
-      width: 45%;
+      width: 75%;
       margin-bottom: 20px;
       background-color: #4caf50;
+      /* background: linear-gradient(57deg, #35a844, #141514, #36a536);
+            background-size: 180% 180%;
+            animation: gradient-animation 6s ease infinite;*/
       color: #fff;
       text-align: center;
       padding: 15px;
@@ -76,13 +80,13 @@ session_write_close();
       border-radius: 0;
       border-bottom-left-radius: 15px;
       border-top-right-radius: 15px;
-      background: linear-gradient(300deg,#3bb52d,#3bb52d,#3bb52d,#fcfcfc,#33a133,#33a133);
-  background-size: 360% 360%;
-  animation: gradient-animation 12s ease infinite;
+      background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
+      background-size: 360% 360%;
+      animation: gradient-animation 12s ease infinite;
       color: black;
+      font-weight: bold;
       border-left: 1px solid green;
       border-bottom: 1px solid green;
-      font-weight: bold;
 
     }
 
@@ -123,26 +127,10 @@ session_write_close();
     <div class="topnav">
 
       <?php
-      if (!isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-        // Generate back navigation link using HTTP_REFERER
-        echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-      } else {
-        // If no referrer is set, provide a default back link
-        echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:25px;"><i class="fa fa-angle-left"></i></a>';
-      }
-      ?>
-      <div id="mySidepanel" class="sidepanel">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
-        <a href="#" onclick="logout()">Logout</a>
-      </div>
 
-      <a href="javascript:void(0);" class="icon" style="font-size:20px;" onclick="openNav()">
-        <i class="fa fa-bars"></i>
-      </a>
+      topnavigation();
+      ?>
+
     </div>
 
     <div class="options-container">

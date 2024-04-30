@@ -174,7 +174,7 @@ input[type="checkbox"] {
 tr:hover {
   background: hsla(207, 88%, 23%, 1);
 
-  background: radial-gradient(
+  background: -webkit-radial-gradient(
     circle,
     hsla(207, 88%, 23%, 1) 0%,
     hsla(115, 50%, 70%, 1) 0%,
@@ -188,7 +188,7 @@ tr:hover {
     hsla(0, 0%, 100%, 1) 100%
   );
 
-  background: -webkit-radial-gradient(
+  background: radial-gradient(
     circle,
     hsla(207, 88%, 23%, 1) 0%,
     hsla(115, 50%, 70%, 1) 0%,

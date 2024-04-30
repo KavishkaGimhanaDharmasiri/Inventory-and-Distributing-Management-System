@@ -393,14 +393,6 @@ function displayOrderTable()
 
 
     <script>
-        function openNav() {
-            document.getElementById(" mySidepanel").style.width = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function closeintro() {
             document.getElementById("advertise").style.display = "none";
             <?php $_SESSION["ad_state"] = "true"; ?>

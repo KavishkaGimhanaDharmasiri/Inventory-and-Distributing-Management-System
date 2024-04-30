@@ -42,7 +42,7 @@ body {
   width: 0;
   position: fixed;
   z-index: 1;
-  height: 210px;
+  height: 100%;
   top: 0;
   right: 0;
   background-color: black;

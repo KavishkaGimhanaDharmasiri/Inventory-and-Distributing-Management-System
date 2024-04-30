@@ -2,6 +2,7 @@
 session_start();
 require_once "db_connection.php";
 require_once('den_fun.php');
+require 'notification_area.php';
 // Include your database connection file
 
 if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
@@ -119,6 +120,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .suggestion:hover {
             background-color: #C5FFBE;
         }
+
+        tr,
+        td {
+            padding: 8px;
+        }
     </style>
 </head>
 
@@ -130,13 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Top Navigation Menu -->
         <div class="topnav">
             <?php
-            if (!isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-                // Generate back navigation link using HTTP_REFERER
-                echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            } else {
-                // If no referrer is set, provide a default back link
-                echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-            }
+            topnavigation();
             ?>
             <div id="mySidepanel" class="sidepanel">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="order-form">
             <form id="messageForm" action="handle_return.php" method="POST">
-                <label for="customer"><b>Customer Name<bb></label>
+                <label for="customer"><b>Customer Name<b></label>
                 <select name="customers" id="customers">
                     <option value=""><b>Select Customer<b></option>
                     <?php
@@ -168,11 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </select>
                 <br>
                 <br>
+                <label for="product"><b>Return Product Name<b></label>
                 <input type="text" class="form-control" id="product_count" placeholder="Type Return Product..">
 
 
                 <div id="suggestedResults" class="list-group"></div>
-                <br>
+                <label for="product"><b>Return Product Name<b></label>
                 <input type="number" class="form-control" id="pcount" placeholder="Enter count Of Return..">
                 <br>
                 <button type="button" id="Add_list" name="Add_list">Add to List</button>
