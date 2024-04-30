@@ -233,9 +233,9 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         if (isset($_POST['confirm'])) {
 
-            if (!isset($_SESSION['sales_recipt_download'])) {
+            /* if (!isset($_SESSION['sales_recipt_download'])) {
                 echo '<script>alert("Download Sales Receipt Before Proceed Further");</script>';
-            }
+            }*/
             echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
             <a href="option.php"><button class="sucess">OK</button></a>
             </div>';
@@ -261,10 +261,8 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             </tr>
         </table>
         <br>
-        <?php
-        if (isset($_SESSION['sales_recipt_download'])) {
-            echo '<button type="submit" name="confirm">Confirm Order</button>';
-        }
+
+        <button type="submit" name="confirm">Confirm Order</button>
         ?>
         </form>
     </div>
