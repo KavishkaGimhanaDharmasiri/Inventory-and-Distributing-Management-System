@@ -182,7 +182,7 @@
 
 /*Review*/
 
-.review{
+/* .review{
     max-width: 968px;
     margin-left: auto;
     margin-right: auto;
@@ -249,7 +249,7 @@
 .review-profile h3{
     font-size: 1rem;
     font-weight: 600;
-}
+} */
 
 
 /*Services*/
@@ -260,10 +260,17 @@
     text-align: center;
     padding: 80px 0 10px 0;
 }
+
 .services h1{
-    font-weight: 600;
+    font-size: 60px;
     text-transform: uppercase;
-    color: linear-gradient(to top, #c72092 , #6c14d0);
+}
+
+.services h1 span{
+    margin-left: 15px;
+    background: linear-gradient(to left, #c72092 , #6c14d0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;    
 }
 
 .services .services_cards{
@@ -293,6 +300,7 @@
     color: #919191;
     margin-bottom: 60px;
 }
+
 
 .footer{
     max-width: 968px;

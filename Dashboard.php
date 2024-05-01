@@ -204,7 +204,7 @@ $conn = new mysqli($host, $username, $password, $database);
     <!--Services-->
 
     <div class="services" id="Servises">
-        <h1>our services</h1>
+        <h1>our<span>services</span></h1>
 
         <div class="services_cards">
             <div class="services_box">
@@ -233,6 +233,7 @@ $conn = new mysqli($host, $username, $password, $database);
         </div>
 
     </div>
+
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

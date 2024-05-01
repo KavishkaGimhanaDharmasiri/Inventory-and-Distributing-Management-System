@@ -1,8 +1,8 @@
 <?php
 session_start();
-//include 'Navibar.php';
+include 'Navibar.php';
 
-var_dump($_POST);
+//var_dump($_POST);
 
  $un=$_SESSION['username'];
 
