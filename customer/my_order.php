@@ -81,14 +81,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
-
             <a href="javascript:void(0);" class="icon" onclick="openNav()">
                 <i class="fa fa-bars"></i>
             </a>
