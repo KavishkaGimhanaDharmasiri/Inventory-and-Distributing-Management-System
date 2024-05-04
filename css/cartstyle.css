@@ -13,8 +13,10 @@
     --bg-color: #fff;
 }
 
-.cart-body{
-    font-family: montserrat;
+
+.rmv-product{
+    background-color: rgb(228, 114, 114);
+    
 }
 
 .wrapper{
@@ -27,6 +29,7 @@
     text-align: center;
     text-transform: uppercase;
 }
+
 
 .cart{
     display: flex;
@@ -138,6 +141,9 @@
     background: var(--light-orange-color);
     transition: 0.2s ease;
 }
+
+
+
 
 @media screen and (max-width:700px) {
     .content h3{

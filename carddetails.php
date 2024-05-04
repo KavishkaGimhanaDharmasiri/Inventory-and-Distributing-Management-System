@@ -1,3 +1,11 @@
+<?php
+session_start();
+$total=$_SESSION['total'];
+$subtotal=$_SESSION['subtotal'];
+$shipping=$_SESSION['shipping'];
+$name=$_SESSION['f_name'];
+$email=$_SESSION['email'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,22 +14,43 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style><style>
         #div1 {
-            align-items: center;
             border-radius: 10px;
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
                 0 10px 10px rgba(0, 0, 0, 0.22);
-            top: 50%;
-            bottom: 50%;
-            left: 50%;
+            
             transform: translate(-50%, -50%);
             width: 1200px;
             height:900px;
             max-width: 100%;
             margin-top: 100px;
-           position: relative;
+        }
+
+       
+
+        #table-logo{
+             display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
+            padding-bottom: 50px; 
         }
 
         #form {
+             align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+                0 10px 10px rgba(0, 0, 0, 0.22);
+            top: 10%;
+            bottom: 50%;
+            left: 35%;
+            transform: translate(-50%, -20%);
+            width: 900px;
+            height:900px;
+            max-width: 100%;
+            margin-top: 100px;
+           position: relative;
           
             display: flex;
             align-items: center;
@@ -51,7 +80,7 @@
             font-weight: bold;
             padding: 10px 50px;
             letter-spacing: 1px;
-            width: 450px;
+            width: 150px;
         } 
 
         #img {
@@ -65,37 +94,77 @@
             padding-left: 20px;
         }
 
-        .tab3 td {
+        .tab3 td  {
             padding-left: 40px;
             padding-right: 40px;
         }
 
-        .tab3 .text{
+        .tab3 .text {
             background-color: #eee;
             border: none;
             border-radius: 10px;
             padding: 12px 15px;
             margin: 8px 0;
-            width: 150px;;
+            width: 160px;;
         }
-       
+
+        select{
+            border-radius: 20px;
+           border: none;
+            height: 30px;
+            width: 350px;
+        }
+
+        label,h6{
+            color:#5C5D5D;
+        }
+
+        img{
+            height: 40px;
+            width: 150px;
+        }
+
+        .right-bar{
+            position: absolute; top: 170px; right: 150px;
+  
+    padding: 20px;
+    height: 400px;
+    width: 30pc;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: rgb(100,100,111,0.2)0 7px 29px 0;
+}
+
+.right-bar hr{
+    margin-bottom: 25px;
+}
+
+.right-bar p{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+    .submit{
+        background: #009933;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+    padding: 10px;
+    width: 200px;
+    margin-left:130px;
+    margin-right: auto;
+    }
+    .submit:hover{
+    background:#e60000;
+    transition: 0.2s ease;
+}
+
     </style></style>
 </head>
 <body>
-<?php
-if(isset($_GET['showModal']) && $_GET['showModal'] == 'true') {
-    echo "<script>document.addEventListener('DOMContentLoaded', function() { document.getElementById('id01').style.display='block'; });</script>";
-}
-?>
-
-  <div id="id01" class="w3-modal">
-    <div class="w3-modal-content">
-      <div class="w3-container">
-        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-        <div id="div1">
-            
-                <form action="" method="post" id="form">
-                    <table id="table">
+        <table id="table-logo">
                         <tr>
                             <td><img src="Images/Decoration/lotus.png" alt="logo" id="img"></td>
                             <td>
@@ -104,89 +173,162 @@ if(isset($_GET['showModal']) && $_GET['showModal'] == 'true') {
                         </tr>
                     </table>
 
-                    <h2 style="color: black;" align="center">Register</h1>
+        <div id="div1">
+            
+                <form action="" method="post" id="form">
+                    
+                    <h2 style="color: black;" align="center">Ship to</h1>
 
                     <table class="tab2">
-                        <tr>
-                        <td><input type="text" placeholder="Name" id="text" name="name"></td><td></td>
+
+                    <tr>
+                        <td> <input type="text" placeholder="<?php echo $name; ?>" id="text" name="name" value=<?php echo $name; ?>></td><td> <input type="text" placeholder=<?php echo $email; ?> id="text" name="email" value=<?php echo $email; ?>></td>
                     </tr>
 
                     <tr>
-                        <td> <input type="text" placeholder="Email" id="text" name="email"></td><td> <input type="text" placeholder="Name on Card" id="text" name="cardname"></td>
+                        <td> <input type="text" placeholder="Street address" id="text" name="Street address"></td><td><input type="text" placeholder="Street address (optional)" id="text" name="Street address2"></td>
                     </tr>
 
                     <tr>
-                        <td> <input type="text" placeholder="Address" id="text" name="address"></td><td><input type="text" placeholder="Credit Card Number" id="text" name="cardnumber"></td>
-                    </tr>
-
-                    <tr>
-                        <td><input type="text" placeholder="City" id="text" name="city"></td><td> <input type="text" placeholder="Exp Month" id="text" name="expmonth"></td>
+                        <td><input type="text" placeholder="Address" id="text" name="address"></td>
                     </tr>
                     </table>
 
                     <table class="tab3">
                         <tr>
-                            <td><input type="text" placeholder="State" class="text" name="state"></td>
+                            <td><input type="text" placeholder="City" class="text" name="city"></td>
+                            <td> <input type="text" placeholder="Province" class="text" name="province"></td>
                             <td> <input type="text" placeholder="Zip Code" class="text" name="zip"></td>
-                            <td> <input type="text" placeholder="Exp Year" class="text" name="expyear"></td>
-                            <td> <input type="text" placeholder="CVV" class="text" name="cvv"></td></tr>
+                            </tr>
                     </table>
            
-                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="sub">Register</button><br>
+                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="add_shipping_details">Done</button><br>
                         
                 </form>
         </div>
-      </div>
-    </div>
-  </div>
-<script>
-// Automatically display the modal when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('id01').style.display = 'block';
-});
-</script>
+
+        <div id="div2">
+            <form action="" method="post" id="form">
+                    
+                    <h2 style="color: black;" align="center">Pay with</h1>
+
+                    <table class="tab2">
+
+                    <tr>
+                        <td><label for="bank">Bank:</label>
+                              <select name="bank" id="bank" name="bank">
+                                <option value="BOC">BOC</option>
+                                <option value="COM">Commercial Bank</option>
+                                <option value="HNB">Hatton National Bank</option>
+                                <option value="NSB">National Savings Bnak</option>
+                                <option value="Peoples">Peoples Bank</option>
+                                <option value="Sampath">Sampath Bnak</option>
+                              </select></td>
+                    <td> <h6>Payment Types: </h6> <img src="Images/Decoration/cards.png"></td>
+                    </tr>
+
+                     <tr>
+                        <td><input type="number" placeholder="Card number" id="text" name="cardnumber"></td><td> <input type="number" placeholder="cvv" id="text" name="cardnumber"></td>
+                    </tr>
+
+                    </table>
+
+                    <table class="tab3">
+                        <tr>
+                            <td><input type="text" placeholder="Expiration date" class="text" name="state"></td>
+                            <td> <input type="text" placeholder="Expiration Month" class="text" name="zip"></td>
+                            </tr>
+                    </table>
+           
+                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="Shipping_details">Done</button><br>
+                        
+                </form>
+        </div>
+
+        <div class="right-bar">
+                <p><span>Subtotal</span><span>Rs.<?php echo $subtotal?></span></p>
+                <hr>
+                
+                <p><span>Shipping</span><span>Rs.<?php echo $shipping?></span></p>
+                <hr>
+                <p><span>Total</span><span>Rs.<?php echo $total?></span></p><br>
+                <input type="submit" class="submit" value="Confirm and pay" name="add_card_details"></a>
+                
+            </div>
 
 </body>
 </html>
 
 <?php
-if(isset($_POST['sub']))
+if(isset($_POST['add_shipping_details'])) // Check if the form is submitted
 {
-    $id= $_POST['name'];
-    $name =$_POST['name'];
+    // Retrieve form data
     $email = $_POST['email'];
+    $street_address = $_POST['Street_address'];
+    $street_address2 = $_POST['Street_address2'];
     $address = $_POST['address'];
-    $cardname = $_POST['cardname'];
-    $cardnumber = $_POST['cardnumber'];
-    $city = $_POST['city'];
-    $expmonth = $_POST['expmonth'];
-    $state = $_POST['state'];
-    $zip = $_POST['zip'];
-    $expyear = $_POST['expyear'];
-    $cvv = $_POST['cvv'];
+    $city = $_POST['city']; // Changed to match the name attribute in the HTML form
+    $province = $_POST['province']; // Changed to match the name attribute in the HTML form
+    $zip = $_POST['zip']; // Changed to match the name attribute in the HTML form
 
-    //connect to DB
-    $host='localhost';
-    $username='root';
-    $password="";
-    $database="retail_website";
+    echo $email;
+    // Connect to the database
+    $host = 'localhost';
+    $username = 'root';
+    $password = '';
+    $database = 'retail_website';
 
-    $link=mysqli_connect($host,$username,$password,$database);
+    $link = mysqli_connect($host, $username, $password, $database);
 
-        if(!$link){
-            die('could connect'.mysqli_error($link));
-        }
-        echo 'connected successfully';
+    // Check the connection
+    if (!$link) {
+        die('Could not connect: ' . mysqli_error($link));
+    }
 
-    $usrer_insert="INSERT INTO users(id,name,email,address,cardnumber,cardname,city,expmonth,state,zip,expyear,cvv) VALUES ('$id','$name', '$email', '$address','$cardnumber','$cardname','$city','$expmonth','$state','$zip','$expyear','$cvv')";
-
-
-        if ($link->query($usrer_insert) === TRUE) {
-        echo "New record created successfully";
-        } else {
-        echo "Error: " . $usrer_insert . "<br>" . $link->error;
-    }   
+    // Prepare and execute the stored procedure
+    $stmt = $link->prepare("CALL add_shippingdetails(?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssi", $email, $street_address, $street_address2, $address, $city, $province, $zip); // 'i' indicates integer type for the parameter
     
+    $stmt->execute();
+
+    // Close statement
+    $stmt->close();
+}
+
+if(isset($_POST['add_card_details'])) // Check if the form is submitted
+{
+    // Retrieve form data
+    $bank = $_POST['bank'];
+    $street_address = $_POST['Street_address'];
+    $street_address2 = $_POST['Street_address2'];
+    $address = $_POST['address'];
+    $city = $_POST['city']; // Changed to match the name attribute in the HTML form
+    $province = $_POST['province']; // Changed to match the name attribute in the HTML form
+    $zip = $_POST['zip']; // Changed to match the name attribute in the HTML form
+
+    echo $bank;
+    // Connect to the database
+    $host = 'localhost';
+    $username = 'root';
+    $password = '';
+    $database = 'retail_website';
+
+    $link = mysqli_connect($host, $username, $password, $database);
+
+    // Check the connection
+    if (!$link) {
+        die('Could not connect: ' . mysqli_error($link));
+    }
+
+    // Prepare and execute the stored procedure
+    $stmt = $link->prepare("CALL add_shippingdetails(?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssi", $email, $street_address, $street_address2, $address, $city, $province, $zip); // 'i' indicates integer type for the parameter
+    
+    $stmt->execute();
+
+    // Close statement
+    $stmt->close();
+    // Close connection
     mysqli_close($link);
-} 
-?>  
+}
+?> 

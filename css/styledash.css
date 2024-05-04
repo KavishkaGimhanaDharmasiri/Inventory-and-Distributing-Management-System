@@ -21,6 +21,7 @@
     --bg-color: #fff;
 }
 .products{
+    padding-top: 100px;
     max-width: 968px;
     margin-left: auto;
     margin-right: auto;
@@ -59,7 +60,10 @@
     font-size: 13px;
 }
 .products h1{
-    color: var(--green-color);
+    margin-left: 15px;
+    background: linear-gradient(to left, #29eb46 , #144320);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
 
 }
 .products .box h2{
@@ -146,10 +150,17 @@
    
 }
 .about-text h1{
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--green-color);
+    margin-left: 15px;
+    background: linear-gradient(to left, #137021 , #3af769);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
 
+}
+
+.about img{
+    width: 200px;
+    -webkit-box-reflect: right 0px linear-gradient(to bottom, rgba(0, 0, 0, 0.201), rgba(0, 0, 0, 0.623));
+    padding-right: 10px;
 }
 
 
@@ -182,15 +193,16 @@
 
 /*Review*/
 
-/* .review{
+.review{
     max-width: 968px;
     margin-left: auto;
     margin-right: auto;
 }
 .review h1{
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--green-color);
+    margin-left: 15px;
+    background: linear-gradient(to left, #137021 , #3af769);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
 }
 .review h2{
     text-align: center;
@@ -249,7 +261,7 @@
 .review-profile h3{
     font-size: 1rem;
     font-weight: 600;
-} */
+} 
 
 
 /*Services*/
@@ -268,7 +280,7 @@
 
 .services h1 span{
     margin-left: 15px;
-    background: linear-gradient(to left, #c72092 , #6c14d0);
+    background: linear-gradient(to left, #137021 , #3af769);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;    
 }

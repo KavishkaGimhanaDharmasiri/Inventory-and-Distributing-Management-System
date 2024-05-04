@@ -258,7 +258,6 @@ if(isset($_POST['signUp']))
       $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
 
     $stmt->execute();
-
     $stmt->close();
     $result = $link->query("SELECT @status AS status");
     $row = $result->fetch_assoc();

@@ -51,6 +51,7 @@ $productid=$_GET['categoryid'];
                 $discount = $row["Discount"];
 
                 $_SESSION['product_id'] = $product_id; // Store product ID in session
+                $_SESSION['stock'] = $stock;
 
                 echo '<div class="card-wrapper">
                         <div class="card">
@@ -123,6 +124,7 @@ if(isset($_POST['btn'])){
        // echo 'connected successfully';
     $quantity = $_POST['quantity'];
     $userid=$_SESSION['user_id'];
+
 
         $stmt = $link->prepare("CALL add_to_cart(?, ?, ?, @status)");
 

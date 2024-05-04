@@ -23,14 +23,9 @@ $un=$_SESSION['email'];
     <?php
 
 include 'Navibar.php';
-?>
-
-<!--Slidebar-->
-<?php
 
 include 'slidebar.php';
 ?>
-        
 
 <!--Products-->
 
@@ -92,12 +87,10 @@ $conn = new mysqli($host, $username, $password, $database);
     </div>
 
 
-
-
     <!--About-->
     <br><br><br><br><br><br><br><br>
     <div class="about" id="About">
-        <img src="Images/Decoration/cover5.jpg" alt="">
+        <img src="Images/Decoration/bulb.jpg" alt="">
         <div class="about-text">
             <h1>About us</h1>
             <br>
@@ -204,7 +197,7 @@ $conn = new mysqli($host, $username, $password, $database);
     <!--Services-->
 
     <div class="services" id="Servises">
-        <h1>our<span>services</span></h1>
+        <h1><span>our services</span></h1>
 
         <div class="services_cards">
             <div class="services_box">

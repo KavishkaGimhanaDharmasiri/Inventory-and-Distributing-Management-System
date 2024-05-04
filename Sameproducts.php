@@ -23,6 +23,7 @@ $maincat=$_SESSION['categoryid'];
         .products-container {
             display: flex;
             animation: moveLeft 50s linear infinite;
+             animation-delay: -7s;
         }
 
         .box {
@@ -67,6 +68,7 @@ $maincat=$_SESSION['categoryid'];
             }
 
         @keyframes moveLeft {
+
             to { transform: translateX(100%); }
             from { transform: translateX(-100%); }
         }
