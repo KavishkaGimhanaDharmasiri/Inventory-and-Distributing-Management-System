@@ -75,7 +75,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         a {
             text-decoration: none;
             color: white;
-            text-align: center;
 
 
         }
@@ -118,17 +117,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 
         </div>
     </div>
-
-
-    <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-    </script>
 
 </body>
 
