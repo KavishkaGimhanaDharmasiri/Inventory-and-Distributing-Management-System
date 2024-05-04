@@ -25,6 +25,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $row = mysqli_fetch_assoc($result);
     $code = generateRandomCode();
 
+
+    function generateRandomCode($length = 5)
+    {
+      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $code = '';
+
+      for ($i = 0; $i < $length; $i++) {
+        $randomIndex = mt_rand(0, strlen($characters) - 1);
+        $code .= $characters[$randomIndex];
+      }
+      return $code;
+    }
+
     // Set session variables
     $_SESSION['code'] = $code;
     $_SESSION["email"] = $row["email"];

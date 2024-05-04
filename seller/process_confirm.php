@@ -115,7 +115,7 @@ if (!isset($_SESSION['process_payment'])) {
     $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
 
     // Send email
-    sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
+    // sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
 
     // Prepare SMS body
     $smsbody = urlencode($body);

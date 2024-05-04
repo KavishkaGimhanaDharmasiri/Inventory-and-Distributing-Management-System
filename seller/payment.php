@@ -26,7 +26,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
-    <link rel="stylesheet" href="divs.css">
+    <link rel="stylesheet" href="/style/divs.css">
     <style>
         h3 {
             text-align: center;
@@ -258,7 +258,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: none;">Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;">Confirm Order</button>
         </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -306,23 +306,23 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 }
             });
         });
-        document.addEventListener("DOMContentLoaded", function() {
-            var myLink = document.getElementById("myLink");
-            var confirmButton = document.getElementById("confirmButton");
-            var inputField = document.getElementById("payment_amount");
+        /* document.addEventListener("DOMContentLoaded", function() {
+             var myLink = document.getElementById("myLink");
+             var confirmButton = document.getElementById("confirmButton");
+             var inputField = document.getElementById("payment_amount");
 
-            myLink.addEventListener("click", function(event) {
-                // Prevent the default action of the link
-                event.preventDefault();
-                // After 2 seconds, enable the confirm button
-                setTimeout(function() {
-                    confirmButton.style.display = "block";
-                    inputField.disabled = true;
-                }, 4000);
-                // Redirect to process_payment.php
-                window.location.href = myLink.href;
-            });
-        });
+             myLink.addEventListener("click", function(event) {
+                 // Prevent the default action of the link
+                 event.preventDefault();
+                 // After 2 seconds, enable the confirm button
+                 setTimeout(function() {
+                     confirmButton.style.display = "block";
+                     inputField.disabled = true;
+                 }, 4000);
+                 // Redirect to process_payment.php
+                 window.location.href = myLink.href;
+             });
+         });*/
     </script>
 
 

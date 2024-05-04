@@ -496,7 +496,7 @@ function displayOrderTable()
                     });
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'update_order_details.php', true);
+                    xhr.open('POST', '/common/update_order_details.php', true);
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === XMLHttpRequest.DONE) {

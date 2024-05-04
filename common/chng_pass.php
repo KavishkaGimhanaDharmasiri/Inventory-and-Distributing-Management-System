@@ -71,13 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="topnav">
 
             <?php
-            topnavigation();
+            // Generate back navigation link using HTTP_REFERER
+            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
             <div id="mySidepanel" class="sidepanel">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
                 <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
                 <a href="#">Contact</a>
             </div>
 
@@ -123,9 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <button type="submit">Change Password</button>
-                <br>
-                <br>
-                <button type="reset">Clear</button>
+                <button type="reset" style="background-color: transparent;color:green;border: 1px solid green;">Clear</button>
             </form>
         </div>
     </div>
