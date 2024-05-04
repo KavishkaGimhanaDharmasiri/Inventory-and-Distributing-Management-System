@@ -14,5 +14,21 @@
     "not samsung <= 24",
     "not ios_saf <= 17.4",
     "not safari <= 17.4"
-  ]
+  ],
+  "hints": {
+    "axe/text-alternatives": [
+      "default",
+      {
+        "document-title": "off"
+      }
+    ],
+    "axe/language": [
+      "default",
+      {
+        "html-has-lang": "off"
+      }
+    ],
+    "meta-viewport": "off",
+    "no-inline-styles": "off"
+  }
 }
