@@ -1,7 +1,8 @@
 <?php
 session_start();
-include("db_connection.php");
-require 'email_sms.php';
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 $orderDetails = $_SESSION['order_details'] ?? [];
 
 

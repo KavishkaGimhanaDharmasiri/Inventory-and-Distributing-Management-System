@@ -17,6 +17,6 @@ function showSuccess() {
 function redirectToIndex() {
     hideSuccess();
     // Redirect to index.php
-    window.location.href = 'option.php';
+    window.location.href = "<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/common/option.php";
   }
   

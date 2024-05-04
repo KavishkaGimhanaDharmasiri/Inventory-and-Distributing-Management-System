@@ -1,5 +1,5 @@
 <?php
-include("db_connection.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 
 function getSubcategories($mainCategory, $connection)
 {
@@ -33,4 +33,3 @@ if (isset($_GET['main_category'])) {
 }
 
 mysqli_close($connection);
-?>

@@ -1,10 +1,11 @@
 <?php
 session_start();
 $_SESSION['index_visit'] = true;
+// Include database connection file
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Include your database connection file
-    include("db_connection.php");
+
 
     // Get the username and password from the form
     $username = $_POST["username"];
@@ -27,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['route_id'] = $row["route_id"];
 
             // Redirect to a secure page after successful login
-            header("Location:option.php");
+            header("Location:/common/option.php");
             exit();
         } else {
             // Display an error message if credentials are invalid
@@ -50,10 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="/style/style.css">
+    <link rel="stylesheet" type="text/css" href="/style/index.css">
 
     </style>
 </head>
@@ -91,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="password" style="font-size: 11pt; font-weight: bold;">Password</label>
                             <input type="password" name="password" class="form-control" required style="width: 230px; ">
                         </div>
-                        <button type="submit" style="width: 230px;">Login</button>
+                        <button type="submit" style="width: 230px;margin-bottom:0%;">Login</button>
                         <button type="button" style=" background-color:transparent;margin-top:1px; " class="fodpass" onclick="redirect()">Fogot Password</button>
                     </form>
                 </div>
@@ -105,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script type="text/javascript">
         function redirect() {
-            window.location.href = 'password_validation.php';
+            window.location.href = '/common/password_validation.php';
         }
     </script>
 </body>

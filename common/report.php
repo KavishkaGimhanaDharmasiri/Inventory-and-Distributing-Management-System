@@ -1,9 +1,8 @@
 <?php
 session_start();
 // Include your database connection file
-require_once('den_fun.php');
-// Include your database connection file
-include("db_connection.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
 if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
     acess_denie();
@@ -23,8 +22,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" href="/style/mobile.css">
     <style>
         .order-container h3 {
             color: #333;
@@ -89,21 +88,10 @@ $customerResult = mysqli_query($connection, $customerQuery);
         <div class="topnav">
 
             <?php
-            if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-                // Generate back navigation link using HTTP_REFERER
-                echo '<a href="' . $_SERVER['HTTP_REFERER'] . '" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            } else {
-                // If no referrer is set, provide a default back link
-                echo '<a href="javascript:history.go(-1);" class="back-link" style="float:left; font-size:30px;"><i class="fa fa-angle-left"></i></a>';
-            }
+            // Generate back navigation link using HTTP_REFERER
+            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
+
 
             <a href="javascript:void(0);" class="icon" onclick="openNav()">
                 <i class="fa fa-bars"></i>
@@ -119,7 +107,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
             }
             ?>
 
-            <form method="POST" action="<?php $_PHP_SELF ?>">
+            <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="form-group">
                     <h4 style="text-align: left; color:#4caf50;">Filter By</h4>
                     <label for="duration">Select Duration</label>
@@ -246,7 +234,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                     echo "<hr>";
                                 }
 
-                                echo "<a href='customer_data.php' style='color:blue;'>Download as PDF</a>";
+                                echo "<a href='/common/customer_data.php' style='color:blue;'>Download as PDF</a>";
                             } else {
                                 echo "No Customer Details Found";
                             }
@@ -419,7 +407,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             echo "</table>";
                             echo '<br>';
                             echo '<br>';
-                            echo "<a href='product_data.php' style='color:blue;'>Download as PDF</a>";
+                            echo "<a href='/common/product_data.php' style='color:blue;'>Download as PDF</a>";
                         }
                     }
 
@@ -432,14 +420,6 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function toggleVisibility(ordId) {
             var orderDiv = document.getElementById('order_' + ordId);
             orderDiv.style.maxHeight = (orderDiv.style.maxHeight === '23%') ? '100%' : '23%';
@@ -536,6 +516,10 @@ $customerResult = mysqli_query($connection, $customerQuery);
                 }
             }
         });
+
+        function back() {
+            window.history.back();
+        }
     </script>
 
 </body>

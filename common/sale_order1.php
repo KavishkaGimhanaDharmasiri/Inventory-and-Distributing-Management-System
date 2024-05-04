@@ -1,11 +1,23 @@
+<?php
+session_start();
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
+
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
+    acess_denie();
+    exit();
+} else {
+    $_SESSION['manage_employee_visit'] = true;
+}
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="mobile.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style/mobile.css">
+    <link rel="stylesheet" href="/style/style.css">
     <style>
         .order-date {
             background-color: #fff;
@@ -105,8 +117,6 @@
             </a>
         </div>
         <?php
-        session_start();
-        include 'db_connection.php';
         $route_id = $_SESSION['route_id'];
         $query = "SELECT * FROM payment where route_id=$route_id ORDER BY ord_id DESC";
         $result = mysqli_query($connection, $query);
@@ -135,12 +145,13 @@
                     echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
                     echo '<p>Payment Amount: Rs.' . $row['payment_amout'] . '</p>';
                     echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
-                    $pdf_path = "pdf/order_" . $row['ord_id'] . ".pdf";
+                    $pdf_path = $_SERVER['DOCUMENT_ROOT'] . "/pdf/order_" . $row['ord_id'] . ".pdf";
                     if (file_exists($pdf_path)) {
                         echo '<p><a href="' . $pdf_path . '" download style="color:blue;float:right;">Download Sales Receipt</a></p><br>';
                     } else {
                         echo '<p style="color:red;float:right;">No sales receipt available</p><br><br>';
                     }
+
                     echo '</div>'; // End of order-details
                     echo '</div>'; // End of order-container
                 } else {
@@ -161,12 +172,13 @@
                     echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
                     echo '<p>Payment Amount: Rs.' . $row['payment_amout'] . '</p>';
                     echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
-                    $pdf_path = "pdf/order_" . $row['ord_id'] . ".pdf";
+                    $pdf_path = $_SERVER['DOCUMENT_ROOT'] . "/pdf/order_" . $row['ord_id'] . ".pdf";
                     if (file_exists($pdf_path)) {
                         echo '<p><a href="' . $pdf_path . '" download style="color:blue;float:right;">Download Sales Receipt</a></p><br>';
                     } else {
                         echo '<p style="color:red;float:right;">No sales receipt available</p><br><br>';
                     }
+
                     echo '</div>'; // End of order-details
                     echo '</div>'; // End of order-container
 

@@ -1,5 +1,5 @@
 <?php
-require_once "db_connection.php";
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 session_start(); // Include your database connection configuration file
 
 // Check if input is provided

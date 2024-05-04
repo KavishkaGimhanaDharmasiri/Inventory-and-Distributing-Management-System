@@ -1,9 +1,9 @@
 <?php
 session_start();
-require('fpdf/fpdf.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/fpdf/fpdf.php');
 
 // Include database connection file
-include("db_connection.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 
 
 $productQuery = "SELECT * FROM product";
@@ -49,7 +49,7 @@ while ($row2 = mysqli_fetch_assoc($productresult)) {
 $pdf->SetFont('Arial', '', 12);
 
 foreach ($mainCategories as $mainCat => $subProducts) {
-     $pdf->SetFont('Arial', 'B', 12); // Set font to bold
+    $pdf->SetFont('Arial', 'B', 12); // Set font to bold
     $pdf->Cell(0, 6, $mainCat, 0, 1, 'L');
     $pdf->SetFont('Arial', '', 12); // Reset font
     $pdf->Cell(80, 6, 'Product Name', 1);
@@ -57,7 +57,7 @@ foreach ($mainCategories as $mainCat => $subProducts) {
     $pdf->Cell(30, 6, 'Check Price', 1);
     $pdf->Cell(30, 6, 'Credit Price', 1);
     $pdf->Ln();
-    
+
     foreach ($subProducts as $subProduct) {
         $pdf->Cell(80, 6, $subProduct['sub_cat'], 1);
         $pdf->Cell(30, 6, $subProduct['cashPrice'], 1);
@@ -70,4 +70,3 @@ foreach ($mainCategories as $mainCat => $subProducts) {
 
 // Output PDF as download
 $pdf->Output('customer_data_report.pdf', 'D');
-?>

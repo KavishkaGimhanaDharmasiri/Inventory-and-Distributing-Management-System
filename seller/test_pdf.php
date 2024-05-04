@@ -8,8 +8,8 @@ if (!isset($_SESSION['payment_visit'])) {
     $_SESSION['sales_recipt_download'] = true;
 }
 ob_start();
-include("db_connection.php");
-require_once('tcpdf/tcpdf.php');
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . '/tcpdf/tcpdf.php');
 ob_end_clean();
 
 
@@ -41,7 +41,7 @@ function getPaymentMethodPriced($mainCategory, $subCategory, $connection)
 
 function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod, $connection)
 {
-    include("db_connection.php");
+    include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $storename = $_SESSION['selected_store'];
     $totalAmount = $_SESSION['totalAmount'];

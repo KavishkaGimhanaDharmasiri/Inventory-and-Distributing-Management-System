@@ -3,22 +3,22 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/phpmailer/phpmailer/src/Exception.php';
-require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require 'vendor/phpmailer/phpmailer/src/SMTP.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/Exception.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/SMTP.php';
 
 
 function sendmail($Subject, $body, $user, $firstname)
 {
 
-    $sender_email = "";
+    $sender_email = "prolinkpc02@gmail.com";
 
     // Recipient's email address (user's email)
     $user_email = $user; // $email contains the user's email address
 
     // Your Gmail credentials
-    $smtp_username = "";
-    $smtp_password = ""; // Use the App Password if you generated one
+    $smtp_username = "prolinkpc02@gmail.com";
+    $smtp_password = "ypxt zbdg wigk bbkc"; // Use the App Password if you generated one
 
     // Create a PHPMailer instance
     $mail = new PHPMailer(true);
@@ -60,7 +60,6 @@ function sendmail($Subject, $body, $user, $firstname)
     } catch (Exception $e) {
         echo $e;
         echo '<script> alert("Message could not be sent. No Internet Connection Found. Please Go Online");</script>';
-        $_SESSION['send_massage'] = true;
     }
 }
 
@@ -69,9 +68,9 @@ function sendsms($number, $message)
     $apiEndpoint = 'https://app.notify.lk/api/v1/send';
 
     // Replace these values with your actual user ID, API key, and sender ID
-    $userId = '';
-    $apiKey = '';
-    $senderId = '';
+    $userId = '26835';
+    $apiKey = 'IzqyTBbXpilTmaIBIIvA';
+    $senderId = 'NotifyDEMO';
 
 
     // Get custom content from the form or any source
