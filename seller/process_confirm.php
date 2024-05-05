@@ -121,7 +121,7 @@ if (!isset($_SESSION['process_payment'])) {
     $smsbody = urlencode($body);
 
     // Send SMS
-    sendsms($modifiedNumber, $smsbody);
+    //sendsms($modifiedNumber, $smsbody);
     $_SESSION['process_payment'] = true;
 }
 header('Location:test_pdf.php');

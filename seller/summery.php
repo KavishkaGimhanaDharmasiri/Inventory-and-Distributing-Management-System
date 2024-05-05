@@ -79,21 +79,16 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <?php
         $routeId = $_SESSION['route_id'];
         $currentMonthYear = date('Y-m');
 
         if ($_SESSION["state"] === "seller") {
-            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND route_id=$routeId AND DATE_FORMAT(ord_date, '$currentMonthYear')";
+            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND route_id=$routeId AND DATE_FORMAT(ord_date, '%Y-%m') = '$currentMonthYear'";
         }
         if ($_SESSION["state"] === "admin") {
-            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND DATE_FORMAT(ord_date, '$currentMonthYear')";
+            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND  DATE_FORMAT(ord_date, '%Y-%m') = '$currentMonthYear'";
         }
         //order_state = 'complete'
 
@@ -106,7 +101,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
         echo '<div class="containers">';
 
-        echo "<form action='summery.php' method='post'>";
         echo '<div class="box">';
         echo "<h4>Order State </h4><br>";
         echo "<table>";
@@ -116,6 +110,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
             $storeName = $row['store_name'];
             $storests = $row['order_state'];
+
 
             if ($storests === 'complete') {
                 echo "<tr>";
@@ -213,7 +208,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         echo "</div>";
 
         echo "</div>";
-        echo "</form>";
 
         // Close the database connection
         mysqli_close($connection);

@@ -95,11 +95,12 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
+            <?php
+            // Generate back navigation link using HTTP_REFERER
+            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
+            ?>
 
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <?php
         $route_id = $_SESSION['route_id'];
@@ -203,6 +204,10 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
                     orders[i].style.display = 'none';
                 }
             }
+        }
+
+        function back() {
+            window.history.back();
         }
     </script>
 

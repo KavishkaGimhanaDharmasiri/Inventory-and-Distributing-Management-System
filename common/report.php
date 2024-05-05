@@ -92,10 +92,6 @@ $customerResult = mysqli_query($connection, $customerQuery);
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
 
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="container">
             <h2>Report Generation</h2>

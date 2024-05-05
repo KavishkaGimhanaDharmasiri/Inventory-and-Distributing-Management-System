@@ -91,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
       ?>
       <div id="mySidepanel" style="height:100%" class="sidepanel" onclick="closepanel()">
-        <a href="#">About</a>
+        <a href="about.php">About</a>
+        <a href="contact">Contact</a>
       </div>
 
       <a href="javascript:void(0);" class="icon" onclick="openNav()">

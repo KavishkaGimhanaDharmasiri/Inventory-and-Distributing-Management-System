@@ -48,11 +48,6 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
 
         <?php
@@ -254,14 +249,14 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         <table>
             <tr style="background-color:white;">
-                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:red; font-weight:bold;">Download Sales Receipt</a>
+                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;"><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: block;">Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;"><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
         </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         function openNav() {
             document.getElementById("mySidepanel").style.width = "150px";
@@ -306,23 +301,23 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 }
             });
         });
-        /* document.addEventListener("DOMContentLoaded", function() {
-             var myLink = document.getElementById("myLink");
-             var confirmButton = document.getElementById("confirmButton");
-             var inputField = document.getElementById("payment_amount");
+        document.addEventListener("DOMContentLoaded", function() {
+            var myLink = document.getElementById("myLink");
+            var confirmButton = document.getElementById("confirmButton");
+            var inputField = document.getElementById("payment_amount");
 
-             myLink.addEventListener("click", function(event) {
-                 // Prevent the default action of the link
-                 event.preventDefault();
-                 // After 2 seconds, enable the confirm button
-                 setTimeout(function() {
-                     confirmButton.style.display = "block";
-                     inputField.disabled = true;
-                 }, 4000);
-                 // Redirect to process_payment.php
-                 window.location.href = myLink.href;
-             });
-         });*/
+            myLink.addEventListener("click", function(event) {
+                // Prevent the default action of the link
+                event.preventDefault();
+                // After 2 seconds, enable the confirm button
+                setTimeout(function() {
+                    confirmButton.style.display = "block";
+                    inputField.disabled = true;
+                }, 4000);
+                // Redirect to process_payment.php
+                window.location.href = myLink.href;
+            });
+        });
     </script>
 
 

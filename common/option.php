@@ -83,9 +83,6 @@ session_write_close();
       animation: gradient-animation 12s ease infinite;
       color: black;
       font-weight: bold;
-      background-image: url("wires_6302557.jpg");
-      background-size: initial;
-
     }
 
     @keyframes gradient-animation {
@@ -203,8 +200,8 @@ session_write_close();
       ?>
       <div id="mySidepanel" class="sidepanel" style="height:100%;">
         <a href="javascript:void(0)" style="color:white;font-size:13px;margin-top:10px;" class="closebtn" onclick="closeNav()">&#10005;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a href="about.php">About</a>
+        <a href="contact">Contact</a>
         <a href="#" onclick="toggleProfilePanel()">Profile</a>
         <a href="javascript:void(0)" onclick="opennot()">Notification</a>
         <br>
