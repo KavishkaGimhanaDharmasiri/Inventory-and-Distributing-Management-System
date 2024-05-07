@@ -3,6 +3,15 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
+
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"]) || !isset($_SESSION['payment_visit']) || $_SESSION["state"] != 'seller') {
+    acess_denie();
+    exit();
+} else {
+    $_SESSION['add_customer_visit'] = true;
+}
+
+
 $orderDetails = $_SESSION['order_details'] ?? [];
 
 
@@ -115,13 +124,13 @@ if (!isset($_SESSION['process_payment'])) {
     $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
 
     // Send email
-    sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
+    // sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
 
     // Prepare SMS body
     $smsbody = urlencode($body);
 
     // Send SMS
-    sendsms($modifiedNumber, $smsbody);
+    //sendsms($modifiedNumber, $smsbody);
     $_SESSION['process_payment'] = true;
 }
 header('Location:test_pdf.php');

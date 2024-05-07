@@ -6,7 +6,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit']) {
+if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION["state"] != 'admin') {
     echo "acess Dinied";
     exit();
 }
@@ -167,7 +167,7 @@ function displayOrderTable()
     if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
         echo "<table>";
         echo "<thead>";
-        echo "<tr><th>Main Product</th><th>Sub Products</th><th>Count</th></tr>";
+        echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
         echo "</thead>";
         echo "<tbody>";
 
@@ -189,7 +189,7 @@ function displayOrderTable()
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -207,17 +207,7 @@ function displayOrderTable()
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="order-form">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -246,7 +236,7 @@ function displayOrderTable()
                     ?>
                 </select>
 
-                <div class="subcategory-container" id="subcategory-container" style="height: 100%;">
+                <div class="subcategory-container" id="subcategory-container">
                     <?php
                     // Display subcategories based on the selected main category
                     if (isset($_POST['main_category'])) {
@@ -271,19 +261,21 @@ function displayOrderTable()
                 <button type="submit" name="add_order">Add Products</button>
 
                 <?php displayOrderTable(); ?>
+                <br>
                 <!-- Display Confirm Order button if there are items in the order -->
-                <?php
-                if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><b>Clear Order</button>";
-                }
-                ?>
-
-                <!-- Confirm Order button -->
                 <?php
                 if (!empty($_SESSION['order_details'])) {
                     echo "<button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
                 }
                 ?>
+                <?php
+                if (!empty($_SESSION['order_details'])) {
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green;height:35px;margin-top:0%;'><b>Clear Order</button>";
+                }
+                ?>
+
+                <!-- Confirm Order button -->
+
             </form>
 
 

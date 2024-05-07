@@ -11,14 +11,14 @@ require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/SMTP.php';
 function sendmail($Subject, $body, $user, $firstname)
 {
 
-    $sender_email = "prolinkpc02@gmail.com";
+    $sender_email = "prolinkpc702@gmail.com";
 
     // Recipient's email address (user's email)
     $user_email = $user; // $email contains the user's email address
 
     // Your Gmail credentials
-    $smtp_username = "prolinkpc02@gmail.com";
-    $smtp_password = "ypxt zbdg wigk bbkc"; // Use the App Password if you generated one
+    $smtp_username = "prolinkpc702@gmail.com";
+    $smtp_password = "ypxt zbdg hjyu ioyr"; // Use the App Password if you generated one
 
     // Create a PHPMailer instance
     $mail = new PHPMailer(true);
@@ -68,8 +68,8 @@ function sendsms($number, $message)
     $apiEndpoint = 'https://app.notify.lk/api/v1/send';
 
     // Replace these values with your actual user ID, API key, and sender ID
-    $userId = '26835';
-    $apiKey = 'IzqyTBbXpilTmaIBIIvA';
+    $userId = '56835';
+    $apiKey = 'IzqyTghtyukiGhaIBIIvA';
     $senderId = 'NotifyDEMO';
 
 
@@ -82,15 +82,4 @@ function sendsms($number, $message)
 
     // Make the HTTP request
     $response = file_get_contents($apiUrl);
-}
-function generateRandomCode($length = 5)
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $code = '';
-
-    for ($i = 0; $i < $length; $i++) {
-        $randomIndex = mt_rand(0, strlen($characters) - 1);
-        $code .= $characters[$randomIndex];
-    }
-    return $code;
 }

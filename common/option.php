@@ -77,14 +77,12 @@ session_write_close();
       cursor: pointer;
       padding-right: 5px;
       border-radius: 0;
-      border-bottom-left-radius: 8px;
-      border-top-left-radius: 8px;
+      border-radius: 15px;
       background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
       background-size: 360% 360%;
       animation: gradient-animation 12s ease infinite;
       color: black;
       font-weight: bold;
-
     }
 
     @keyframes gradient-animation {
@@ -202,8 +200,8 @@ session_write_close();
       ?>
       <div id="mySidepanel" class="sidepanel" style="height:100%;">
         <a href="javascript:void(0)" style="color:white;font-size:13px;margin-top:10px;" class="closebtn" onclick="closeNav()">&#10005;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a href="about.php">About</a>
+        <a href="contact">Contact</a>
         <a href="#" onclick="toggleProfilePanel()">Profile</a>
         <a href="javascript:void(0)" onclick="opennot()">Notification</a>
         <br>
@@ -239,7 +237,7 @@ session_write_close();
       </div>
 
 
-      <div id="profilePanel" class="profile-panel">
+      <div id="profilePanel" class="profile-panel" style="max-height: 320px;">
 
         <div class="">
           <div class="our-team">
@@ -248,8 +246,8 @@ session_write_close();
             </div>
             <div class="team-content">
               <?php echo '<lable style="font-weight:bold;font-size:16px;">' . $_SESSION["user_log_fname"] . " " . $_SESSION["user_log_lname"] . "</lable><br><br><lable style='font-weight:bold;font-size:14px;'>" . $_SESSION["state"] . "</label><br><br><lable style='font-weight:bold;font-size:14px;'>" . $_SESSION["user_log_email"] . '</label><br><br>'; ?>
-              <button type="button" style="border-bottom-right-radius: 0px;border-top-right-radius: 0px; border-top-right-radius: 15px; padding: 5px;" class="changePass">Change Password</button><br>
-              <button type="button " onclick="logout()" style="background: indianred;color:white; border-bottom-right-radius: 0px;border-top-right-radius: 0px; padding: 5px; border: 1px solid indianred;margin-top: 8px;">Logout</button>
+              <button type="button" onclick="changePassword()" style="border-bottom-right-radius: 0px;border-top-right-radius: 0px; border-top-right-radius: 15px; padding: 5px;margin:0px;" class="changePass">Change Password</button><br>
+              <button type="button " onclick="logout()" style="background: indianred;color:white; border-bottom-right-radius: 0px;border-top-right-radius: 0px; padding: 5px; border: 1px solid indianred;margin-top: 8px;border-bottom-right-radius: 15px">Logout</button>
             </div>
           </div>
 

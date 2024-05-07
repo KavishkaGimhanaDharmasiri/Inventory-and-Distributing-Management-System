@@ -25,6 +25,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $row = mysqli_fetch_assoc($result);
     $code = generateRandomCode();
 
+
+    function generateRandomCode($length = 5)
+    {
+      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $code = '';
+
+      for ($i = 0; $i < $length; $i++) {
+        $randomIndex = mt_rand(0, strlen($characters) - 1);
+        $code .= $characters[$randomIndex];
+      }
+      return $code;
+    }
+
     // Set session variables
     $_SESSION['code'] = $code;
     $_SESSION["email"] = $row["email"];
@@ -78,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
       ?>
       <div id="mySidepanel" style="height:100%" class="sidepanel" onclick="closepanel()">
-        <a href="#">About</a>
+        <a href="about.php">About</a>
+        <a href="contact">Contact</a>
       </div>
 
       <a href="javascript:void(0);" class="icon" onclick="openNav()">

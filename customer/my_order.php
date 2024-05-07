@@ -2,6 +2,13 @@
 session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
+if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_SESSION["state"] != 'wholeseller') {
+    acess_denie();
+    exit();
+} else {
+    $_SESSION['create_order_visit'] = true;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,6 +57,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
             justify-content: center;
             align-items: center;
 
+
         }
 
         .box {
@@ -60,11 +68,93 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
         }
 
-        h4:hover {
-            background-color: #bdffa1;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        th,
+        td {
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        h4 {
+            text-align: left;
+            color: black;
+            margin-bottom: 0px;
+            margin-top: 2px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .main-category-name {
+            cursor: pointer;
+        }
+
+
+        li {
+            font-weight: bold;
             padding: 5px;
+        }
 
+        li:hover {
+            background-color: #3cba68;
+        }
 
+        .store-name {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            overflow-y: auto;
+            overflow: visible;
+            margin-top: 1%;
+            border-bottom-left-radius: 1px;
+            border-bottom-right-radius: 1px;
+            font-weight: bold;
+            background: linear-gradient(301deg, #3cba68, #fefefe, #ffffff);
+            background-size: 180% 180%;
+            animation: gradient-animation 7s ease infinite;
+            color: black;
+            cursor: pointer;
+
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .order-details {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            overflow-y: auto;
+            overflow: visible;
+            border-top-left-radius: 1px;
+            border-top-right-radius: 1px;
+            border-top: 1px solid white;
+            color: black;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -81,11 +171,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
+
         </div>
-        <div class="containers">
+        <div class="containers" style="margin-top: 5%;">
             <?php
             $user_id = $_SESSION["user_id"];
             $store_quary = "SELECT c.sto_name FROM customers c LEFT JOIN users u ON u.user_id=c.user_id WHERE u.user_id=$user_id";
@@ -98,116 +186,151 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
             $store_name = $_SESSION["my_store"];
 
             // Select all orders with details from primary_orders and orders tables for the given store name
-            $sql = "SELECT p.ord_id,p.order_state, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
-        FROM primary_orders p JOIN orders o ON p.ord_id = o.ord_id WHERE p.store_name = '$store_name' And order_type ='customer' AND p.order_state='pending' ORDER BY ord_date DESC";
-            $result = mysqli_query($connection, $sql);
 
-            if (mysqli_num_rows($result) > 0) {
-                // Initialize a variable to keep track of the current order date
-                $current_date = null;
-                echo '<div class="box" style="height:100%;background-color:#bdffa1">';
-                echo "<h4>Order Made on: <span class='order-date'>{$_SESSION['pending']}</span> - Pending</h4>";
-                echo "<table>";
-                echo '<tr><th id="leftth">Product</th><th>item</th><th id="rightth">units</th></tr>';
-                // Output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $current_date = $row["ord_date"];
-                    $_SESSION['pending'] = $row["ord_date"];
-
-                    echo "<tr>";
-                    echo "<td><b>" . $row["main_cat"] . "</td>";
-                    echo "<td><b>" . $row["sub_cat"] . "</td>";
-                    echo "<td><b>" . $row["order_count"] . "</td>";
-                    echo "</tr>";
-                }
-            }
-            echo '</table>';
-
-
-            // Calculate and display the remaining time within 24 hours
-            $current_time = strtotime(date("Y-m-d H:i:s"));
-            $order_time = strtotime($current_date);
-            $time_diff = $current_time - $order_time;
-            $remaining_time = 24 * 60 * 60 - $time_diff;
-            $remaining_hours = floor($remaining_time / 3600);
-            $remaining_minutes = floor(($remaining_time % 3600) / 60);
-
-            echo "<h5>Remaining Time: $remaining_hours hours $remaining_minutes minutes</h5>";
-
-            // Place buttons outside the loop
-            echo '<button type="submit" id="edit_order" name="edit_order" style="float:right; width:130px;">Edit Order</button>';
-            echo '<button style="float:right; width:130px;margin-right:10px">Confirm</button>';
-
-            echo "<br>";
-            echo "<br>";
-            echo "</div>";
-
-            echo "<br>";
 
 
             echo '<div class="box">';
+            // Fetch pending orders
+            $sql_pending = "SELECT p.ord_id, p.order_state, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
+                FROM primary_orders p 
+                JOIN orders o ON p.ord_id = o.ord_id 
+                WHERE p.store_name = '$store_name' AND order_type = 'customer' AND p.order_state = 'pending' 
+                ORDER BY ord_date DESC";
 
+            $result_pending = mysqli_query($connection, $sql_pending);
 
-            $sql = "SELECT p.ord_id,p.order_state, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
-        FROM primary_orders p JOIN orders o ON p.ord_id = o.ord_id WHERE p.store_name = '$store_name' And order_type ='customer' AND p.order_state='complete' ORDER BY ord_date DESC ";
-            $result = mysqli_query($connection, $sql);
+            // Initialize an array to store main categories and their related sub products for pending orders
+            $mainCategories_pending = array();
 
-            if (mysqli_num_rows($result) > 0) {
-                // Initialize a variable to keep track of the current order date
-                $current_date = null;
-
-                // Output data of each row
-                while ($row = mysqli_fetch_assoc($result)) {
-                    // Start a new table if the current order date is different from the previous one
-                    if ($row["ord_date"] != $current_date) {
-                        // Close the previous table if it exists
-                        if ($current_date !== null) {
-                            echo "</table>";
+            // Process pending orders
+            while ($row_pending = mysqli_fetch_assoc($result_pending)) {
+                $mainCat = $row_pending["main_cat"];
+                $subCat = $row_pending["sub_cat"];
+                $count = $row_pending["order_count"];
+                $date = $row_pending["ord_date"];
+                // If main category already exists in the array, append the sub product
+                if (array_key_exists($mainCat, $mainCategories_pending)) {
+                    // Check if the subcategory already exists, if yes, add the count
+                    $found = false;
+                    foreach ($mainCategories_pending[$mainCat] as &$subProduct) {
+                        if ($subProduct['sub_cat'] === $subCat) {
+                            $subProduct['order_count'] += $count;
+                            $found = true;
+                            break;
                         }
-                        $current_date = $row["ord_date"];
-                        echo "<h4>Order Made on: <span class='order-date'>$current_date </span>- {$row['order_state']}</h4>";
-                        echo "<hr>";
-                        echo "<table class='order-details' id='order-details-$current_date'>";
-                        echo '<tr><th id="leftth">Product</th><th>item</th><th id="rightth">units</th></tr>';
                     }
-
-                    // Output order details based on order state (pending or complete)
-                    echo "<tr>";
-                    echo "<td><b>" . $row["main_cat"] . "</td>";
-                    echo "<td><b>" . $row["sub_cat"] . "</td>";
-                    echo "<td><b>" . $row["order_count"] . "</td>";
-                    echo "</tr>";
+                    // If subcategory not found, add it to the array
+                    if (!$found) {
+                        $mainCategories_pending[$mainCat][] = array("sub_cat" => $subCat, "order_count" => $count);
+                    }
+                } else {
+                    // If main category doesn't exist, create a new entry in the array
+                    $mainCategories_pending[$mainCat] = array(array("sub_cat" => $subCat, "order_count" => $count));
                 }
+            }
+            echo "<h4>Order Made on $date is Now on Pending";
+            // Output pending orders
+            echo "<div class='main-categories'>";
+            foreach ($mainCategories_pending as $mainCat => $subProducts) {
+                echo "<div class='main-category'>";
+                echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:black;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px"></i></h4>';
+                echo "<ul class='sub-categories' style='color:black;display: none;'>";
+                foreach ($subProducts as $subProduct) {
+                    echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['order_count']}</label></li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+            }
+            echo "</div>";
+            echo '</div>'; // End of pending orders box
+            echo "<br>";
+            echo '<div class="box">';
+            // Fetch complete orders
+            $sql_complete = "SELECT p.ord_id, p.order_state, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
+                FROM primary_orders p 
+                JOIN orders o ON p.ord_id = o.ord_id 
+                WHERE p.store_name = '$store_name' AND order_type = 'customer' AND p.order_state = 'complete' 
+                ORDER BY ord_date DESC";
 
-                echo "</table>";
-                echo "</div>"; // Close container
+            $result_complete = mysqli_query($connection, $sql_complete);
+
+            // Initialize an array to store main categories and their related sub products for complete orders
+            $mainCategories_complete = array();
+
+            // Process complete orders
+            while ($row_complete = mysqli_fetch_assoc($result_complete)) {
+                $mainCat = $row_complete["main_cat"];
+                $subCat = $row_complete["sub_cat"];
+                $count = $row_complete["order_count"];
+                $ordDate = $row_complete["ord_date"];
+
+                // If main category already exists in the array, append the sub product
+                if (array_key_exists($mainCat, $mainCategories_complete)) {
+                    // Check if the subcategory already exists, if yes, add the count
+                    $found = false;
+                    foreach ($mainCategories_complete[$mainCat] as &$subProduct) {
+                        if ($subProduct['sub_cat'] === $subCat) {
+                            $subProduct['order_count'] += $count;
+                            $found = true;
+                            break;
+                        }
+                    }
+                    // If subcategory not found, add it to the array
+                    if (!$found) {
+                        $mainCategories_complete[$mainCat][] = array("sub_cat" => $subCat, "order_count" => $count, "ord_date" => $ordDate);
+                    }
+                } else {
+                    // If main category doesn't exist, create a new entry in the array
+                    $mainCategories_complete[$mainCat] = array(array("sub_cat" => $subCat, "order_count" => $count, "ord_date" => $ordDate));
+                }
             }
 
+            // Output complete orders
+            echo "<div class='main-categories'>";
+            foreach ($mainCategories_complete as $mainCat => $subProducts) {
+                echo "<div class='main-category'>";
+                // Display the order date for this group of complete orders
+                echo "<div class='store-name'>Order Made On {$subProducts[0]['ord_date']} was Completed<i class='fa fa-angle-down' style='float:right;font-size:20px'></i></div>";
+                echo "<div class='order-details' style='display: none;'>";
+                echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:red;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px;"></i></h4>';
+                echo "<ul class='sub-categories' style='color:black;display: none;'>";
+                foreach ($subProducts as $subProduct) {
+                    echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['order_count']}</label></li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+                echo "</div>";
+            }
+            echo "</div>";
+            echo '</div>'; // End of complete orders box
+            // End of complete orders box
+
+
             ?>
+
+            <!-- Include jQuery -->
+
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }
-
+        document.addEventListener("DOMContentLoaded", function() {
+            var mainCategoryNames = document.querySelectorAll(".main-category-name");
+            mainCategoryNames.forEach(function(mainCategoryName) {
+                mainCategoryName.addEventListener("click", function() {
+                    var subCategories = this.nextElementSibling;
+                    subCategories.style.display = subCategories.style.display === "none" ? "block" : "none";
+                });
+            });
+        });
 
         $(document).ready(function() {
-            // Toggle order details table visibility when clicking on order date
-            $(".order-date").click(function() {
-                // Find the corresponding order details table and toggle its visibility
-                var orderDate = $(this).text();
-                $("#order-details-" + orderDate).toggle();
+            $('.store-name').click(function() {
+                $(this).next('.order-details').toggle();
             });
         });
     </script>

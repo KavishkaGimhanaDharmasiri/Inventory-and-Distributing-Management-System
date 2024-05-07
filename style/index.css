@@ -120,16 +120,6 @@ path {
 .img-portada {
   width: 100%;
 }
-
-.portada {
-  width: 100%;
-  height: 100%;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  background-image: url("wires_6302557.jpg");
-  background-position: bottom center;
-  background-size: cover;
-}
 input:-webkit-autofill {
   -webkit-box-shadow: inset 0 0 0px 9999px white;
 }

@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"]) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {
@@ -98,10 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
             $body = "\nDear $firstname,\n\n"
-                . "Thank you for registering with YourSite.\n"
-                . "Your username is: $firstname\n"
+                . "Thank you for registering with Lotus Electricals(PVT).LTD.\n"
+                . "\nYour username is: $firstname\n"
                 . "Your generated password is: $lastFiveDigits\n"
-                . "Please keep your login details secure.\n\n"
+                . "\nPlease keep your login details secure.\n\n"
                 . "Best regards,\nLotus Electicals (PVT)LTD";
 
 
@@ -192,11 +192,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="container">
             <h2 id="customer_data">Customer Details</h2>

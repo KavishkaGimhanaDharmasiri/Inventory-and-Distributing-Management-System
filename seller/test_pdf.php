@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['payment_visit'])) {
+if (!isset($_SESSION['payment_visit']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {

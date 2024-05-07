@@ -6,7 +6,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 
-if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit'])) {
+if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || $_SESSION["state"] != 'admin') {
 
     acess_denie();
     exit();
@@ -118,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //sending sms and email
     $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
     $body = "\nDear $firstname,\n\n"
-        . "Thank you for registering with YourSite.\n"
+        . "Thank you for registering with Lotus Electicals (PVT)LTD.\n"
         . "Your username is: $firstname\n"
         . "Your generated password is: $lastFiveDigits\n"
         . "Please keep your login details secure.\n\n"
@@ -192,19 +192,10 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
         <div class="topnav">
 
             <?php
-            topnavigation();
+            // Generate back navigation link using HTTP_REFERER
+            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="container">
             <h2 id="customer_data">Customer Details</h2>
@@ -258,13 +249,6 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
     </div>
     <script type="text/javascript" src="/javascript/divs.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
         document.addEventListener("DOMContentLoaded", function() {
             var userState = "<?php echo $userState; ?>";
 
@@ -317,6 +301,10 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
             }
 
             return true; // Form is valid
+        }
+
+        function back() {
+            window.history.back();
         }
     </script>
 

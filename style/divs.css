@@ -32,15 +32,6 @@
   width: 95px;
   margin-bottom: 20px;
 }
-.gif2 {
-  background: url("prio.gif") no-repeat center center;
-  margin-left: 20%;
-  align-content: center;
-  height: 80px;
-  width: 95px;
-  margin-bottom: 0px;
-  margin-top: 0px;
-}
 
 #overlay {
   position: fixed;

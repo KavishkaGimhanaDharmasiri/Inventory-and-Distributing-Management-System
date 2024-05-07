@@ -5,7 +5,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {
@@ -55,37 +55,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
 }
 
 // Handle confirming an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])) {
-    // Process form submission and redirect to payment page
-    handleConfirmOrder($connection);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && isset($_POST['payment_method'])) {
+    if ($_POST['payment_method'] === "") {
+        echo '<script>alert("Please Select Payment Method");</script>';
+    } else {
+        // Process form submission and redirect to payment page
+        handleConfirmOrder($connection);
 
-    $mainCategory = $_POST['main_category'];
-    $subcategories = $_POST['subcategories'] ?? '';
-    $counts = $_POST['counts'] ?? '';
-    $selectedStore = $_POST["customers"];
-    $_SESSION['selected_store'] = $selectedStore;
-    $selectedPaymentMethod = $_POST['payment_method'] ?? '';
-    $_SESSION['selected_payment_method'] = $selectedPaymentMethod;
-    $pay_period = ($payment_method == 'credit') ? $_POST['credit_period'] : null;
-    $_SESSION['pay_period'] = $pay_period;
+        $mainCategory = $_POST['main_category'];
+        $subcategories = $_POST['subcategories'] ?? '';
+        $counts = $_POST['counts'] ?? '';
+        $selectedStore = $_POST["customers"];
+        $_SESSION['selected_store'] = $selectedStore;
+        $selectedPaymentMethod = $_POST['payment_method'] ?? '';
+        $_SESSION['selected_payment_method'] = $selectedPaymentMethod;
+        $pay_period = ($payment_method == 'credit') ? $_POST['credit_period'] : null;
+        $_SESSION['pay_period'] = $pay_period;
 
-    $selectedPaymentMethod = $_POST['payment_method'] ?? '';
-    $customPaymentAmount100 = isset($_POST['custom_range_100']) ? $_POST['custom_range_100'] : '';
-    $customPaymentAmount500 = isset($_POST['custom_range_500']) ? $_POST['custom_range_500'] : '';
-    $customPaymentAmount1500 = isset($_POST['custom_range_1500']) ? $_POST['custom_range_1500'] : '';
+        $selectedPaymentMethod = $_POST['payment_method'] ?? '';
+        $customPaymentAmount100 = isset($_POST['custom_range_100']) ? $_POST['custom_range_100'] : '';
+        $customPaymentAmount500 = isset($_POST['custom_range_500']) ? $_POST['custom_range_500'] : '';
+        $customPaymentAmount1500 = isset($_POST['custom_range_1500']) ? $_POST['custom_range_1500'] : '';
 
-    // Validate and sanitize the custom payment amount
-    $customPaymentAmount100 = filter_var($customPaymentAmount100, FILTER_VALIDATE_FLOAT);
-    $customPaymentAmount500 = filter_var($customPaymentAmount500, FILTER_VALIDATE_FLOAT);
-    $customPaymentAmount1500 = filter_var($customPaymentAmount1500, FILTER_VALIDATE_FLOAT);
+        // Validate and sanitize the custom payment amount
+        $customPaymentAmount100 = filter_var($customPaymentAmount100, FILTER_VALIDATE_FLOAT);
+        $customPaymentAmount500 = filter_var($customPaymentAmount500, FILTER_VALIDATE_FLOAT);
+        $customPaymentAmount1500 = filter_var($customPaymentAmount1500, FILTER_VALIDATE_FLOAT);
 
-    $_SESSION['customPaymentAmount100'] = $customPaymentAmount100;
-    $_SESSION['customPaymentAmount500'] = $customPaymentAmount500;
-    $_SESSION['customPaymentAmount1500'] = $customPaymentAmount1500;
+        $_SESSION['customPaymentAmount100'] = $customPaymentAmount100;
+        $_SESSION['customPaymentAmount500'] = $customPaymentAmount500;
+        $_SESSION['customPaymentAmount1500'] = $customPaymentAmount1500;
 
-    // Redirect after processing form submission
-    header("Location: payment.php?main_category=$mainCategory&subcategories=$subcategories&counts=$counts&payment_method=$selectedPaymentMethod");
-    exit();
+        // Redirect after processing form submission
+        header("Location: payment.php?main_category=$mainCategory&subcategories=$subcategories&counts=$counts&payment_method=$selectedPaymentMethod");
+        exit();
+    }
 }
 
 // Close the database connection
@@ -251,18 +255,9 @@ function displayOrderTable()
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-                <a href="#" onclick="logout()">Logout</a>
-            </div>
 
-            <a href="javascript:void(0);" class="icon" style="font-size:20px;" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
+
+
         </div>
         <div class="order-form" id="order-form">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -309,7 +304,7 @@ function displayOrderTable()
                         foreach ($subcategories as $index => $subcategory) {
                             echo "<div>";
                             echo "<label for='count[$subcategory[sub_cat]]' id='r'><b>$subcategory[sub_cat]</label>";
-                            echo "<input type='number' name='counts[]' id='count[$subcategory[sub_cat]]' required>";
+                            echo "<input type='number' name='counts[]' id='count[$subcategory[sub_cat]]' min='0' required>";
                             echo "<input type='hidden' name='subcategories[]' value='$subcategory[sub_cat]'>";
                             echo "</div>";
                         }
@@ -317,14 +312,14 @@ function displayOrderTable()
                     ?>
                 </div>
 
-                <button type="submit" name="add_order"><b>Add Order</button>
+                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;"></i>&nbsp;&nbsp;Add Items</button>
 
                 <?php displayOrderTable(); ?>
                 <br>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
                     echo '<label for="payment_method"><b>Payment Method</label>';
-                    echo '<select name="payment_method" id="payment_method" onchange="toggleCustomPaymentFields()" required>';
+                    echo '<select name="payment_method" id="payment_method" onchange="toggleCustomPaymentFields()" >';
                     if (isset($_SESSION['selected_payment_method'])) {
                         echo "<option value='{$_SESSION['selected_payment_method']}' selected>{$_SESSION['selected_payment_method']}</option>";
                     }
@@ -356,12 +351,13 @@ function displayOrderTable()
                 <!-- Display Confirm Order button if there are items in the order -->
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='submit' class='confirm-order-button' name='confirm_order'><b>Confirm Order</button>";
+                    echo "<button type='submit' class='confirm-order-button' name='confirm_order' onclick='validatePaymentMethod(event)'>
+                    <i class='fa fa-check' style='font-size: 14px;'></i>&nbsp;&nbsp;Confirm Order</button>";
                 }
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><b>Clear Order</button>";
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
                 }
                 ?>
 
@@ -393,8 +389,15 @@ function displayOrderTable()
     <script>
         function closeintro() {
             document.getElementById("advertise").style.display = "none";
-            <?php $_SESSION["ad_state"] = "true"; ?>
 
+        }
+
+        function validatePaymentMethod(event) {
+            var paymentMethod = document.getElementById("payment_method").value;
+            if (paymentMethod === "") {
+                event.preventDefault(); // Prevent form submission
+                alert("Please Select Payment Method");
+            }
         }
 
         function back() {
@@ -496,7 +499,7 @@ function displayOrderTable()
                     });
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'update_order_details.php', true);
+                    xhr.open('POST', '/common/update_order_details.php', true);
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === XMLHttpRequest.DONE) {

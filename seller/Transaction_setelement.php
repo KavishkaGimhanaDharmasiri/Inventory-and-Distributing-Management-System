@@ -4,7 +4,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/mobile.css" />
     <link rel="stylesheet" href="/style/style.css" />
@@ -54,21 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
         </div>
         <div class="container" id="order-form">
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -110,6 +96,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
+        function back() {
+            alert("ht");
+            window.history.back();
+        }
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const customersSelect = document.getElementById("customers");
             const dateSelect = document.getElementById("date");
@@ -124,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 const selectedDate = dateSelect.value;
 
                 // Send asynchronous request to get remaining balance
-                fetch(`getRemainingBalance.php?store=${selectedStore}&date=${selectedDate}`)
+                fetch('getRemainingBalance.php?store=${selectedStore}&date=${selectedDate}')
                     .then(response => response.json())
                     .then(data => {
                         remainBalanceLabel.textContent = "Rs." + data.balance;
@@ -150,10 +142,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php $_SESSION['rembalance'] = $balance; ?>
 
             balanceRemainsLabel.textContent = "Rs." + balance.toFixed(2);
-        }
-
-        function back() {
-            window.history.back();
         }
     </script>
 

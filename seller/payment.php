@@ -7,7 +7,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 
-if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])) {
+if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {
@@ -26,7 +26,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
-    <link rel="stylesheet" href="divs.css">
+    <link rel="stylesheet" href="/style/divs.css">
     <style>
         h3 {
             text-align: center;
@@ -48,11 +48,6 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
 
         <?php
@@ -254,23 +249,15 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         <table>
             <tr style="background-color:white;">
-                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:red; font-weight:bold;">Download Sales Receipt</a>
+                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;"><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: none;">Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;"><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
         </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }
