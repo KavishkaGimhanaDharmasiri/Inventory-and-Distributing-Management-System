@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"]) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {

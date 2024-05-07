@@ -2,7 +2,7 @@
 session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
-if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !isset($_SESSION["user_id"]) || !isset($_SESSION["state"])) {
+if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !isset($_SESSION["user_id"]) || !isset($_SESSION["state"]) || $_SESSION["state"] != 'admin') {
 
     acess_denie();
     exit();

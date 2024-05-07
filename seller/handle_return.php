@@ -4,7 +4,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 // Include your database connection file
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {

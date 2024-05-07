@@ -7,7 +7,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 
-if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])) {
+if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_SESSION["state"] != 'seller') {
     acess_denie();
     exit();
 } else {
@@ -258,14 +258,6 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
     </div>
     <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

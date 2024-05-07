@@ -4,7 +4,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['manage_employee_visit'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['manage_employee_visit']) || $_SESSION["state"] != 'admin') {
     acess_denie();
     exit();
 } else {
@@ -19,6 +19,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
 </head>
 
 <body>
@@ -84,14 +85,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

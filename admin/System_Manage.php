@@ -1,5 +1,12 @@
-<? session_start();
-require $_SERVER['DOCUMENT_ROOT'] . '/common/notification_area.php';
+<?
+session_start();
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] != 'admin') {
+    acess_denie();
+    exit();
+} else {
+    $_SESSION['system_manage_visit'] = true;
+}
+?>
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,8 +38,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/common/notification_area.php';
             cursor: pointer;
             padding-right: 5px;
             border-radius: 0;
-            border-bottom-left-radius: 15px;
-            border-top-right-radius: 15px;
+            border-radius: 15px;
             background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
             background-size: 360% 360%;
             animation: gradient-animation 12s ease infinite;
@@ -84,13 +90,10 @@ require $_SERVER['DOCUMENT_ROOT'] . '/common/notification_area.php';
         <div class="topnav">
 
             <?php
-            topnavigation();
+            // Generate back navigation link using HTTP_REFERER
+            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
 
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="options-container">
             <a href="add_Route.php" class="option" id="option2">
@@ -105,12 +108,8 @@ require $_SERVER['DOCUMENT_ROOT'] . '/common/notification_area.php';
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
+        function back() {
+            window.history.back();
         }
     </script>
 

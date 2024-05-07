@@ -4,7 +4,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] === 'wholeseller') {
     acess_denie();
     exit();
 } else {
@@ -20,11 +20,16 @@ $customerResult = mysqli_query($connection, $customerQuery);
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="/style/mobile.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <style>
+        .mobile-container {
+            color: black;
+        }
+
         .order-container h3 {
             color: #333;
         }
@@ -73,8 +78,48 @@ $customerResult = mysqli_query($connection, $customerQuery);
             text-decoration: underline;
         }
 
+        th,
+        tr,
         th {
+            background-color: transparent;
+            color: black;
+            text-align: center;
+        }
+
+        tr {
+            padding-top: 0px;
+        }
+
+        tr:nth-child(even) {
             background-color: white;
+        }
+
+        th {
+            padding: 5px;
+        }
+
+        table {
+
+            border-spacing: 0;
+            width: auto;
+        }
+
+        tr :hover {
+            background-color: none;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        #left {
+            text-align: left;
+        }
+
+        h4,
+        ul,
+        li {
+            color: black;
         }
     </style>
 </head>
@@ -87,14 +132,10 @@ $customerResult = mysqli_query($connection, $customerQuery);
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
-
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
         </div>
         <div class="container">
-            <h2>Report Generation</h2>
+            <h3 style="text-align: center;">Report Generation</h3>
 
             <?php
             // Display error message if set
@@ -104,13 +145,26 @@ $customerResult = mysqli_query($connection, $customerQuery);
             ?>
 
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+
                 <div class="form-group">
                     <h4 style="text-align: left; color:#4caf50;">Filter By</h4>
-                    <label for="duration">Select Duration</label>
-                    <table>
+                    <div class="form-group">
+                        <label for="report_type">Report Type</label>
+                        <select name="receiptType" id="receiptType">
+                            <option value="">Select Report Type</option>
+                            <option value="salessummery">Sales Summary</option>
+                            <option value="customerdata">Customer Data</option>
+                            <option value="salecompare">Sales Comparison</option>
+                            <option value="return">Return summery</option>
+                            <option value="product">product Details</option>
+                        </select>
+                    </div>
+
+                    <label id="dur" for="duration" style="display: none;">Select Duration</label>
+                    <table id="dura" style="display: none;">
                         <tr>
-                            <th colspan="3">
-                                <select id="duration" name="duration">
+                            <th colspan="4">
+                                <select id="duration" name="duration" style="width:100%;">
                                     <option value="yearly" selected>Select Duration</option>
                                     <option value="yearly">Yearly</option>
                                     <option value="monthly">Monthly</option>
@@ -118,7 +172,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 </select>
                             </th>
 
-                        <tr>
+                        </tr>
 
                         <tr>
                             <th>
@@ -166,8 +220,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
                     </table>
 
                     <div class="form-group">
-                        <label for="sto_name">Store name</label>
-                        <select name="customer" id="customer" required>
+                        <label for="sto_name" style="display: none;" id="sto">Store Customer<lable style="color: red; font-size: 14pt;">&nbsp;*</label></label>
+                        <select name="customer" id="customer" style="display: none;" required>
                             <option value="">Select Customer</option>
                             <?php
                             while ($customerRow = mysqli_fetch_assoc($customerResult)) {
@@ -175,20 +229,12 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 echo "<option value='{$customerRow['sto_name']}' $selectedCustomer>{$customerRow['sto_name']}</option>";
                             }
                             ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="report_type">Report Type</label>
-                        <select name="receiptType" id="receiptType">
-                            <option value="">Select Report Type</option>
-                            <option value="salesreceipt">Sales Receipt</option>
-                            <option value="salessummery">Sales Summary</option>
-                            <option value="customerdata">Customer Data</option>
-                            <option value="return">Return summery</option>
+                            <option value="all">All Customer</option>
                         </select>
                     </div>
 
-                    <button type="submit">Generate Report</button>
+
+                    <button type="submit"><i class="fa fa-file-text"></i> &nbsp;Generate Report</button>
                     <br>
                     <button type="reset">Clear</button>
                     <br>
@@ -291,7 +337,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 $percentage = ($percentage / $total_transactions) * 100;
                             }
 
-                            echo '<h2>Comprehensive Sales Report</h2>';
+                            echo '<h3 style="text-decoration:underline;color:indianred;text-align:center;">Comprehensive Sales Report</h3>';
                             echo '<label>Total Revenue : LKR.' . $total_revenue . '</label><br>';
                             echo '<label>Total Outstanding : LKR.' . $total_balance . '</label><br>';
                             echo '<label>Total Quantity Sold :' . $total_quantity_sold . ' items</label>';
@@ -353,7 +399,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 
 
-                        if (isset($_POST["receiptType"]) && $_POST["receiptType"] == "product") {
+                        if ($_POST["receiptType"] === "product") {
 
                             $productQuery = "SELECT * from product";
 
@@ -394,16 +440,93 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             foreach ($mainCategories as $mainCat => $subProducts) {
                                 echo '<tr><th colspan="4" style="height:25px;" class="empty"></tr>';
                                 echo '<tr class="empty1"><th colspan="4" style="text-align:left; ">' . $mainCat . '</th><tr>';
-                                echo '<tr><th>Product Name</th><th>Cash Price</th><th>Check Price</th><th>Credit Price</th><tr>';
+                                echo '<tr><th >Product Name</th><th>Cash Price</th><th>Check Price</th><th>Credit Price</th><tr>';
 
                                 foreach ($subProducts as $subProduct) {
-                                    echo "<tr><td>{$subProduct['sub_cat']} </td><td>{$subProduct['cashPrice']}</td> <td>{$subProduct['checkPrice']}</td> <td>{$subProduct['creditPrice']}</td></tr>";
+                                    echo "<tr><td id='left'>{$subProduct['sub_cat']} </td><td>{$subProduct['cashPrice']}</td> <td>{$subProduct['checkPrice']}</td> <td>{$subProduct['creditPrice']}</td></tr>";
                                 }
                             }
                             echo "</table>";
                             echo '<br>';
                             echo '<br>';
                             echo "<a href='/common/product_data.php' style='color:blue;'>Download as PDF</a>";
+                        }
+
+                        if ($_POST["receiptType"] === "salecompare") {
+
+                            $currentYear = date('Y');
+                            $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
+                     FROM payment 
+                     WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id
+                     GROUP BY MONTH(payment_date)";
+                            $currentYearResult = mysqli_query($connection, $currentYearQuery);
+
+                            // Fetch total sales amounts for each month of the previous year
+                            $previousYear = $currentYear - 1;
+                            $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
+                      FROM payment 
+                      WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id
+                      GROUP BY MONTH(payment_date)";
+                            $previousYearResult = mysqli_query($connection, $previousYearQuery);
+
+                            // Initialize arrays to store monthly sales amounts for the current and previous years
+                            $currentYearSales = array_fill(1, 12, 0); // Initialize with 0 for each month
+                            $previousYearSales = array_fill(1, 12, 0);
+
+                            // Populate arrays with fetched data
+                            while ($row = mysqli_fetch_assoc($currentYearResult)) {
+                                $currentYearSales[$row['month']] = $row['total_sales'];
+                            }
+                            while ($row = mysqli_fetch_assoc($previousYearResult)) {
+                                $previousYearSales[$row['month']] = $row['total_sales'];
+                            }
+
+                            // Calculate percentage increase/decrease for each month compared to the previous year
+                            $percentageChanges = array();
+                            foreach ($currentYearSales as $month => $currentSales) {
+                                $previousSales = $previousYearSales[$month];
+                                if ($previousSales != 0) {
+                                    $percentageChange = (($currentSales - $previousSales) / $previousSales) * 100;
+                                } else {
+                                    $percentageChange = ($currentSales != 0) ? 100 : 0;
+                                }
+                                $percentageChanges[$month] = $percentageChange;
+                            }
+
+                            // Display the comparative sales report
+                            echo '<h3 style="text-align:center;">Sales Comparison of years</h3>';
+                            echo '<table border="1">';
+                            echo ' <tr style="background-color:lightgreen;">';
+                            echo '<th id="leftth">Month</th>';
+                            echo '<th>' . $currentYear . "" . ' Sales</th><th>Percentage of change</th>';
+                            echo '<th id="rightth">' . $previousYear . "" . ' Sales</th>
+                            
+        
+    </tr>';
+
+                            // Loop through months
+                            for ($i = 1; $i <= 12; $i++) {
+                                // Calculate month name
+                                $monthName = date('F', mktime(0, 0, 0, $i, 1));
+                                // Display row for each month
+                                echo "<tr>";
+                                echo "<td><b>$monthName</td>";
+                                echo "<td><b>{$currentYearSales[$i]}.00</td>";
+                                if ($currentYearSales[$i] > $previousYearSales[$i]) {
+                                    echo "<td><b>" . number_format($percentageChanges[$i], 2) . "%&nbsp;&nbsp;<i class='fa fa-arrow-up' style='color:green;'></i></td>";
+                                } else {
+                                    echo "<td><b>" . number_format($percentageChanges[$i], 2) . "%&nbsp;&nbsp;<i class='fa fa-arrow-down' style='color:red;'></i></td>";
+                                }
+
+
+                                echo "<td><b>{$previousYearSales[$i]}.00</td>";
+
+                                echo "</tr>";
+                            }
+                            echo '</table>';
+                            echo "<br>";
+                            echo '<label style="color:red;font-size:13px;">*Remember All sales Amounts in LKR.</label>';
+                            echo '<a href="sale_compare_report.php" style="color:blue;cursor:pointer;float:right;">Download as Pdf</a>';
                         }
                     }
 
@@ -413,13 +536,13 @@ $customerResult = mysqli_query($connection, $customerQuery);
         </div>
 
     </div>
-
-
     <script>
-        function toggleVisibility(ordId) {
-            var orderDiv = document.getElementById('order_' + ordId);
-            orderDiv.style.maxHeight = (orderDiv.style.maxHeight === '23%') ? '100%' : '23%';
+        function back() {
+            window.history.back();
         }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const durationSelect = document.getElementById("duration");
             const yearDropdown = document.getElementById("yearDropdown");
@@ -441,6 +564,50 @@ $customerResult = mysqli_query($connection, $customerQuery);
                     monthDropdown.style.display = "block";
                     dayDropdown.style.display = "block";
                 }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const receiptSelect = document.getElementById("receiptType");
+            const duration = document.getElementById('dura');
+            const dur = document.getElementById('dur');
+            const customer = document.getElementById('customer');
+            const cus = document.getElementById('sto');
+
+
+            receiptSelect.addEventListener("change", function() {
+                const selectedValue = this.value;
+                if (selectedValue === "salesreceipt") {
+                    cus.style.display = 'block';
+                    customer.style.display = 'block';
+                    dur.style.display = 'block';
+                    duration.style.display = 'block';
+                } else if (selectedValue === 'salessummery') {
+                    cus.style.display = 'block';
+                    customer.style.display = 'block';
+                    dur.style.display = 'block';
+                    duration.style.display = 'block';
+
+                } else if (selectedValue === 'customerdata') {
+                    dur.style.display = 'none';
+                    duration.style.display = 'none';
+                    cus.style.display = 'block';
+                    customer.style.display = 'block';
+
+                } else if (selectedValue === 'product') {
+                    dur.style.display = 'none';
+                    duration.style.display = 'none';
+                    cus.style.display = 'none';
+                    customer.style.display = 'none';
+
+                } else if (selectedValue === 'salecompare') {
+                    dur.style.display = 'none';
+                    duration.style.display = 'none';
+                    cus.style.display = 'none';
+                    customer.style.display = 'none';
+
+                }
+
             });
         });
     </script>
@@ -512,11 +679,10 @@ $customerResult = mysqli_query($connection, $customerQuery);
                 }
             }
         });
-
-        function back() {
-            window.history.back();
-        }
     </script>
+
+
+
 
 </body>
 

@@ -3,7 +3,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] != 'admin') {
     acess_denie();
     exit();
 } else {
@@ -96,11 +96,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="options-container">
             <a href="add_customer.php" class="option" id="option1">

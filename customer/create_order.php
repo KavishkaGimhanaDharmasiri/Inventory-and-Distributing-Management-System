@@ -3,8 +3,8 @@ session_start();
 
 // Include your database connection file
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/common/'den_fun.php");
-if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit'])) {
+require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
+if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_SESSION["state"] != 'wholeseller') {
     acess_denie();
     exit();
 } else {
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])) {
 }
 
 // Edit order functionality
-if (isset($_GET['edit_order']) && $_GET['edit_order'] == true && isset($_GET['ord_id'])) {
+/*if (isset($_GET['edit_order']) && $_GET['edit_order'] == true && isset($_GET['ord_id'])) {
     // Retrieve order details from the database based on ord_id
     $ord_id = $_GET['ord_id'];
     $editQuery = "SELECT p.ord_id, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
@@ -90,7 +90,7 @@ if (isset($_GET['edit_order']) && $_GET['edit_order'] == true && isset($_GET['or
     while ($row = mysqli_fetch_assoc($editResult)) {
         $orderDetails[] = $row;
     }
-}
+}*/
 
 // Close the database connection
 mysqli_close($connection);
@@ -196,9 +196,9 @@ function handleConfirmOrder()
         }
         // Commit the transaction
         $pdo->commit();
-        echo '<div  style="top: 0;left: 0;width: 100%;height: 100%;backdrop-filter: blur(9px);z-index: 1;"></div><div id="successModal" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);padding: 20px;background-color: white;color:#4CAF50 ;z-index: 1;border-radius: 15px;border: 2px solid #4CAF50;height: 150px;width: 200px;"><div class="gif" style="';
-        echo "background: url('gif4.gif') no-repeat center center;";
-        echo 'margin-left: 25%;align-content: center;height: 95px;width: 95px;margin-bottom: 20px;"></div><button onclick="redirectToIManage()" class="sucess" style="width: 50px;padding: 10px;background-color: #4caf50;color: #fff;border: none;border-radius: 15px;cursor: pointer;width: calc(100% - 5px);margin-bottom: 5px;">OK</button></div>';
+        echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+            <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
+            </div>';
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         $pdo->rollBack();
@@ -212,16 +212,16 @@ function displayOrderTable()
     if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
         echo "<table>";
         echo "<thead>";
-        echo "<tr><th>Check</th><th>Main Product</th><th>Sub Products</th><th>Count</th></tr>";
+        echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
         echo "</thead>";
         echo "<tbody>";
 
         foreach ($_SESSION['order_details'] as $order) {
             echo "<tr>";
             echo "<td><input type='checkbox' name='username' class='form-control'></td>";
-            echo "<td>{$order['main_category']}</td>";
-            echo "<td>{$order['sub_category']}</td>";
-            echo "<td>{$order['count']}</td>";
+            echo "<td><b>{$order['main_category']}</td>";
+            echo "<td><b>{$order['sub_category']}</td>";
+            echo "<td><b>{$order['count']}</td>";
             echo "</tr>";
         }
 
@@ -238,6 +238,7 @@ function displayOrderTable()
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
 </head>
 
 <body>
@@ -252,17 +253,6 @@ function displayOrderTable()
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
-
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
         <div class="order-form">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -289,7 +279,7 @@ function displayOrderTable()
                     ?>
                 </select>
 
-                <div class="subcategory-container" id="subcategory-container" style="height: 100%; ">
+                <div class="subcategory-container" id="subcategory-container">
                     <?php
                     // Display subcategories based on the selected main category
                     if (isset($_POST['main_category'])) {
@@ -317,13 +307,16 @@ function displayOrderTable()
 
                 <?php displayOrderTable(); ?>
                 <!-- Display Confirm Order button if there are items in the order -->
+                <br>
                 <?php
-                if (!empty($_SESSION['order_details'])) {;
-                    echo '<tr><th><input type="checkbox" required></th><th><p class="tooltip" style="cursor:pointer; text-align: center;">Are you sure about comfirming this order.</th><tr><span class="tooltiptext">The Order that You Make, is pending order until 24 hours, It may Automatically confirmed to system after 24 hours. Withing 24 hours You can make necessary changes.for more details go for My Orders section</span></p>';
+                if (!empty($_SESSION['order_details'])) {
+                    echo "<button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
                 }
-                echo "<b><button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
-                echo '<b><button type="button" name="clear_order" style="color:green; background-color:transparent; border:2px solid green"><b>Clear Order</button>';
-
+                ?>
+                <?php
+                if (!empty($_SESSION['order_details'])) {
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green;height:35px;margin-top:0%;'><b>Clear Order</button>";
+                }
                 ?>
             </form>
 
@@ -333,14 +326,6 @@ function displayOrderTable()
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

@@ -84,7 +84,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         </div>
         <?php
         // Assuming $route_id is already defined
-        $route_id = 4; // Example route ID
+        $route_id = $_SESSION["route_id"]; // Example route ID
 
         // Handle the search AND DATE_FORMAT(p.ord_date, '%Y-%m') ='$currentmonth'
         $search_query = "";
@@ -98,8 +98,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
         FROM orders o 
         LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
-        WHERE p.route_id = $route_id
-        $search_query
+        WHERE p.route_id = 4   
         GROUP BY p.store_name, o.main_cat, o.sub_cat
         ORDER BY p.store_name, ord_date DESC";
 
@@ -118,7 +117,9 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                 while ($row = $result->fetch_assoc()) {
                     $sale_date = $row['ord_date']; // Assuming $row['payment_date'] contains '2024-02-20'
                     $year_month = date('Y-m', strtotime($sale_date));
-                    if ($year_month == $currentmonth) {
+                    echo $year_month;
+                    if ($year_month === $currentmonth) {
+                        echo "equal";
                         // Start of a new store, close the previous div if not the first one
                         if ($currentStore != $row["store_name"]) {
                             if ($currentStore != "") {
@@ -188,16 +189,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
 
     </div>
 
-    <script src="/javascript/navigation.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function showStore(storeName) {
             const details = document.getElementById(storeName);
             details.style.display = details.style.display === 'none' ? 'block' : 'none';

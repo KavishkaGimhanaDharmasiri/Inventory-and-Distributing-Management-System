@@ -3,7 +3,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION['route_id']) || !isset($_SESSION["state"])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !isset($_SESSION["state"])) {
     acess_denie();
 
     exit();
@@ -96,7 +96,12 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         $sql1 = "SELECT sto_name FROM customers WHERE route_id=$routeId";
         $result1 = mysqli_query($connection, $sql1);
 
-        $sql3 = "SELECT sum(total) sum1,sum(payment_amout) as sum2, sum(balance) as sum3 FROM payment WHERE route_id=$routeId AND DATE_FORMAT(payment_date, '$currentMonthYear')";
+        if ($_SESSION["state"] === "seller") {
+            $sql3 = "SELECT sum(total) sum1,sum(payment_amout) as sum2, sum(balance) as sum3 FROM payment WHERE route_id=$routeId AND DATE_FORMAT(payment_date, '$currentMonthYear')";
+        }
+        if ($_SESSION["state"] === "admin") {
+            $sql3 = "SELECT sum(total) sum1,sum(payment_amout) as sum2, sum(balance) as sum3 FROM payment WHERE DATE_FORMAT(payment_date, '$currentMonthYear')";
+        }
         $result3 = mysqli_query($connection, $sql3);
 
         echo '<div class="containers">';
@@ -132,11 +137,15 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
         echo '<div class="box">';
         echo "<h4>Remaining Product Details</h4><br>";
-
-        $sql2 = "SELECT f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count 
-         FROM feed f 
-         LEFT JOIN feed_item i ON i.feed_id = f.feed_id 
-         WHERE route_id = $routeId AND DATE_FORMAT(feed_date, '$currentMonthYear')";
+        $sql = "";
+        $result2 = "";
+        if ($_SESSION["state"] === "seller") {
+            $sql2 = "SELECT f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id WHERE route_id = $routeId AND DATE_FORMAT(feed_date, '$currentMonthYear')";
+        }
+        if ($_SESSION["state"] === "admin") {
+            $sql2 = "SELECT f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f 
+            LEFT JOIN feed_item i ON i.feed_id = f.feed_id WHERE AND DATE_FORMAT(feed_date, '$currentMonthYear')";
+        }
 
         $result2 = mysqli_query($connection, $sql2);
 
