@@ -18,6 +18,11 @@ if (!isset($_SESSION['index_visit']) || !$_SESSION['index_visit'] || !isset($_SE
 $query = "SELECT * FROM users WHERE user_id = '$user_idn'";
 $result = mysqli_query($connection, $query);
 
+$currentmonth = date('Y-m');
+
+$sqlq = "SELECT * FROM payment WHERE balance > 4000 AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentmonth'";
+$results = $connection->query($sqlq);
+
 if ($result) {
   // Check if a matching record is found
   if (mysqli_num_rows($result) == 1) {
@@ -76,8 +81,8 @@ session_write_close();
       padding: 15px;
       cursor: pointer;
       padding-right: 5px;
-      border-radius: 0;
-      border-radius: 15px;
+
+      border-radius: 20px;
       background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
       background-size: 360% 360%;
       animation: gradient-animation 12s ease infinite;
@@ -134,7 +139,7 @@ session_write_close();
       text-decoration: none;
       font-size: 15px;
       font-weight: bold;
-      color: red;
+      color: white;
       display: block;
       transition: 0.3s;
     }
@@ -151,7 +156,7 @@ session_write_close();
     }
 
     .notification-panel {
-      background-color: white;
+      background-color: #383938;
       border: 1px solid #ccc;
       border-radius: 10px;
       margin: 3px;
@@ -173,15 +178,26 @@ session_write_close();
     }
 
     #notificationContent {
-      background-color: white;
+      background-color: #383938;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px black;
       font-size: 12px;
+      color: white;
     }
 
     .contain {
       display: flex;
       justify-content: space-between;
+      color: white;
+    }
+
+    .badge {
+      position: absolute;
+      right: 25px;
+      padding: 4px 4px;
+      border-radius: 50%;
+      background-color: red;
+      color: white;
     }
   </style>
 </head>
@@ -200,16 +216,26 @@ session_write_close();
       ?>
       <div id="mySidepanel" class="sidepanel" style="height:100%;">
         <a href="javascript:void(0)" style="color:white;font-size:13px;margin-top:10px;" class="closebtn" onclick="closeNav()">&#10005;</a>
-        <a href="about.php">About</a>
-        <a href="contact">Contact</a>
+        <a href="about.php">Info</a>
         <a href="#" onclick="toggleProfilePanel()">Profile</a>
-        <a href="javascript:void(0)" onclick="opennot()">Notification</a>
+        <a href="javascript:void(0)" onclick="opennot()">
+          <?php
+          if ($results->num_rows > 0) {
+            echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
+          }
+          ?>Notification</a>
         <br>
         <br>
         <a href="javascript:void(0)" onclick="logout()">Logout</a>
       </div>
       <a href="javascript:void(0);" class="icon" onclick="openNav()">
         <i class="fa fa-bars"></i>
+        <?php
+
+        if ($results->num_rows > 0) {
+          echo '<span class="badge" id="bages"></span>';
+        }
+        ?>
       </a>
 
       <div id="mynotification" class="notification">
@@ -217,13 +243,13 @@ session_write_close();
         <div class="notification-panel" id="notificationPanel">
           <div class="contain">
             <a href style="font-size:12px;pointer-events: none;">Notification</a>
-            <a href="javascript:void(0)" style="color: black;font-size:12px;cursor:pointer;" onclick="closenot()">&#10005;</a>
+            <a href="javascript:void(0)" style="font-size:12px;cursor:pointer;" onclick="closenot()">&#10005;</a>
           </div>
 
           <div id="notificationContent" style="padding: 5px;">
             <div class="contain">
-              <a href="javascript:void(0)" style="pointer-events: none;color:black;font-size:12px;font-weight:normal;">Some of These Customers have outstanding balance remaining</a>
-              <a href="javascript:void(0)" style="color: red;font-size:12px;" onclick="hidenotifi()">&#10005;</a>
+              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">Some of These Customers have outstanding balance remaining</a>
+              <a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a>
             </div>
             <div class="contain">
 
@@ -239,7 +265,10 @@ session_write_close();
 
       <div id="profilePanel" class="profile-panel" style="max-height: 320px;">
 
+
+
         <div class="">
+          <lable onclick="profileclose()" style="margin-left:90%;">&#10005;</lable>
           <div class="our-team">
             <div class="picture">
               <img class="img-fluid" style="height: 100px; width: 100px;" src="https://picsum.photos/id/77/1631/1102">
@@ -315,11 +344,13 @@ session_write_close();
 
     function closenot() {
       document.getElementById("mynotification").style.width = "0px";
-      document.getElementById("mySidepanel").style.width = "150px";
     }
 
     function hidenotifi() {
       document.getElementById("notificationContent").style.display = "none";
+      document.getElementById("bages").style.display = "none";
+      document.getElementById("bagesd").style.display = "none";
+      document.getElementById("notifications").style.display = "none";
 
     }
     document.addEventListener("DOMContentLoaded", function() {
@@ -353,7 +384,12 @@ session_write_close();
     function toggleProfilePanel() {
       var profilePanel = document.getElementById('profilePanel');
       profilePanel.style.display = (profilePanel.style.display === 'block') ? 'none' : 'block';
+      document.getElementById("mySidepanel").style.width = "0px";
       //fetchUserData()
+    }
+
+    function profileclose() {
+      const profilePanel = document.getElementById('profilePanel').style.display = "none";
     }
 
     function changePassword() {

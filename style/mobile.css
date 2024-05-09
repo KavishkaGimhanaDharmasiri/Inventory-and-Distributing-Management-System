@@ -74,7 +74,7 @@ body {
   height: 150px;
   top: 0;
   right: 0;
-  background-color: black;
+  background-color: #383938;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 40px;
@@ -86,7 +86,7 @@ body {
   text-decoration: none;
   font-size: 15px;
   font-weight: bold;
-  color: #818181;
+  color: #a8a6a6;
   display: block;
   transition: 0.3s;
 }
