@@ -177,6 +177,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .fail:hover {
             background-color: red;
         }
+
+        h3 {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -194,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
         </div>
         <div class="container">
-            <h2 id="customer_data">Customer Details</h2>
+            <h3 id="customer_data">Customer Details</h3>
             <h2 id="sales_data" style="display: none;">Sales Person Details</h2>
 
 
@@ -223,7 +227,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <hr id="sep_hr"> <!-- Separate Customer and Store Details -->
 
                 <!-- Store Details Section -->
-                <h2 id="sto_detail">Store Details</h2>
+                <h3 id="sto_detail">Store Details</h3>
                 <div class="form-group">
                     <label for="storename" id="storenamelable">Store Name<lable style="color: red; font-size: 14pt">&nbsp;*</label></label>
                     <input type="text" name="storename" id="storename" class="form-control" placeholder="Sadaruwan Hardware" required>

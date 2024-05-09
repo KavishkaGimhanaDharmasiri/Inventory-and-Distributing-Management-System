@@ -45,6 +45,8 @@
             position: absolute;
             bottom: 8px;
             text-align: center;
+            animation-name: fade;
+            animation-duration: 1.5s;
 
         }
 
@@ -63,10 +65,12 @@
         .active,
         .dot:hover {
             background-color: red;
+            animation-name: fade;
+            animation-duration: 1.5s;
         }
 
         /* Fading animation */
-        .fade {
+        .mySlides {
             animation-name: fade;
             animation-duration: 1.5s;
         }
@@ -125,7 +129,7 @@
             </div>
 
             <div class="mySlides">
-                <div class="container">
+                <div class="container" style="background-color:indianred;">
                     <h3>Contact Us</h3>
                 </div>
             </div>

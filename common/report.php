@@ -270,7 +270,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                     echo "<label>Owners' Name :" . $row['firstName'] . " " . $row['LastName'] . "</label>";
                                     echo "<label>Store Name :" . $row['sto_name'] . "</label>";
                                     echo "<label>Registration No. :" . $row['sto_reg_no'] . "</label>";
-                                    echo "<label>Contact No. :" . $row['sto_tep_number'] . "</label>";
+                                    echo "<label>Contact No. :" . "+94" . $row['sto_tep_number'] . "</label>";
                                     echo "<label>Email Address:" . $row['email'] . "</label>";
                                     echo "<label>Location :" . $row['sto_loc'] . "</label>";
                                     echo "<hr>";

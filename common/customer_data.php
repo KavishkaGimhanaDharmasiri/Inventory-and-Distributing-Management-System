@@ -37,7 +37,7 @@ while ($row = mysqli_fetch_assoc($customerResult)) {
     $pdf->Cell(0, 6, 'Owner\'s Name: ' . $row['firstName'] . ' ' . $row['LastName'], 0, 1);
     $pdf->Cell(0, 6, 'Store Name: ' . $row['sto_name'], 0, 1);
     $pdf->Cell(0, 6, 'Registration No.: ' . $row['sto_reg_no'], 0, 1);
-    $pdf->Cell(0, 6, 'Contact No.: ' . $row['sto_tep_number'], 0, 1);
+    $pdf->Cell(0, 6, 'Contact No.: ' . "+94" . $row['sto_tep_number'], 0, 1);
     $pdf->Cell(0, 6, 'Email Address: ' . $row['email'], 0, 1);
     $pdf->Cell(0, 6, 'Location: ' . $row['sto_loc'], 0, 1);
     $pdf->Ln();

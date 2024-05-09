@@ -98,7 +98,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
         FROM orders o 
         LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
-        WHERE p.route_id = 4   
+        WHERE p.route_id = $route_id AND p.order_type='customer'  
         GROUP BY p.store_name, o.main_cat, o.sub_cat
         ORDER BY p.store_name, ord_date DESC";
 
@@ -117,9 +117,8 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                 while ($row = $result->fetch_assoc()) {
                     $sale_date = $row['ord_date']; // Assuming $row['payment_date'] contains '2024-02-20'
                     $year_month = date('Y-m', strtotime($sale_date));
-                    echo $year_month;
                     if ($year_month === $currentmonth) {
-                        echo "equal";
+
                         // Start of a new store, close the previous div if not the first one
                         if ($currentStore != $row["store_name"]) {
                             if ($currentStore != "") {
@@ -145,6 +144,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                         echo '</ul>';
                     } else {
                         if (!$previous_orders_displayed) {
+                            echo "</div>";
                             echo '<h4 style="color:red;">Previous Customer Orders</h4>';
                             $previous_orders_displayed = true; // Set the flag to true after displaying the header
                         }
