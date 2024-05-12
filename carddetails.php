@@ -186,7 +186,7 @@ $email=$_SESSION['email'];
                     </tr>
 
                     <tr>
-                        <td> <input type="text" placeholder="Street address" id="text" name="Street address"></td><td><input type="text" placeholder="Street address (optional)" id="text" name="Street address2"></td>
+                        <td> <input type="text" placeholder="Street address" id="text" name="Street_address"></td><td><input type="text" placeholder="Street address (optional)" id="text" name="Street_address2"></td>
                     </tr>
 
                     <tr>
@@ -228,19 +228,19 @@ $email=$_SESSION['email'];
                     </tr>
 
                      <tr>
-                        <td><input type="number" placeholder="Card number" id="text" name="cardnumber"></td><td> <input type="number" placeholder="cvv" id="text" name="cardnumber"></td>
+                        <td><input type="text" placeholder="Card number" id="text" name="cardnumber"></td><td> <input type="text" placeholder="cvv" id="text" name="cvv"></td>
                     </tr>
 
                     </table>
 
                     <table class="tab3">
                         <tr>
-                            <td><input type="text" placeholder="Expiration date" class="text" name="state"></td>
-                            <td> <input type="text" placeholder="Expiration Month" class="text" name="zip"></td>
+                            <td><input type="text" placeholder="Expiration date" class="text" name="expD"></td>
+                            <td> <input type="text" placeholder="Expiration Month" class="text" name="expM"></td>
                             </tr>
                     </table>
            
-                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="Shipping_details">Done</button><br>
+                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="Card_details">Done</button><br>
                         
                 </form>
         </div>
@@ -267,11 +267,11 @@ if(isset($_POST['add_shipping_details'])) // Check if the form is submitted
     $street_address = $_POST['Street_address'];
     $street_address2 = $_POST['Street_address2'];
     $address = $_POST['address'];
-    $city = $_POST['city']; // Changed to match the name attribute in the HTML form
-    $province = $_POST['province']; // Changed to match the name attribute in the HTML form
-    $zip = $_POST['zip']; // Changed to match the name attribute in the HTML form
+    $city = $_POST['city'];
+    $province = $_POST['province'];
+    $zip = $_POST['zip'];
 
-    echo $email;
+    echo $email,$street_address,$street_address2, $address,$city,$province,$zip;
     // Connect to the database
     $host = 'localhost';
     $username = 'root';
@@ -282,33 +282,43 @@ if(isset($_POST['add_shipping_details'])) // Check if the form is submitted
 
     // Check the connection
     if (!$link) {
-        die('Could not connect: ' . mysqli_error($link));
+        die('Could not connect: ' . mysqli_connect_error()); // Improved error message
+    }
+    echo 'connected';
+    // Prepare and execute the stored procedure
+    $stmt = $link->prepare("CALL add_shippingdetaills(?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        die('Failed to prepare statement: ' . $link->error); // Error handling
+    }
+    $bindResult = $stmt->bind_param("ssssssi", $email, $street_address, $street_address2, $address, $city, $province, $zip);
+    if (!$bindResult) {
+        die('Binding parameters failed: ' . $stmt->error); // Error handling
+    }
+    
+    $executeResult = $stmt->execute();
+    if (!$executeResult) {
+        die('Execution failed: ' . $stmt->error); // Error handling
     }
 
-    // Prepare and execute the stored procedure
-    $stmt = $link->prepare("CALL add_shippingdetails(?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssi", $email, $street_address, $street_address2, $address, $city, $province, $zip); // 'i' indicates integer type for the parameter
-    
-    $stmt->execute();
-
-    // Close statement
     $stmt->close();
 }
+?>
 
-if(isset($_POST['add_card_details'])) // Check if the form is submitted
+<?php
+
+if(isset($_POST['Card_details'])) // Check if the form is submitted
 {
+
     // Retrieve form data
     $bank = $_POST['bank'];
-    $street_address = $_POST['Street_address'];
-    $street_address2 = $_POST['Street_address2'];
-    $address = $_POST['address'];
-    $city = $_POST['city']; // Changed to match the name attribute in the HTML form
-    $province = $_POST['province']; // Changed to match the name attribute in the HTML form
-    $zip = $_POST['zip']; // Changed to match the name attribute in the HTML form
+    $cardnumber = $_POST['cardnumber'];
+    $cvv = $_POST['cvv'];
+    $expM = $_POST['expM'];
+    $expD = $_POST['expD'];
 
-    echo $bank;
-    // Connect to the database
-    $host = 'localhost';
+    // echo $bank, $email, $cardnumber, $cvv, $expD, $expM;
+
+     $host = 'localhost';
     $username = 'root';
     $password = '';
     $database = 'retail_website';
@@ -317,18 +327,25 @@ if(isset($_POST['add_card_details'])) // Check if the form is submitted
 
     // Check the connection
     if (!$link) {
-        die('Could not connect: ' . mysqli_error($link));
+        die('Could not connect: ' . mysqli_connect_error()); // Improved error message
+    }
+    
+    $stmt = $link->prepare("CALL add_carddetails(?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        die('Failed to prepare statement: ' . $link->error); // Error handling
+    }
+    $bindResult = $stmt->bind_param("ssiiii", $email, $bank, $cardnumber, $cvv, $expD, $expM);
+    if (!$bindResult) {
+        die('Binding parameters failed: ' . $stmt->error); // Error handling
+    }
+    
+    $executeResult = $stmt->execute();
+    if (!$executeResult) {
+        die('Execution failed: ' . $stmt->error); // Error handling
     }
 
-    // Prepare and execute the stored procedure
-    $stmt = $link->prepare("CALL add_shippingdetails(?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssi", $email, $street_address, $street_address2, $address, $city, $province, $zip); // 'i' indicates integer type for the parameter
-    
-    $stmt->execute();
-
-    // Close statement
     $stmt->close();
-    // Close connection
-    mysqli_close($link);
 }
-?> 
+
+?>
+

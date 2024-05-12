@@ -53,7 +53,7 @@ $productid=$_GET['categoryid'];
                 $_SESSION['product_id'] = $product_id; // Store product ID in session
                 $_SESSION['stock'] = $stock;
 
-                echo '<div class="card-wrapper">
+                echo '<div class="card-wrapper" >
                         <div class="card">
                             <div class="about" id="About"> 
                                 <div class="about_main">

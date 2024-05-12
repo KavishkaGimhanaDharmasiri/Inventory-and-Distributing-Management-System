@@ -59,9 +59,9 @@
             <div class="cart-profile">
             
            <div class="dropdown">
-    <img src="Images/Decoration/profile.jpg" onclick="myFunction()" class="dropbtn" style="width: 50px; height: 50px;">
+    <img src="Images/Decoration/profile.png" onclick="myFunction()" class="dropbtn" style="width: 50px; height: 50px;">
     <div id="myDropdown" class="dropdown-content">
-        <a href="#">Edit Profile</a>
+        <a href="profileupdate.php">Edit Profile</a>
         <a href="LogOut.php">Log Out</a>
     </div>
 </div>
@@ -70,7 +70,6 @@
             </div>
 
         </header>
-
         </nav>
     </section>
 <script>

@@ -90,7 +90,7 @@ $conn = new mysqli($host, $username, $password, $database);
     <!--About-->
     <br><br><br><br><br><br><br><br>
     <div class="about" id="About">
-        <img src="Images/Decoration/bulb.jpg" alt="">
+        <img src="Images/Decoration/electrician.jpg" alt="">
         <div class="about-text">
             <h1>About us</h1>
             <br>

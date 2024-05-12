@@ -85,23 +85,21 @@
 
 .btn-area{
     background: var(--green-color);
-    color: var(--bg-color);
     position: absolute;
     bottom: 20px;
     right: 20px;
     padding: 10px 25px;
     border-radius: 2px;
     font-weight: 600;
+    color: black;
+    margin-right: 5px;
+    border: none;
 }
 
 .unit input{
     width: 50px;
     text-align: center;
     padding: 8px;
-}
-
-.btn-area{
-    margin-right: 5px;
 }
 
 .right-bar{

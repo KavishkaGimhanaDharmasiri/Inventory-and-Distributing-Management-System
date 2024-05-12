@@ -4,7 +4,7 @@ include 'Navibar.php';
 
 //var_dump($_POST);
 
- $un=$_SESSION['username'];
+ $un=$_SESSION['email'];
 
 
 ?>
@@ -47,21 +47,26 @@ include 'Navibar.php';
     opacity: 1;
     transition: 0.5s;
 }
-.btn{
-    width: 200px;
-    height: 40px;
-    border-radius: 50px;
-    border: none;
-    }
+
 
 #rmvbtn{
     background-color: #FF5F1F;
     bottom: 40px;
     margin-bottom: 20px;
+    width: 200px;
+    height: 40px;
+    border-radius: 50px;
+    border: none;
+
 }
 
-#cancle{
-
+#cancel{
+    bottom: 40px;
+    margin-bottom: 20px;
+    width: 200px;
+    height: 40px;
+    border-radius: 50px;
+    border: none;
 }
 
 
@@ -116,20 +121,21 @@ if ($result) { // Check if the query was successful
             
 
             echo '<div class="center-container">
-    <div class="box">
-        <input type="checkbox" name="item1_quantity[]" value="1" class="checkbox">
-        <img src="data:image;base64,'. base64_encode($img) .'" alt="">
-        <div class="content">
-            <h3>'.$sub_cat.'</h3>
-            <h4>Price: Rs. '.$subtotal.'</h4>
-            <p class="unit">Quantity: '.$quantity.'</p>
-            <p class="btn-area" onclick="toggleBlur()">
-                <i class="bx bxs-trash"></i>
-                <a href="#" onclick="toggle()"#rmv-product?categoryid='.$p_id.'>Remove</a>
-            </p>
+        <div class="box">
+            <input type="checkbox" name="item1_quantity[]" value="1" class="checkbox">
+            <img src="data:image;base64,'. base64_encode($img) .'" alt="">
+            <div class="content">
+                <h3>'.$sub_cat.'</h3>
+                <h4>Price: Rs. '.$subtotal.'</h4>
+                <p class="unit">Quantity: '.$quantity.'</p>
+                <p class="btn-area">
+                    <i class="bx bxs-trash"></i>
+                    <!-- Pass p_id to toggle() -->
+                    <a href="#" onclick="toggle('.$p_id.')">Remove</a>
+                </p>
+            </div>
         </div>
-    </div>
-</div>';
+    </div>';
 
 
                 $total=$total+$subtotal;
@@ -167,26 +173,33 @@ $conn->close(); // Close the database connection
         <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe> 
     </div>
     
-    <script type="text/javascript">
-        function toggle() {
-            var blur = document.getElementById('blur');
-            blur.classList.toggle('active');
-            var remove = document.getElementById('remove');
-            remove.classList.toggle('active');
-        }
-    </script>
-    <div class="rmv-product" id="remove">
-        <form action="" method="post" id="form">
-                    <h3>Remove product</h3>
-                    <h5>Remove item from cart?</h5>
-                    <?php
-                    echo $p_id
-                    ?>
-                <br><br> <button type="submit" value="remove" id="rmvbtn" class="btn" name="remove">Remove</button><br>
-                <button type="submit" value="cancle" id="cancle" class="btn" name="cancle" onclick="toggle()">Cancle</button>
-                        
-                </form>
-    </div>
+   <script type="text/javascript">
+    function toggle(p_id) {
+        var blur = document.getElementById('blur');
+        blur.classList.toggle('active');
+        
+        var remove = document.getElementById('remove');
+        remove.classList.toggle('active');
+
+        document.getElementById('item_id').value = p_id;
+    }
+
+
+</script> 
+
+<div class="rmv-product" id="remove">
+    <form action="removecartitems.php" method="post" id="form">
+        <h3>Remove product</h3>
+        <h5>Remove item from cart?</h5>
+        <!-- Hidden input field to store the item_id -->
+        <input type='hidden' name='item_id' id="item_id">
+        <br><br> 
+        <a href="removecartitems.php?id=<?php echo $p_id; ?>">
+            <button type="button" id="rmvbtn" class="btn" name="remove">Remove</button>
+        </a></form><br>
+
+            <button value="cancel" id="cancel" class="btn" name="cancel" onclick="toggle()">Cancel</button>      
+</div>
+
 </body>
 </html>
-
