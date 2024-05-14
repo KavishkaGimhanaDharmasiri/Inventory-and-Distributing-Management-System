@@ -84,16 +84,29 @@
 }
 
 .btn-area{
-    background: var(--green-color);
+    background-color: #fff;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     position: absolute;
     bottom: 20px;
     right: 20px;
     padding: 10px 25px;
-    border-radius: 2px;
-    font-weight: 600;
+}
+
+.bx{
     color: black;
+}
+
+.empty-cart{
+    content: "\2716"; /* Unicode cross symbol */
+    color: #6b6b6b; /* Dark red cross color */
+    font-size: 24px; /* Cross size */
     margin-right: 5px;
-    border: none;
+    border: 1px solid #1b7a05; /* Border color */
+    border-radius: 10px;
+    padding: 30px;
+    background-color: #caeac3;
 }
 
 .unit input{

@@ -1,5 +1,7 @@
+<?php
+$name=$_SESSION['f_name'];
+?>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-compatible" content="IE=edge">
@@ -63,7 +65,7 @@
     <div id="myDropdown" class="dropdown-content">
         <a href="profileupdate.php">Edit Profile</a>
         <a href="LogOut.php">Log Out</a>
-    </div>
+    </div><br><?php echo "Hello <br>".$name?>
 </div>
 &nbsp&nbsp
             <a href="Cart.php" class="index-cart"><i class='bx bx-cart' ></i></a> 

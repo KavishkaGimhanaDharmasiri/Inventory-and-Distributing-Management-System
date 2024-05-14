@@ -104,8 +104,8 @@ $result = $stmt->get_result();
 
 $total2=0;
 $total=0;
-$shipping=200;
-$_SESSION['shipping']=$shipping;
+$ship=0;
+$shipping=0;
 
 if ($result) { // Check if the query was successful
     if ($result->num_rows > 0) {
@@ -116,9 +116,11 @@ if ($result) { // Check if the query was successful
             $price = $row["cashPrice"];
             $img = $row["image"];
             $discount = $row["Discount"];
+            $shipping=$row["Shipping"];
+            $_SESSION['shipping']=$shipping;
 
             $subtotal=$price*$quantity;
-            
+            $ship=$ship+$shipping;
 
             echo '<div class="center-container">
         <div class="box">
@@ -129,22 +131,19 @@ if ($result) { // Check if the query was successful
                 <h4>Price: Rs. '.$subtotal.'</h4>
                 <p class="unit">Quantity: '.$quantity.'</p>
                 <p class="btn-area">
-                    <i class="bx bxs-trash"></i>
-                    <!-- Pass p_id to toggle() -->
-                    <a href="#" onclick="toggle('.$p_id.')">Remove</a>
+                    <button onclick="toggle('.$p_id.')"><i class="bx bxs-trash"></i></button>
                 </p>
             </div>
         </div>
     </div>';
-
 
                 $total=$total+$subtotal;
         }
         $total2=$total+$shipping;
         $_SESSION['total']=$total2;
     } else {
-        echo "<div class='box'>
-                        <h3>No result found</h3>
+        echo "<div class='empty-cart'>
+                        <span>Oops! Your cart is lonely. Add some items to make it happy!</span>
             </div>";
     }
     $_SESSION['subtotal']=$total;
@@ -164,11 +163,8 @@ echo '</div>
                 
             </div>';
 
-$conn->close(); // Close the database connection
-?>
-
-
-            
+$conn->close(); 
+?>            
         </div>
         <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe> 
     </div>
@@ -183,7 +179,6 @@ $conn->close(); // Close the database connection
 
         document.getElementById('item_id').value = p_id;
     }
-
 
 </script> 
 

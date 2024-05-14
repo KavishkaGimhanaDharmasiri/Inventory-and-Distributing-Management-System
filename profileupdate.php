@@ -1,7 +1,7 @@
 <?php
 session_start();
 $un=$_SESSION['email'];
-include 'Navibar.php';
+
 ?>
 
 
@@ -115,12 +115,13 @@ if ($result->num_rows > 0) {
         $tp = $row["number"];
         $email = $row["email"];
         $pwd = $row["password"];
+        $_SESSION['f_name']=$fname;
 
         echo '<table id="table">
                 <tr>
                     <td><img src="./Images/Decoration/manprofile.png" alt="logo" id="img"></td>
                     <td>
-                        <h1 style="color: black;">HELLO ' . $fname . '</h1>
+                        <h1 style="color: black;">Profile Update</h1>
                     </td>
                 </tr>
             </table>
@@ -137,10 +138,10 @@ if ($result->num_rows > 0) {
             <input type="tel" placeholder="' . $tp . '" id="tnumber" name="tnumber">
 
             <span id="pwd1_msg" style="color:red"> </span>
-            <input type="password" placeholder="Old password" id="password1" >
+            <input type="password" placeholder="Old password" id="password1" name="password1">
 
             <span id="pwd2_msg" style="color:red"> </span>
-            <input type="password" placeholder="New password" id="password2" name="password"><br>
+            <input type="password" placeholder="New password" id="password2" name="password2"><br>
 
             <button type="submit" value="update" id="button" name="update">Update</button><br>
 
@@ -154,7 +155,8 @@ if(isset($_POST['update'])){
     $up_email = $_POST['email'];
     $up_address = $_POST['address'];
     $up_number = $_POST['tnumber'];
-    $up_pwd = $_POST['password'];
+    $up_pwd1 = $_POST['password1'];
+    $up_pwd2 = $_POST['password2'];
 
     if($up_email == ''){
         $up_email = $email;
@@ -165,13 +167,20 @@ if(isset($_POST['update'])){
     if($up_number == ''){
          $up_number = $tp;
     }
-    if($up_pwd == ''){
-        $up_pwd = $pwd;  
+    if($up_pwd1 == ''){
+        $up_pwd1 = $pwd;  
+    }elseif ($pwd!=$up_pwd1) {?>
+       <script type="text/javascript"> 
+        text = "**Passwords do not match**";
+        document.getElementById("pwd1_msg").innerHTML = text;
+        event.preventDefault();
+        </script>
+<?php
     }
 
     $sql = "UPDATE user_details SET address = '$up_address', 
                         number = '$up_number', email = '$up_email', 
-                        password = '$up_pwd' 
+                        password = '$up_pwd2' 
                         WHERE email = '$un'";
 
     $result = $conn->query($sql);

@@ -112,13 +112,13 @@ session_start();
                 <input type="text" placeholder="Email" id="email" name="email">
 
                 <span id = "pwd1_msg" style="color:red"> </span>
-                <input type="password" placeholder="Password" id="password1" name="password" >
+                <input type="password" placeholder="Password" id="password1" name="password1" >
                 <label for="showPassword">
                 <input type="checkbox" id="showPassword"> Show Password
                 </label>
 
                 <span id = "pwd2_msg" style="color:red"> </span>
-                <input type="password" placeholder="Confirm Password" id="password2" ><br>
+                <input type="password" placeholder="Confirm Password" id="password2" name="password2"><br>
 
                 <button type="submit" value="Sign Up" id="button" name="signUp" onclick="check_form()">Sign Up</button><br>
                 
@@ -157,7 +157,7 @@ function check_form() {
         var password2 = document.getElementById("password2").value;
 
         var letters = /^[A-Za-z]+$/;
-        var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+        var pattern = /^([0-9]{4})\/([0-9]{2})\/([0-9]{2})$/;
         var phoneno = /^\d{10}$/;
         var mailFormat = /\S+@\S+\.\S+/;
 
@@ -177,10 +177,10 @@ function check_form() {
             text = '**Enter Characters Only**';
             document.getElementById("lname_msg").innerHTML = text;
             event.preventDefault();
-        // } else if (!pattern.test(dob)) {
-        //     text = '**Invalid Date of Birth (DD-MM-YYYY)**';
-        //     document.getElementById("dob_msg").innerHTML = text;
-        //     event.preventDefault();
+         // } else if (!pattern.test(dob)) {
+         //    text = '**Invalid Date of Birth**';
+         //     document.getElementById("dob_msg").innerHTML = text;
+         //     event.preventDefault();
          } else if (address == null || address.trim() === "") {
             text = '**Enter Your Address**';
             document.getElementById("address_msg").innerHTML = text;
@@ -233,7 +233,7 @@ if(isset($_POST['signUp']))
     $address = $_POST['address'];
     $tnumber = $_POST['tnumber'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $pwd = $_POST['password2'];
      $_SESSION['usrname'] = $email;
      $_SESSION['email'] = $email;
             
@@ -255,7 +255,7 @@ if(isset($_POST['signUp']))
 
     $stmt = $link->prepare("CALL create_user(?, ?, ?, ?, ?, ?, ?, @status)");
 
-      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $password);
+      $stmt->bind_param("ssssiss", $fname, $lname, $dob, $address, $tnumber, $email,  $pwd);
 
     $stmt->execute();
     $stmt->close();
@@ -266,8 +266,8 @@ if(isset($_POST['signUp']))
     switch ($status) {
         case 0:
             // echo "Student inserted successfully."; 
-        echo '<script>window.alert("User inserted successfully.");
-        window.location.href="SignIn.php";
+        echo '<script>alert("User inserted successfully.");
+        window.location.href="Dashboard.php";
         exit();</script>'; 
         
             break;

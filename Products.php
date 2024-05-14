@@ -97,8 +97,7 @@ if ($result) { // Check if the query was successful
                              <img src="data:image;base64,' . base64_encode($img) . '" alt="">
                     </div> 
                              <h2>' . $sub_cat . '</h2>
-                             <p>' . $main_cat . '</p>
-                            <h3 class="price">Rs. ' . $price . '</h3>';
+                            <h3 class="price">Rs. ' . number_format($price, 2) . '</h3>';
 
             if ($discount != '' && $discount != NULL)
              { // Added condition to check if discount exists

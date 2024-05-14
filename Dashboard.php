@@ -70,7 +70,7 @@ $conn = new mysqli($host, $username, $password, $database);
                             </div>
                                 
                             <h2>'.$name.'</h2>
-                            <h3>'.$quantity.' Items</h3>
+                            <h3>'.$quantity.' Products</h3>
 
                             <div class="home-text">
                                 <a href="Products.php?categoryid='.$catnum.'" class="btn">Shop Now<i class="bx bx-right-arrow-alt"></i></a>

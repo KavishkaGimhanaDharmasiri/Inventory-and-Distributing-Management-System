@@ -11,7 +11,6 @@ $un=$_SESSION['email'];
     <title>Product_Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/productdetails.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" /> -->
   </head>
   <body >
 <?php
@@ -53,7 +52,7 @@ $productid=$_GET['categoryid'];
                 $_SESSION['product_id'] = $product_id; // Store product ID in session
                 $_SESSION['stock'] = $stock;
 
-                echo '<div class="card-wrapper" >
+                echo '
                         <div class="card">
                             <div class="about" id="About"> 
                                 <div class="about_main">
@@ -71,20 +70,20 @@ $productid=$_GET['categoryid'];
                     $p = ($discount * $price) / 100;
                     $newprice = $price - $p;
                     echo '<div class="last-product-price">
-                            <p class="last-price">Old Price: <span>Rs. ' . $price . '</span></p>
+                            <p class="last-price"><span>Rs. ' .number_format($price, 2) . '</span></p>
                           </div>
                           <div class="new-product-price">
-                            <p class="new-price">Price: <span>Rs. ' . $newprice . '</span></p>
+                            <p class="new-price"><span>Rs. ' . number_format($newprice, 2) . '</span></p>
                           </div>';
                 } else {
                     echo '<div class="new-product-price">
-                            <p class="new-price">Price: <span>Rs. ' . $price . '</span></p>
+                            <p class="new-price"><span>Rs. '. number_format($price, 2) .'</span></p>
 
                           </div>';
                 }
 
                 echo '<div>
-                        <h4>'.$description.'</h4>
+                        <h5 class="description">'.$description.'</h5>
                       </div>'; // Close the divs properly
             }
         } else {
@@ -102,12 +101,14 @@ $productid=$_GET['categoryid'];
                         </div>
                         <form action=" " method="post" id="form">
                         <div class = "purchase-info">
-                           <input type="number" min="0" max="<?php echo $stock; ?>" value="0" name="quantity" id="quantity"><br>
+                           <input type="number" min="0" max="<?php echo $stock; ?>" value="1" name="quantity" id="quantity"><br>
                            <input type="hidden" name="product_id" value="<?php echo $product_id?>">
 
                            <a href="SignIn.php"><button type="submit" name="btn" class="btn">Add to Cart <i class="fas fa-shopping-cart"></i></button></a>
-                         </div></form>
-                        </div></div></div>
+                         </div>
+                     </form>
+    </div>
+</div>
 
 <?php
 if(isset($_POST['btn'])){
