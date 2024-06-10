@@ -5,7 +5,7 @@ session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/common/email_sms.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/common/db_connection.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
-if (!isset($_SESSION['email_valid_visit'])) {
+if (!isset($_SESSION['email_valid_visit']) && !isset($_SESSION['otp_send_visit'])) {
     acess_denie();
     exit();
 } else {
@@ -59,19 +59,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-
-            <?php
             // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
-            <div id="mySidepanel" onclick="closeNav()" style="height:100%" ; class="sidepanel">
-                <a href="about.php">About</a>
-                <a href="contact">Contact</a>
-            </div>
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
+
+
+
         </div>
         <div class="container">
             <h3>OTP Validation</h3>
@@ -97,14 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

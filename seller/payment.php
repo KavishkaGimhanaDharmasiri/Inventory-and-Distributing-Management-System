@@ -105,7 +105,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         }
         echo '<div class="order-form ">';
         echo '<form  action="payment.php" method="post">';
-        echo '<h3>Order Details</h3>';
+        echo '<h3> Order Details of ' . $_SESSION['selected_store'] . '</h3>';
 
 
         if (!empty($orderDetails)) {
@@ -174,6 +174,8 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
                 $totalAmount += $subtotal;
 
+
+
                 // echo "<td>{$order['main_category']}</td>";
                 echo "<td ><b>{$order['sub_category']}</td>";
                 echo "<td style='text-align:center; padding:10px;'><b>{$unitprice}</td>";
@@ -226,7 +228,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
 
 
-        if (isset($_POST['confirm'])) {
+        if (isset($_POST['confirm'])  && $_SESSION["state"] == 'seller') {
 
             echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
             <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
@@ -235,8 +237,22 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         ?>
 
-
         <h3>Payment Information</h3>
+        <?php /*
+        //get previous month blance if avaliable
+        
+        $prepayment_query = "SELECT store_name, balance FROM payment
+        WHERE balance < 0 AND payment_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) - INTERVAL DAY(CURDATE())-1 DAY
+          AND payment_date < DATE_SUB(CURDATE(), INTERVAL DAY(CURDATE()) DAY) AND user_id=4;";
+        $prepayment_result = mysqli_query($connection, $prepayment_query);
+
+        if ($prepayment_result && mysqli_num_rows($result) == 1) {
+            if ($rowres = mysqli_fetch_assoc($result1)) {
+                $previous_month_balance = $rowres['balance'];
+            }
+        }*/
+        ?>
+
 
         <label for="total_amount" style="color: indianred;">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
 
@@ -249,17 +265,40 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         <table>
             <tr style="background-color:white;">
-                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;"><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
+                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;" onclick='validatezero(event)'><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: block;"><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;" onclick='validatePaymentMethod(event)'><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
         </form>
     </div>
     <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         function back() {
             window.history.back();
+        }
+
+        function validatePaymentMethod(event) {
+            var paymentMethod = document.getElementById("payment_amount").value;
+            if (paymentMethod === "") {
+                event.preventDefault() // Prevent form submission
+                alert("Please Enter Amount in total Field or if You don't make any payment just leave 0");
+            }
+        }
+
+        function validatezero(event) {
+            var paymentMethod = document.getElementById("payment_amount").value.trim(); // Remove leading/trailing spaces
+            if (paymentMethod === "" || paymentMethod !== "0") {
+                event.preventDefault(); // Prevent link from being followed
+                alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
+            } else {
+                document.getElementById("payment_amount").disabled = true;
+                document.getElementById("payment_amount").value = "Once you click Download Sales Receipt This Can't be Reversed";
+            }
+        }
+
+        function validatetotal(event) {
+
         }
 
 
@@ -304,7 +343,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 // After 2 seconds, enable the confirm button
                 setTimeout(function() {
                     confirmButton.style.display = "block";
-                    inputField.disabled = true;
+                    // inputField.disabled = true;
                 }, 4000);
                 // Redirect to process_payment.php
                 window.location.href = myLink.href;

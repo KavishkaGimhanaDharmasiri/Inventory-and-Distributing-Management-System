@@ -14,7 +14,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 $route_id = $_SESSION['route_id'];
 $customerQuery = "SELECT sto_name FROM customers WHERE route_id=$route_id";
 $customerResult = mysqli_query($connection, $customerQuery);
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
     // Initialize returnItems array to avoid error
     $returnItems = [];
 
@@ -138,17 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-            </div>
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
             </a>
         </div>
         <div class="order-form">
@@ -201,14 +191,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

@@ -4,7 +4,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/fpdf/fpdf.php');
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] === 'wholeseller') {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
     acess_denie();
     exit();
 } else {
@@ -92,14 +92,7 @@ for ($i = 1; $i <= 12; $i++) {
 
 // Add note
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(0, 10, '*Remember All sales Amounts in LKR.', 0, 1);
+//$pdf->Cell(0, 10, '*Remember All sales Amounts in LKR.', 0, 1);
 
 // Output the PDF (force download)
-$pdf->Output('sales_comparison.pdf', 'D');
-
-// Optionally, you can save the PDF file
-// $pdf->Output('sales_comparison.pdf', 'F');
-
-// Close the database connection and exit
-mysqli_close($connection);
-exit();
+$pdf->Output('sales_comparisons.pdf', 'D');

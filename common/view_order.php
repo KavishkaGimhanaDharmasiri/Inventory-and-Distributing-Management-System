@@ -13,7 +13,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -109,7 +109,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                 $currentStore = "";
                 $currentMainCat = "";
                 $currentmonth = date('Y-m');
-                echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;">';
+                echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;margin-top:5%;">';
                 echo "<h4 style='color:red;'>Recent Customer Orders</h4>";
                 echo '<div id="storeList" ></div>';
                 echo '<div id="result" >';
@@ -144,13 +144,14 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                         echo '</ul>';
                     } else {
                         if (!$previous_orders_displayed) {
+                            $preo = $row['ord_date'];
                             echo "</div>";
                             echo '<h4 style="color:red;">Previous Customer Orders</h4>';
                             $previous_orders_displayed = true; // Set the flag to true after displaying the header
                         }
-                        // Start of a new store, close the previous div if not the first one
-                        if ($currentStore != $row["store_name"]) {
+                        if ($currentStore != $row["store_name"] || $year_month == "2024-02") {
                             if ($currentStore != "") {
+                                $preo = $row['ord_date'];
                                 echo "</div>"; // Close previous store's details
                             }
                             $currentStore = $row["store_name"];

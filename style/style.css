@@ -4,6 +4,7 @@ body {
   padding: 0;
   background-size: cover;
   background-color: rgb(255, 255, 255);
+  -webkit-user-select: none;
 }
 
 .container {
@@ -12,6 +13,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 5%;
+  margin-bottom: 2%;
 }
 .order-form {
   background-color: #fff;
@@ -21,11 +23,13 @@ body {
   overflow-y: auto;
   overflow: visible;
   margin-top: 5%;
+  margin-bottom: 2%;
 }
 
 h2 {
   text-align: center;
   color: #333;
+  user-select: none;
 }
 
 form {
@@ -111,6 +115,7 @@ button {
   width: 100%;
   font-weight: bold;
   font-size: 14px;
+  user-select: none;
 }
 
 button:hover {
@@ -127,6 +132,7 @@ table {
   border-collapse: collapse;
   margin-top: 20px;
   border: none;
+  -webkit-user-select: none;
 }
 
 th {
@@ -134,10 +140,15 @@ th {
   padding: 10px;
   background-color: #4caf50;
   color: #fff;
+  user-select: none;
+}
+tr {
+  user-select: none;
 }
 
 td {
   color: black;
+  user-select: none;
 }
 tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -164,7 +175,7 @@ input[type="checkbox"] {
   border-top-right-radius: 8px;
 }
 
-tr:hover {
+/*tr:hover {
   background: hsla(207, 88%, 23%, 1);
 
   background: -webkit-radial-gradient(
@@ -189,7 +200,7 @@ tr:hover {
   );
 
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#074170", endColorstr="#92D88B", GradientType=1);
-}
+}*/
 
 .subcategory-container {
   margin-top: 15px;

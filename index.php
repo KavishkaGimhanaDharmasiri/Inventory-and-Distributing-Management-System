@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="form-group">
                             <label for="password" style="font-size: 11pt; font-weight: bold;">Password</label>
-                            <input type="password" name="password" class="form-control" required style="width: 230px; ">
+                            <input type="password" name="password" class="form-control" required style="width: 230px;" placeholder="Password">
                         </div>
                         <button type="submit" style="width: 230px;margin-bottom:0%;">Login</button>
                         <button type="button" style=" background-color:transparent;margin-top:1px; " class="fodpass" onclick="redirect()">Fogot Password</button>

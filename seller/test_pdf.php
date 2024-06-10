@@ -23,7 +23,9 @@ $selectedPaymentMethod = $_SESSION['selected_payment_method'];
 
 // Now call the function
 date_default_timezone_set('Asia/Colombo');
-generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod, $connection);
+if ($_SESSION["state"] == 'seller') {
+    generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod, $connection);
+}
 
 function getPaymentMethodPriced($mainCategory, $subCategory, $connection)
 {

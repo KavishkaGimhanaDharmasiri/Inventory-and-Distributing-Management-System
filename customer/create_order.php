@@ -10,67 +10,81 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
 } else {
     $_SESSION['create_order_visit'] = true;
 }
+?>
 
+<!DOCTYPE html>
+<html>
 
-// Fetch main categories from the database
-$query = "SELECT DISTINCT main_cat FROM product";
-$result = mysqli_query($connection, $query);
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" type="text/css" href="/style/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
+</head>
 
-$user_id = $_SESSION['user_id'];
-$customerQuery = "SELECT sto_name FROM customers WHERE user_id=$user_id";
-$customerResult = mysqli_query($connection, $customerQuery);
+<body>
+    <?php
 
-
-
-// Check for database query failures
-if (!$customerResult || !$result) {
-    die("Database query failed: " . mysqli_error($connection));
-}
-
-// Fetch subcategories for the selected main category
-function getSubcategories($mainCategory, $connection)
-{
-    $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'";
+    // Fetch main categories from the database
+    $query = "SELECT DISTINCT main_cat FROM product";
     $result = mysqli_query($connection, $query);
 
-    // Check for database query failure
-    if (!$result) {
+    $user_id = $_SESSION['user_id'];
+    $customerQuery = "SELECT sto_name FROM customers WHERE user_id=$user_id";
+    $customerResult = mysqli_query($connection, $customerQuery);
+
+
+
+    // Check for database query failures
+    if (!$customerResult || !$result) {
         die("Database query failed: " . mysqli_error($connection));
     }
 
-    $subcategories = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $subcategories[] = ['sub_cat' => $row['sub_cat']];
+    // Fetch subcategories for the selected main category
+    function getSubcategories($mainCategory, $connection)
+    {
+        $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'";
+        $result = mysqli_query($connection, $query);
+
+        // Check for database query failure
+        if (!$result) {
+            die("Database query failed: " . mysqli_error($connection));
+        }
+
+        $subcategories = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $subcategories[] = ['sub_cat' => $row['sub_cat']];
+        }
+
+        return $subcategories;
     }
 
-    return $subcategories;
-}
+    // Handle adding an order
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"]) && $_SESSION["state"] == 'wholeseller') {
+        // Process form submission and update order details
+        handleAddOrder($connection);
 
-// Handle adding an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
-    // Process form submission and update order details
-    handleAddOrder($connection);
+        // Redirect after processing form submission
+        header("Location:/customer/create_order.php");
+        exit();
+    }
 
-    // Redirect after processing form submission
-    header("Location:/customer/create_order.php");
-    exit();
-}
+    // Handle confirming an order
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && $_SESSION["state"] == 'wholeseller') {
+        handleConfirmOrder();
 
-// Handle confirming an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])) {
-    handleConfirmOrder();
+        $mainCategory = $_POST['main_category'];
+        $subcategories = $_POST['subcategories'] ?? '';
+        $counts = $_POST['counts'] ?? '';
+        $selectedStore = $_POST["customer"];
+        $_SESSION['selected_store'] = $selectedStore;
 
-    $mainCategory = $_POST['main_category'];
-    $subcategories = $_POST['subcategories'] ?? '';
-    $counts = $_POST['counts'] ?? '';
-    $selectedStore = $_POST["customer"];
-    $_SESSION['selected_store'] = $selectedStore;
+        exit();
+    }
 
-    exit();
-}
-
-// Edit order functionality
-/*if (isset($_GET['edit_order']) && $_GET['edit_order'] == true && isset($_GET['ord_id'])) {
+    // Edit order functionality
+    /*if (isset($_GET['edit_order']) && $_GET['edit_order'] == true && isset($_GET['ord_id'])) {
     // Retrieve order details from the database based on ord_id
     $ord_id = $_GET['ord_id'];
     $editQuery = "SELECT p.ord_id, p.ord_date, o.main_cat, o.sub_cat, o.order_count 
@@ -92,167 +106,151 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])) {
     }
 }*/
 
-// Close the database connection
-mysqli_close($connection);
+    // Close the database connectio
 
-// Function to handle adding an order
-function handleAddOrder($connection)
-{
-    $mainCategory = $_POST["main_category"];
-    $subcategories = getSubcategories($mainCategory, $connection);
-    $counts = $_POST["counts"];
+    // Function to handle adding an order
+    function handleAddOrder($connection)
+    {
+        $mainCategory = $_POST["main_category"];
+        $subcategories = getSubcategories($mainCategory, $connection);
+        $counts = $_POST["counts"];
 
-    // Temporary storage for the order details
-    $orderDetails = $_SESSION['order_details'] ?? [];
+        // Temporary storage for the order details
+        $orderDetails = $_SESSION['order_details'] ?? [];
 
-    $selectedStore = $_POST["customer"];
-    $_SESSION['selected_store'] = $selectedStore;
+        $selectedStore = $_POST["customer"];
+        $_SESSION['selected_store'] = $selectedStore;
 
-    // Check if there's already an order for the selected main category
-    $existingOrderIndex = null;
-    foreach ($orderDetails as $index => $order) {
-        if ($order['main_category'] == $mainCategory) {
-            $existingOrderIndex = $index;
-            break;
-        }
-    }
-
-    if ($existingOrderIndex !== null) {
-        // Update the existing order for the selected main category
-        foreach ($subcategories as $index => $subcategory) {
-            // Check if the count is greater than 0 before updating the order details
-            if ($counts[$index] > 0) {
-                $orderDetails[$existingOrderIndex]['sub_category'] = $subcategory['sub_cat'];
-                $orderDetails[$existingOrderIndex]['count'] = $counts[$index];
+        // Check if there's already an order for the selected main category
+        $existingOrderIndex = null;
+        foreach ($orderDetails as $index => $order) {
+            if ($order['main_category'] == $mainCategory) {
+                $existingOrderIndex = $index;
+                break;
             }
         }
-    } else {
-        // Add a new order for the selected main category
-        foreach ($subcategories as $index => $subcategory) {
-            // Check if the count is greater than 0 before adding to the order details
-            if ($counts[$index] > 0) {
-                $orderDetails[] = [
-                    'main_category' => $mainCategory,
-                    'sub_category' => $subcategory['sub_cat'],
-                    'count' => $counts[$index]
-                ];
+
+        if ($existingOrderIndex !== null) {
+            // Update the existing order for the selected main category
+            foreach ($subcategories as $index => $subcategory) {
+                // Check if the count is greater than 0 before updating the order details
+                if ($counts[$index] > 0) {
+                    $orderDetails[$existingOrderIndex]['sub_category'] = $subcategory['sub_cat'];
+                    $orderDetails[$existingOrderIndex]['count'] = $counts[$index];
+                }
+            }
+        } else {
+            // Add a new order for the selected main category
+            foreach ($subcategories as $index => $subcategory) {
+                // Check if the count is greater than 0 before adding to the order details
+                if ($counts[$index] > 0) {
+                    $orderDetails[] = [
+                        'main_category' => $mainCategory,
+                        'sub_category' => $subcategory['sub_cat'],
+                        'count' => $counts[$index]
+                    ];
+                }
             }
         }
+
+        // Update the session variable with the order details
+        $_SESSION['order_details'] = $orderDetails;
+
+        // Reset main category to the default value
+        $_POST["main_category"] = "";
     }
 
-    // Update the session variable with the order details
-    $_SESSION['order_details'] = $orderDetails;
+    // Function to handle confirming an order
+    function handleConfirmOrder()
+    {
+        include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+        $orderDetails = $_SESSION['order_details'] ?? [];
+        $route_id = $_SESSION['route_id'];
+        // Get necessary data for redirection
+        $mainCategory = $_POST['main_category'];
+        $subcategories = $_POST['subcategories'] ?? '';
+        $counts = $_POST['counts'] ?? '';
+        $selectedStore = $_POST["customer"];
+        $_SESSION['selected_store'] = $selectedStore;
 
-    // Reset main category to the default value
-    $_POST["main_category"] = "";
-}
-
-// Function to handle confirming an order
-function handleConfirmOrder()
-{
-    include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
-    $orderDetails = $_SESSION['order_details'] ?? [];
-    $route_id = $_SESSION['route_id'];
-    // Get necessary data for redirection
-    $mainCategory = $_POST['main_category'];
-    $subcategories = $_POST['subcategories'] ?? '';
-    $counts = $_POST['counts'] ?? '';
-    $selectedStore = $_POST["customer"];
-    $_SESSION['selected_store'] = $selectedStore;
-
-    try {
-        $pdo->beginTransaction();
-        $ord_type = "customer";
-        $ord_state = "pending";
-        $ord_date = date('Y-m-d H:i:s');
-        $query3 = "INSERT INTO primary_orders(route_id,ord_date,store_name,order_type,order_state)
+        try {
+            $pdo->beginTransaction();
+            $ord_type = "customer";
+            $ord_state = "complete";
+            $ord_date = date('Y-m-d H:i:s');
+            $query3 = "INSERT INTO primary_orders(route_id,ord_date,store_name,order_type,order_state)
      VALUES(:route_id, :ord_date, :store_name, :order_type, :state)";
 
-        $stmt1 = $pdo->prepare($query3);
-        $stmt1->bindParam(':route_id', $route_id);
-        $stmt1->bindParam(':ord_date', $ord_date);
-        $stmt1->bindParam(':store_name', $selectedStore);
-        $stmt1->bindParam(':order_type', $ord_type);
-        $stmt1->bindParam(':state', $ord_state);
-        $stmt1->execute();
+            $stmt1 = $pdo->prepare($query3);
+            $stmt1->bindParam(':route_id', $route_id);
+            $stmt1->bindParam(':ord_date', $ord_date);
+            $stmt1->bindParam(':store_name', $selectedStore);
+            $stmt1->bindParam(':order_type', $ord_type);
+            $stmt1->bindParam(':state', $ord_state);
+            $stmt1->execute();
 
-        $ord_id = $pdo->lastInsertId();
+            $ord_id = $pdo->lastInsertId();
 
-        foreach ($orderDetails as $orderDetail) {
-            $mainCategory = $orderDetail['main_category'];
-            $subCategory = $orderDetail['sub_category'];
-            $count = $orderDetail['count'];
+            foreach ($orderDetails as $orderDetail) {
+                $mainCategory = $orderDetail['main_category'];
+                $subCategory = $orderDetail['sub_category'];
+                $count = $orderDetail['count'];
 
-            $query2 = "INSERT INTO orders (ord_id, main_cat, sub_cat, order_count) 
+                $query2 = "INSERT INTO orders (ord_id, main_cat, sub_cat, order_count) 
                    VALUES (:ord_id, :main_cat, :sub_cat, :order_count)";
 
 
-            $stmt2 = $pdo->prepare($query2);
-            $stmt2->bindParam(':ord_id', $ord_id);
-            $stmt2->bindParam(':main_cat', $mainCategory);
-            $stmt2->bindParam(':sub_cat', $subCategory);
-            $stmt2->bindParam(':order_count', $count);
-            $stmt2->execute();
+                $stmt2 = $pdo->prepare($query2);
+                $stmt2->bindParam(':ord_id', $ord_id);
+                $stmt2->bindParam(':main_cat', $mainCategory);
+                $stmt2->bindParam(':sub_cat', $subCategory);
+                $stmt2->bindParam(':order_count', $count);
+                $stmt2->execute();
+            }
+            // Commit the transaction
+            $pdo->commit();
+            echo '<div id="overlay"></div><div id="successModal" s><div class="gif"></div>
+        <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
+        </div>';
+        } catch (Exception $e) {
+            // Rollback the transaction in case of an error
+            $pdo->rollBack();
+            echo "Failed: " . $e->getMessage();
         }
-        // Commit the transaction
-        $pdo->commit();
-        echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
-            <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
-            </div>';
-    } catch (Exception $e) {
-        // Rollback the transaction in case of an error
-        $pdo->rollBack();
-        echo "Failed: " . $e->getMessage();
     }
-}
 
-// Function to display the orders table
-function displayOrderTable()
-{
-    if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
-        echo "<table>";
-        echo "<thead>";
-        echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
-        echo "</thead>";
-        echo "<tbody>";
+    // Function to display the orders table
+    function displayOrderTable()
+    {
+        if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
+            echo "<table>";
+            echo "<thead>";
+            echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
+            echo "</thead>";
+            echo "<tbody>";
 
-        foreach ($_SESSION['order_details'] as $order) {
-            echo "<tr>";
-            echo "<td><input type='checkbox' name='username' class='form-control'></td>";
-            echo "<td><b>{$order['main_category']}</td>";
-            echo "<td><b>{$order['sub_category']}</td>";
-            echo "<td><b>{$order['count']}</td>";
-            echo "</tr>";
+            foreach ($_SESSION['order_details'] as $order) {
+                echo "<tr>";
+                echo "<td><input type='checkbox' name='username' class='form-control'></td>";
+                echo "<td><b>{$order['main_category']}</td>";
+                echo "<td><b>{$order['sub_category']}</td>";
+                echo "<td><b>{$order['count']}</td>";
+                echo "</tr>";
+            }
+
+            echo "</tbody>";
+            echo "</table>";
         }
-
-        echo "</tbody>";
-        echo "</table>";
     }
-}
-?>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/style/style.css">
-    <link rel="stylesheet" type="text/css" href="/style/mobile.css">
-    <link rel="stylesheet" type="text/css" href="/style/divs.css">
-</head>
-
-<body>
+    ?>
 
     <!-- Simulate a smartphone / tablet -->
     <div class="mobile-container">
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
         </div>
         <div class="order-form">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -315,7 +313,7 @@ function displayOrderTable()
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green;height:35px;margin-top:0%;'><b>Clear Order</button>";
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; '><b>Clear Order</button>";
                 }
                 ?>
             </form>

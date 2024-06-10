@@ -45,7 +45,7 @@ function getSubcategories($mainCategory, $connection)
 }
 
 // Handle adding an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])  && $_SESSION["state"] == 'seller') {
     // Process form submission and update order details
     handleAddOrder($connection);
 
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
 }
 
 // Handle confirming an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && isset($_POST['payment_method'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && isset($_POST['payment_method'])  && $_SESSION["state"] == 'seller') {
     if ($_POST['payment_method'] === "") {
         echo '<script>alert("Please Select Payment Method");</script>';
     } else {
@@ -231,7 +231,7 @@ function displayOrderTable()
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -357,7 +357,7 @@ function displayOrderTable()
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent;'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
                 }
                 ?>
 
@@ -370,15 +370,19 @@ function displayOrderTable()
         <?php
         if (!isset($_SESSION["ad_state"])) {
             echo '<div style="border:1px solid green;font-weight:normal; color:green;background-color:#d9fcd2; " class="order-form" id="advertise">
-            <p style="color: green; font-weight: normal;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;";></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
+            <p style="color: green; font-weight: normal; -webkit-user-select: none;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;"></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
             c).Add disired item count in each box below item then click Add order button the previously enterd details are shown in table below Add order Button. <br><br>
-            d.)Again you can perform b). And c). steps to add multipel items to order. 
-            <br><br>if You want remove any Items from order click check box and click Clear Order Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
+            d.)Again you can perform b). And c). steps to add multiple items to order. 
+            <br><br>if You want remove any Items from order click check box and click Remove Item Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
         </div>';
         }
         if (isset($_SESSION["ad_state"])) {
             echo '<div style="border:1px solid green; color:green; display:none; " class="order-form" id="advertise">
-            <p style="color: green;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green;  "><i class="fa fa-close"></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>c).Add disired item count in each box below item then click Add order button the previously enterd details are shown in table below Add order Button. <br><br>d.)Again you can perform b). And c). steps to add multipel items to order. <br><br>if You want remove any Items from order click check box and click Clear Order Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
+            <p style="color: green;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green;  "><i class="fa fa-close"></i></a><br><br>a). First select Customer 
+            Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically 
+            according to selected Main Product.<br><br>c).Add disired item count in each box below item then 
+            click Add order button the previously enterd details are shown in table bellow Add order Button. <br><br>d.)Again you can perform b). And c). steps to add multiple items to order. <br><br>if You want remove any Items from order click check box and click 
+            Remove Item Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
         </div>';
         }
         ?>
