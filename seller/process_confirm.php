@@ -16,7 +16,7 @@ $orderDetails = $_SESSION['order_details'] ?? [];
 
 
 
-if (!isset($_SESSION['process_payment'])  && $_SESSION["state"] == 'seller') {
+if (!isset($_SESSION['process_payment'])) {
     try {
         $pdo->beginTransaction();
 
@@ -30,28 +30,27 @@ if (!isset($_SESSION['process_payment'])  && $_SESSION["state"] == 'seller') {
         $pay_period = ($payment_method == 'credit') ?  $_SESSION['pay_period'] : null;
         $balance = $_SESSION['balance'];
 
-        //update the feed item when comfirms the order
-        foreach ($orderDetails as $order) {
-            $mainCategory = $order['main_category'];
-            $subCategory = $order['sub_category'];
-            $count = $order['count'];
+        /*foreach ($orderDetails as $order) {
+        $mainCategory = $order['main_category'];
+        $subCategory = $order['sub_category'];
+        $count = $order['count'];
 
-            // Update feed_item table
-            $query = "UPDATE feed_item SET count = count - :count WHERE main_cat = :main_cat AND sub_cat = :sub_cat";
+        // Update feed_item table
+        $query = "UPDATE feed_item SET count = count - :count WHERE main_cat = :main_cat AND sub_cat = :sub_cat";
 
-            $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':count', $count);
-            $stmt->bindParam(':main_cat', $mainCategory);
-            $stmt->bindParam(':sub_cat', $subCategory);
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':count', $count);
+        $stmt->bindParam(':main_cat', $mainCategory);
+        $stmt->bindParam(':sub_cat', $subCategory);
 
-            if ($stmt->execute()) {
-                // Successful update
-            } else {
-                // Error occurred while updating the database
-                echo '<script>alert("Error: Unable to update product quantity.\n\nContact Adminstrator");</script>';
-                return; // Exit function
-            }
+        if ($stmt->execute()) {
+            // Successful update
+        } else {
+            // Error occurred while updating the database
+            echo '<script>alert("Error: Unable to update product quantity.\n\nContact Adminstrator");</script>';
+            return; // Exit function
         }
+    }*/
 
         // Insert into primary_orders table
         $ord_type = "sale";
@@ -88,7 +87,7 @@ if (!isset($_SESSION['process_payment'])  && $_SESSION["state"] == 'seller') {
         }
 
         // Insert into payment table
-        $query1 = "INSERT INTO payment (ord_id, route_id, store_name, total, payment_date, payment_method, pay_period, payment_amout, balance,user_id) VALUES (:ord_id, :route_id, :store_name, :total, :payment_date, :payment_method, :pay_period, :payment_amount, :balance,:user_id)";
+        $query1 = "INSERT INTO payment (ord_id, route_id, store_name, total, payment_date, payment_method, pay_period, payment_amout, balance) VALUES (:ord_id, :route_id, :store_name, :total, :payment_date, :payment_method, :pay_period, :payment_amount, :balance)";
         $stmt = $pdo->prepare($query1);
         $stmt->bindParam(':ord_id', $ord_id);
         $stmt->bindParam(':route_id', $route_id);
@@ -99,7 +98,6 @@ if (!isset($_SESSION['process_payment'])  && $_SESSION["state"] == 'seller') {
         $stmt->bindParam(':pay_period', $pay_period);
         $stmt->bindParam(':payment_amount', $payment_amount);
         $stmt->bindParam(':balance', $balance);
-        $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
 
         // Commit the transaction
@@ -123,10 +121,10 @@ if (!isset($_SESSION['process_payment'])  && $_SESSION["state"] == 'seller') {
     $Subject = "Order Details";
 
     // Email body
-    $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " made on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+    $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
 
     // Send email
-    //sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
+    // sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
 
     // Prepare SMS body
     $smsbody = urlencode($body);

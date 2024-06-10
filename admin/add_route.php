@@ -85,14 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
 
     <script type="text/javascript" src="/javascript/divs.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function redirectToIManage() {
             hideSuccess();
             // Redirect to index.php

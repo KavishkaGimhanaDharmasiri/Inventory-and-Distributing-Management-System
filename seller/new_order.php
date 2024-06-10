@@ -142,7 +142,7 @@ function handleAddOrder($connection)
     $_SESSION['selected_store'] = $selectedStore;
     // Update the session variable with the order details
     $_SESSION['order_details'] = $orderDetails;
-
+    $_POST["customers"] = $selectedStore;
     // Reset main category to the default value
     $_POST["main_category"] = "";
     displayOrderTable();
@@ -268,9 +268,6 @@ function displayOrderTable()
                 <select name="customers" id="customers" required>
                     <option value=""><b>Select Customer<b></option>
                     <?php
-                    if (isset($_SESSION['selected_store'])) {
-                        echo "<option value='{$_SESSION['selected_store']}' selected>{$_SESSION['selected_store']}</option>";
-                    }
                     while ($customerRow = mysqli_fetch_assoc($customerResult)) {
                         $selected = ($_SESSION['selected_store'] == $customerRow['sto_name']) ? 'selected' : '';
                         echo "<option value='{$customerRow['sto_name']}' $selected>{$customerRow['sto_name']}</option>";
@@ -304,7 +301,7 @@ function displayOrderTable()
                         foreach ($subcategories as $index => $subcategory) {
                             echo "<div>";
                             echo "<label for='count[$subcategory[sub_cat]]' id='r'><b>$subcategory[sub_cat]</label>";
-                            echo "<input type='number' name='counts[]' id='count[$subcategory[sub_cat]]' min='0' required>";
+                            echo '<input type="number" name="counts[]" id="count[$subcategory[sub_cat]]" min="0" required >';
                             echo "<input type='hidden' name='subcategories[]' value='$subcategory[sub_cat]'>";
                             echo "</div>";
                         }
@@ -312,7 +309,7 @@ function displayOrderTable()
                     ?>
                 </div>
 
-                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;"></i>&nbsp;&nbsp;Add Items</button>
+                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;" onclick="validatecustomer(event)"></i>&nbsp;&nbsp;Add Items</button>
 
                 <?php displayOrderTable(); ?>
                 <br>
@@ -394,6 +391,33 @@ function displayOrderTable()
         function closeintro() {
             document.getElementById("advertise").style.display = "none";
 
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField = document.getElementsByName('counts[]');
+            const errorMessage = document.getElementById('error-message');
+
+            inputField.addEventListener('input', () => {
+                const value = inputField.value;
+                if (value === '' || /^[0-9]+(\.[0-9]*)?$/.test(value)) {
+                    inputField.style.borderBottomColor = 'green';
+                    errorMessage.style.display = 'none';
+
+                } else {
+                    errorMessage.style.display = 'block';
+                    inputField.style.borderBottomColor = 'red';
+                }
+            });
+        });
+
+
+
+        function validatecustomer(event) {
+            var customer = document.getElementById("customers").value;
+            if (customer === "") {
+                event.preventDefault(); // Prevent form submission
+                alert("Please Select Customer First");
+            }
         }
 
         function validatePaymentMethod(event) {
