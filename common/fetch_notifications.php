@@ -1,13 +1,13 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
-
-if (isset($_POST['action']) && !empty($_POST['action'])) {
+$route_id = $_SESSION['route_id'];
+if (isset($_POST['action'])) {
     $action = $_POST['action'];
 
     if ($action == 'get_notifications') {
         $currentmonth = date('Y-m');
         // Fetch notifications
-        $sql = "SELECT * FROM payment WHERE balance > 4000 AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentmonth'";
+        $sql = "SELECT * FROM payment WHERE balance > 4000 AND DATE_FORMAT(payment_date, '%Y-%m') = '2024-05' AND route_id=4";
         $result = $connection->query($sql);
 
         if ($result->num_rows > 0) {

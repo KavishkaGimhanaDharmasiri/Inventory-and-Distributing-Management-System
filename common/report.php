@@ -121,6 +121,12 @@ $customerResult = mysqli_query($connection, $customerQuery);
         li {
             color: black;
         }
+
+        tr:hover,
+        td:hover,
+        th:hover {
+            background-color: white;
+        }
     </style>
 </head>
 
@@ -235,9 +241,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 
                     <button type="submit"><i class="fa fa-file-text"></i> &nbsp;Generate Report</button>
-                    <br>
-                    <button type="reset">Clear</button>
-                    <br>
+                    <button type="reset" style="background-color: transparent;color:green;">Clear</button>
                     <?php
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $duration = $_POST['duration'];

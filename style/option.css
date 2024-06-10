@@ -1,0 +1,140 @@
+.options-container {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 5%;
+}
+
+.option {
+  width: 75%;
+  margin-bottom: 20px;
+  /* background: linear-gradient(57deg, #35a844, #141514, #36a536);
+          background-size: 180% 180%;
+          animation: gradient-animation 6s ease infinite;*/
+  background-size: cover;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  cursor: pointer;
+  padding-right: 5px;
+
+  border-radius: 10px;
+  background: url("wave.gif") no-repeat center center;
+  /* background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
+    background-size: 360% 360%;
+    animation: gradient-animation 12s ease infinite;*/
+  color: white;
+  font-weight: bold;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  text-align: left;
+}
+
+.option:hover {
+  background-color: #45a049;
+}
+
+#mynotification {
+  background-color: transparent;
+}
+
+.notification {
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background-color: red;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 40px;
+  margin: auto;
+}
+
+.notification a {
+  padding: 8px 8px 8px 20px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.notification a:hover {
+  color: red;
+}
+
+.notification .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+}
+
+.notification-panel {
+  background-color: #383938;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 3px;
+  padding: 5px;
+  display: none;
+}
+
+#notifications {
+  background-color: #383938;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  padding: 10px;
+  margin: 3px;
+  height: 400px;
+  display: none;
+  color: white;
+}
+
+#notificationContent,
+#notificationContent2 {
+  background-color: #383938;
+  border-radius: 10px;
+  box-shadow: 0 0 10px black;
+  font-size: 12px;
+  color: white;
+}
+
+.contain {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.badge {
+  position: absolute;
+  right: 25px;
+  padding: 4px 4px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+}

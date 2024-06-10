@@ -45,7 +45,7 @@ function getSubcategories($mainCategory, $connection)
 }
 
 // Handle adding an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])  && $_SESSION["state"] == 'seller') {
     // Process form submission and update order details
     handleAddOrder($connection);
 
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
 }
 
 // Handle confirming an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && isset($_POST['payment_method'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"]) && isset($_POST['payment_method'])  && $_SESSION["state"] == 'seller') {
     if ($_POST['payment_method'] === "") {
         echo '<script>alert("Please Select Payment Method");</script>';
     } else {
@@ -142,7 +142,7 @@ function handleAddOrder($connection)
     $_SESSION['selected_store'] = $selectedStore;
     // Update the session variable with the order details
     $_SESSION['order_details'] = $orderDetails;
-
+    $_POST["customers"] = $selectedStore;
     // Reset main category to the default value
     $_POST["main_category"] = "";
     displayOrderTable();
@@ -231,7 +231,7 @@ function displayOrderTable()
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -268,9 +268,6 @@ function displayOrderTable()
                 <select name="customers" id="customers" required>
                     <option value=""><b>Select Customer<b></option>
                     <?php
-                    if (isset($_SESSION['selected_store'])) {
-                        echo "<option value='{$_SESSION['selected_store']}' selected>{$_SESSION['selected_store']}</option>";
-                    }
                     while ($customerRow = mysqli_fetch_assoc($customerResult)) {
                         $selected = ($_SESSION['selected_store'] == $customerRow['sto_name']) ? 'selected' : '';
                         echo "<option value='{$customerRow['sto_name']}' $selected>{$customerRow['sto_name']}</option>";
@@ -304,7 +301,7 @@ function displayOrderTable()
                         foreach ($subcategories as $index => $subcategory) {
                             echo "<div>";
                             echo "<label for='count[$subcategory[sub_cat]]' id='r'><b>$subcategory[sub_cat]</label>";
-                            echo "<input type='number' name='counts[]' id='count[$subcategory[sub_cat]]' min='0' required>";
+                            echo '<input type="number" name="counts[]" id="count[$subcategory[sub_cat]]" min="0" required >';
                             echo "<input type='hidden' name='subcategories[]' value='$subcategory[sub_cat]'>";
                             echo "</div>";
                         }
@@ -312,7 +309,7 @@ function displayOrderTable()
                     ?>
                 </div>
 
-                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;"></i>&nbsp;&nbsp;Add Items</button>
+                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;" onclick="validatecustomer(event)"></i>&nbsp;&nbsp;Add Items</button>
 
                 <?php displayOrderTable(); ?>
                 <br>
@@ -357,7 +354,7 @@ function displayOrderTable()
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent;'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
                 }
                 ?>
 
@@ -370,15 +367,19 @@ function displayOrderTable()
         <?php
         if (!isset($_SESSION["ad_state"])) {
             echo '<div style="border:1px solid green;font-weight:normal; color:green;background-color:#d9fcd2; " class="order-form" id="advertise">
-            <p style="color: green; font-weight: normal;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;";></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
+            <p style="color: green; font-weight: normal; -webkit-user-select: none;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;"></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>
             c).Add disired item count in each box below item then click Add order button the previously enterd details are shown in table below Add order Button. <br><br>
-            d.)Again you can perform b). And c). steps to add multipel items to order. 
-            <br><br>if You want remove any Items from order click check box and click Clear Order Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
+            d.)Again you can perform b). And c). steps to add multiple items to order. 
+            <br><br>if You want remove any Items from order click check box and click Remove Item Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
         </div>';
         }
         if (isset($_SESSION["ad_state"])) {
             echo '<div style="border:1px solid green; color:green; display:none; " class="order-form" id="advertise">
-            <p style="color: green;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green;  "><i class="fa fa-close"></i></a><br><br>a). First select Customer Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically according to selected Main Product.<br><br>c).Add disired item count in each box below item then click Add order button the previously enterd details are shown in table below Add order Button. <br><br>d.)Again you can perform b). And c). steps to add multipel items to order. <br><br>if You want remove any Items from order click check box and click Clear Order Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
+            <p style="color: green;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green;  "><i class="fa fa-close"></i></a><br><br>a). First select Customer 
+            Name from dropdown <br><br>b). Select Main product from dropdown. Items will be load automatically 
+            according to selected Main Product.<br><br>c).Add disired item count in each box below item then 
+            click Add order button the previously enterd details are shown in table bellow Add order Button. <br><br>d.)Again you can perform b). And c). steps to add multiple items to order. <br><br>if You want remove any Items from order click check box and click 
+            Remove Item Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
         </div>';
         }
         ?>
@@ -390,6 +391,33 @@ function displayOrderTable()
         function closeintro() {
             document.getElementById("advertise").style.display = "none";
 
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField = document.getElementsByName('counts[]');
+            const errorMessage = document.getElementById('error-message');
+
+            inputField.addEventListener('input', () => {
+                const value = inputField.value;
+                if (value === '' || /^[0-9]+(\.[0-9]*)?$/.test(value)) {
+                    inputField.style.borderBottomColor = 'green';
+                    errorMessage.style.display = 'none';
+
+                } else {
+                    errorMessage.style.display = 'block';
+                    inputField.style.borderBottomColor = 'red';
+                }
+            });
+        });
+
+
+
+        function validatecustomer(event) {
+            var customer = document.getElementById("customers").value;
+            if (customer === "") {
+                event.preventDefault(); // Prevent form submission
+                alert("Please Select Customer First");
+            }
         }
 
         function validatePaymentMethod(event) {

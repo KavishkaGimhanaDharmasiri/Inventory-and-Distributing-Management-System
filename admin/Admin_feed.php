@@ -7,8 +7,10 @@ include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
 if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION["state"] != 'admin') {
-    echo "acess Dinied";
+    acess_denie();
     exit();
+} else {
+    $_SESSION['admin_feed_visit'] = true;
 }
 
 // Fetch main categories from the database
@@ -49,9 +51,9 @@ function getSubcategories($mainCategory, $connection)
 }
 
 // Handle adding an order
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])) {
-    // Process form submission and update order details
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"]) && $_SESSION["state"] == 'admin') {
     handleAddOrder($connection);
+    // Process form submission and update order details 
 }
 
 // Handle confirming an order
@@ -151,7 +153,9 @@ function handleConfirmOrder($connection)
         if (!$result2) {
             die("Feed item insertion query failed: " . mysqli_error($connection));
         }
-        header("Location:/common/divs.php");
+        echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+        <button onclick="redirectToIndex()" class="sucess">OK</button>
+        </div>';
     }
 
     // Clear order details from session
@@ -173,7 +177,7 @@ function displayOrderTable()
 
         foreach ($_SESSION['order_details'] as $index => $order) {
             echo "<tr>";
-            echo "<td><input type='checkbox' name='remove_order[]' value='$index'></td>";
+            echo "<td><input type='checkbox' name='remove_order[]' value='$index' style='padding-top:5px;'></td>";
             echo "<td><b>{$order['main_category']}</td>";
             echo "<td><b>{$order['sub_category']}</td>";
             echo "<td><b>{$order['count']}</td>";
@@ -193,6 +197,7 @@ function displayOrderTable()
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
 </head>
 
 <body>
@@ -270,7 +275,7 @@ function displayOrderTable()
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent; border:2px solid green;height:35px;margin-top:0%;'><b>Clear Order</button>";
+                    echo "<button type='button' name='clear_order' style='color:green; background-color:transparent;margin-top:0%;'><b>Clear Order</button>";
                 }
                 ?>
 
@@ -284,13 +289,6 @@ function displayOrderTable()
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
         document.getElementById('main_category').addEventListener('change', function() {
             var mainCategory = this.value;
             var xhttp = new XMLHttpRequest();

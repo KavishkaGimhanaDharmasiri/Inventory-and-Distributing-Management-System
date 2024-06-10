@@ -23,6 +23,40 @@ $currentmonth = date('Y-m');
 $sqlq = "SELECT * FROM payment WHERE balance > 4000 AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentmonth'";
 $results = $connection->query($sqlq);
 
+$sqlpassword = "SELECT l.password,u.telphone_no FROM users u LEFT JOIN login l ON l.user_id=u.user_id  WHERE l.user_id= $user_idn";
+$result2 = $connection->query($sqlpassword);
+
+$sqlcustomer = "SELECT sto_name,route_id FROM customers WHERE user_id = '$user_idn'";
+$resultcustomer = $connection->query($sqlcustomer);
+$stoname = "";
+$storoute = "";
+while ($rowSrore = mysqli_fetch_assoc($resultcustomer)) {
+  $stoname = $rowSrore['sto_name'];
+  $storoute = $rowSrore['route_id'];
+}
+
+$sqlorder = "SELECT order_state FROM primary_orders p LEFT JOIN  customers c ON p.store_name=c.sto_name AND p.ord_id=c.route_id WHERE  p.route_id=$storoute AND p.store_name= '$stoname' AND p.order_type='customer' AND DATE_FORMAT(p.ord_date, '%Y-%m') = '$currentmonth';";
+$resultorder = $connection->query($sqlorder);
+$existing = false;
+if ($resultorder) {
+  if (mysqli_num_rows($resultorder) == 1) {
+    $existing = true;
+  }
+}
+
+
+$samepassword = false;
+
+if ($row3 = mysqli_fetch_assoc($result2)) {
+  $lastFiveDigits = substr((string)$row3['telphone_no'], -5);
+
+  if ($row3['password'] === $lastFiveDigits) {
+    $samepassword = true;
+  } else {
+    $samepassword = false;
+  }
+}
+
 if ($result) {
   // Check if a matching record is found
   if (mysqli_num_rows($result) == 1) {
@@ -53,153 +87,13 @@ session_write_close();
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/style/mobile.css">
   <link rel="stylesheet" type="text/css" href="/style/style.css">
-  <style>
-    .options-container {
-      background-color: #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      margin-top: 5%;
-    }
-
-    .option {
-      width: 75%;
-      margin-bottom: 20px;
-      background-color: #4caf50;
-      /* background: linear-gradient(57deg, #35a844, #141514, #36a536);
-            background-size: 180% 180%;
-            animation: gradient-animation 6s ease infinite;*/
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-      cursor: pointer;
-      padding-right: 5px;
-
-      border-radius: 20px;
-      background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
-      background-size: 360% 360%;
-      animation: gradient-animation 12s ease infinite;
-      color: black;
-      font-weight: bold;
-    }
-
-    @keyframes gradient-animation {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    a {
-      text-decoration: none;
-      color: white;
-      text-align: left;
+  <link rel="stylesheet" type="text/css" href="/style/option.css">
 
 
-    }
-
-    .option:hover {
-      background-color: #45a049;
-    }
-
-    #mynotification {
-      background-color: transparent;
-    }
-
-    .notification {
-      width: 0;
-      position: fixed;
-      z-index: 1;
-      height: 100%;
-      top: 0;
-      right: 0;
-      background-color: red;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 40px;
-      margin: auto;
-    }
-
-    .notification a {
-      padding: 8px 8px 8px 20px;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-
-    .notification a:hover {
-      color: red;
-    }
-
-    .notification .closebtn {
-      position: absolute;
-      top: 0;
-      right: 25px;
-      font-size: 36px;
-    }
-
-    .notification-panel {
-      background-color: #383938;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin: 3px;
-      padding: 5px;
-      display: none;
-    }
-
-    #notifications {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      font-size: 12px;
-      padding: 10px;
-      margin: 3px;
-      height: 200px;
-      color: black;
-      display: none;
-
-    }
-
-    #notificationContent {
-      background-color: #383938;
-      border-radius: 10px;
-      box-shadow: 0 0 10px black;
-      font-size: 12px;
-      color: white;
-    }
-
-    .contain {
-      display: flex;
-      justify-content: space-between;
-      color: white;
-    }
-
-    .badge {
-      position: absolute;
-      right: 25px;
-      padding: 4px 4px;
-      border-radius: 50%;
-      background-color: red;
-      color: white;
-    }
-  </style>
 </head>
 
 <body>
@@ -212,17 +106,25 @@ session_write_close();
 
       <?php
       // Generate back navigation link using HTTP_REFERER
-      echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
+      echo '<a href="javascript:void(0)" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
       ?>
       <div id="mySidepanel" class="sidepanel" style="height:100%;">
         <a href="javascript:void(0)" style="color:white;font-size:13px;margin-top:10px;" class="closebtn" onclick="closeNav()">&#10005;</a>
         <a href="about.php">Info</a>
-        <a href="#" onclick="toggleProfilePanel()">Profile</a>
+        <a href="javascript:void(0)" onclick="toggleProfilePanel()">Profile</a>
         <a href="javascript:void(0)" onclick="opennot()">
           <?php
-          if ($results->num_rows > 0) {
-            echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
+          if ($_SESSION["state"] === 'seller') {
+            if ($results->num_rows > 0) {
+              echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
+            }
           }
+          if (isset($_SESSION["state"])) {
+            if ($samepassword == true) {
+              echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
+            }
+          }
+
           ?>Notification</a>
         <br>
         <br>
@@ -231,9 +133,15 @@ session_write_close();
       <a href="javascript:void(0);" class="icon" onclick="openNav()">
         <i class="fa fa-bars"></i>
         <?php
-
-        if ($results->num_rows > 0) {
-          echo '<span class="badge" id="bages"></span>';
+        if ($_SESSION["state"] == 'seller') { //if seller login show bagage
+          if ($results->num_rows > 0) {
+            echo '<span class="badge" id="bages"></span>';
+          }
+        }
+        if (isset($_SESSION["state"])) {
+          if ($samepassword == true) {
+            echo '<span class="badge" id="bages"></span>';
+          }
         }
         ?>
       </a>
@@ -245,22 +153,46 @@ session_write_close();
             <a href style="font-size:12px;pointer-events: none;">Notification</a>
             <a href="javascript:void(0)" style="font-size:12px;cursor:pointer;" onclick="closenot()">&#10005;</a>
           </div>
+          <?php
 
-          <div id="notificationContent" style="padding: 5px;">
+          if ($_SESSION["state"] === 'seller') {
+            if ($results->num_rows > 0) {
+              echo '<div id="notificationContent" style="padding: 5px;">
             <div class="contain">
               <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">Some of These Customers have outstanding balance remaining</a>
               <a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a>
             </div>
             <div class="contain">
 
-              <a href="javascript:void(0)" onclick="view_cus();" class="view" style="font-size: 11px;cursor:pointer;color:blue;">View detils</a>
+              <a href="javascript:void(0)" onclick="view_cus()" class="view" style="font-size: 11px;cursor:pointer;color:blue;">View detils</a>
               <a href="javascript:void(0)" onclick="sendSMS()" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>
             </div>
+           
+          </div>';
+              echo ' <div id="notifications">hihbhjhjb</div>';
+            }
+          }
+          if (isset($_SESSION["state"])) {
+            if ($samepassword === true) {
+              echo '<div id="notificationContent2" style="padding: 5px;margin-top:5px;">
+            <div class="contain">
+              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">Password at risk. still using same password as system generates</a>
+              <a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi2()">&#10005;</a>
+            </div>
+            <div class="contain">
 
-          </div>
+              <a href="chng_pass.php" class="chngpass" style="font-size: 11px;cursor:pointer;color:blue;">Chnage Password</a>
+              
+            </div>
+
+          </div>';
+            }
+          }
+          ?>
         </div>
-        <div id="notifications" style="max-height:100%;"></div>
       </div>
+
+
 
 
       <div id="profilePanel" class="profile-panel" style="max-height: 320px;">
@@ -308,9 +240,19 @@ session_write_close();
       <a href="/admin/Admin_feed.php" class="option" id="option6" style="display: none;">
         <div>Distribute Products</div>
       </a>
-      <a href="/customer/create_order.php" class="option" id="option7" style="display: none;">
+      <?php
+
+      if ($existing == true) {
+        echo '<a href="javascript:void(0)" onclick="showordernot()" class="option" id="option7" style="display: none;">
         <div>Pre Order</div>
-      </a>
+      </a>';
+      } else {
+        echo '<a href="/customer/create_order.php" class="option" id="option7" style="display: none;">
+        <div>Pre Order</div>
+      </a>';
+      }
+      ?>
+
       <a href="/customer/my_order.php" class="option" id="option8" style="display: none;">
         <div>My Orders</div>
       </a>
@@ -322,6 +264,7 @@ session_write_close();
       </a>
 
     </div>
+
 
   </div>
 
@@ -336,10 +279,18 @@ session_write_close();
       document.getElementById("mySidepanel").style.width = "0px";
     }
 
+    function showordernot() {
+
+      window.alert("You Already Made An Order For This Month. Go to My Order to See Activity. Thank You... ");
+    }
+
     function opennot() {
       document.getElementById("mynotification").style.width = "280px";
       document.getElementById("notificationPanel").style.display = "block";
       document.getElementById("mySidepanel").style.width = "0px";
+      document.getElementById("bages").style.display = "none";
+      document.getElementById("bagesd").style.display = "none";
+      <?php $_SESSION["notification"] = true; ?>
     }
 
     function closenot() {
@@ -348,9 +299,12 @@ session_write_close();
 
     function hidenotifi() {
       document.getElementById("notificationContent").style.display = "none";
-      document.getElementById("bages").style.display = "none";
-      document.getElementById("bagesd").style.display = "none";
       document.getElementById("notifications").style.display = "none";
+
+    }
+
+    function hidenotifi2() {
+      document.getElementById("notificationContent2").style.display = "none";
 
     }
     document.addEventListener("DOMContentLoaded", function() {
@@ -465,42 +419,21 @@ session_write_close();
       // Implement the logic to change the password here
       window.location.href = 'chng_pass.php';
     }
-    $(document).ready(function() {
-      // Load notification count
+    // When clicking on the notification bell
+
+    function view_cus() {
+      document.getElementById("notifications").style.display = "block";
       $.ajax({
-        url: 'fetch_notifications.php', // Change this to your PHP script that fetches the notification count
+        url: 'fetch_notifications.php', // Change this to your PHP script that fetches the notifications
         type: 'POST',
         data: {
-          action: 'get_notification_count'
+          action: 'get_notifications'
         },
         success: function(data) {
-          document.getElementById('badges').style.display = 'block';
+          $('#notifications').html(data);
         }
       });
-
-      // When clicking on the notification bell
-      function shownotf() {
-        // Show the notification panel
-        // $('.notification-panel').toggle();
-        alert("hi");
-
-      }
-
-      $('.view').click(function() {
-        document.getElementById("notifications").style.display = "block";
-        $.ajax({
-          url: 'fetch_notifications.php', // Change this to your PHP script that fetches the notifications
-          type: 'POST',
-          data: {
-            action: 'get_notifications'
-          },
-          success: function(data) {
-            $('#notifications').html(data);
-          }
-        });
-      }) // Load notifications
-
-    });
+    }
   </script>
 
 </body>

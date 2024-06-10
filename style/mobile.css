@@ -118,8 +118,7 @@ body {
 .profile-icon {
   background-image: url("profile.png");
   position: absolute;
-  top: 40px;
-  right: 40px;
+  right: 25px;
   height: 20px;
   width: 20px;
   margin-bottom: 400px;
@@ -127,7 +126,7 @@ body {
 
 .profile-panel {
   position: fixed;
-  top: 20%;
+  top: 30%;
   left: 70%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -135,7 +134,6 @@ body {
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   width: 190px;
-  max-height: 320px;
   display: none;
 }
 

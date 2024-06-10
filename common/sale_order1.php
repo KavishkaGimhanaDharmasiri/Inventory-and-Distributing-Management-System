@@ -128,9 +128,15 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
                     echo '<p>Total: Rs.' . $row['total'] . '</p>';
                     echo '<p>Payment Date: ' . $row['payment_date'] . '</p>';
                     echo '<p>Payment Method: ' . $row['payment_method'] . '</p>';
-                    echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
+                    if ($row['payment_method'] == "credit") {
+                        echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
+                    }
                     echo '<p>Payment Amount: Rs.' . $row['payment_amout'] . '</p>';
-                    echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
+                    if ($row['balance'] < 0) {
+                        echo '<p>Balance: Rs.' . $row['balance'] . '(Prepaid Amount)</p>';
+                    } else {
+                        echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
+                    }
                     $pdf_path = $_SERVER['DOCUMENT_ROOT'] . "/pdf/order_" . $row['ord_id'] . ".pdf";
                     if (file_exists($pdf_path)) {
                         echo '<p><a href="' . $pdf_path . '" download style="color:blue;float:right;">Download Sales Receipt</a></p><br>';
@@ -155,9 +161,16 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
                     echo '<p>Total: Rs.' . $row['total'] . '</p>';
                     echo '<p>Payment Date: ' . $row['payment_date'] . '</p>';
                     echo '<p>Payment Method: ' . $row['payment_method'] . '</p>';
-                    echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
+                    if ($row['payment_method'] == "credit") {
+                        echo '<p>Pay Period: ' . $row['pay_period'] . '</p>';
+                    }
                     echo '<p>Payment Amount: Rs.' . $row['payment_amout'] . '</p>';
-                    echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
+                    if ($row['balance'] < 0) {
+                        echo '<p>Balance: Rs.' . $row['balance'] . '(Prepaid Amount)</p>';
+                    } else {
+                        echo '<p>Balance: Rs.' . $row['balance'] . '</p>';
+                    }
+
                     $pdf_path = $_SERVER['DOCUMENT_ROOT'] . "/pdf/order_" . $row['ord_id'] . ".pdf";
                     if (file_exists($pdf_path)) {
                         echo '<p><a href="' . $pdf_path . '" download style="color:blue;float:right;">Download Sales Receipt</a></p><br>';

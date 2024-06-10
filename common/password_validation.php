@@ -25,19 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $row = mysqli_fetch_assoc($result);
     $code = generateRandomCode();
 
-
-    function generateRandomCode($length = 5)
-    {
-      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      $code = '';
-
-      for ($i = 0; $i < $length; $i++) {
-        $randomIndex = mt_rand(0, strlen($characters) - 1);
-        $code .= $characters[$randomIndex];
-      }
-      return $code;
-    }
-
     // Set session variables
     $_SESSION['code'] = $code;
     $_SESSION["email"] = $row["email"];
@@ -47,10 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstname = $row["firstName"];
 
     $Subject = "Password Change Request";
-    $body = "Vertify your Email address\n\nEnter Below Vertification Code to Continue Change Password \n\nVertification code is :  " . $code . "\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+    $body = "Vertify your Email address\n\nEnter Below Vertification Code for Continue Change Password \n\nVertification code is :  " . $code . "\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
 
 
-    // sendmail($Subject, $body, $user, $firstname);
+    sendmail($Subject, $body, $user, $firstname);
 
     // Redirect to the OTP validation page
     header("Location:/common/otp_validation.php");
@@ -59,6 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Display an error message if credentials are invalid
     $error_message = "Invalid Email Address.";
   }
+}
+function generateRandomCode($length = 5)
+{
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $code = '';
+
+  for ($i = 0; $i < $length; $i++) {
+    $randomIndex = mt_rand(0, strlen($characters) - 1);
+    $code .= $characters[$randomIndex];
+  }
+  return $code;
 }
 ?>
 <!DOCTYPE html>
@@ -85,24 +83,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Top Navigation Menu -->
     <div class="topnav">
-
-      <?php
-      // Generate back navigation link using HTTP_REFERER
-      echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-      ?>
-      <div id="mySidepanel" style="height:100%" class="sidepanel" onclick="closepanel()">
-        <a href="about.php">About</a>
-        <a href="contact">Contact</a>
-      </div>
-
-      <a href="javascript:void(0);" class="icon" onclick="openNav()">
-        <i class="fa fa-bars"></i>
-      </a>
-
+      <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
     </div>
 
     <div class="container">
-      <h3>Email Validation</h3>
+      <h3>Validation</h3>
 
       <?php
       // Display error message if set
@@ -115,31 +100,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="form-group">
 
-          <label for="email">E-Mail Address </label>
-          <input type="email" name="email" class="form-control" required placeholder="noreply@gmail.com">
+          <label for="email" id="elabel">E-Mail Address </label>
+          <input type="email" name="email" id="email" class="form-control" placeholder="noreply@gmail.com" style="margin-bottom: 2%;">
+          <label for="email" id="tlabel">Telephone Number </label>
+          <input type="text" name="number" id="mobile" class="form-control" placeholder="XXXXXXXXXX" style="margin-bottom: 2%;" maxlength="10">
+          <a href="" onclick="toggleCustomfields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;">Try Another Way</a>
         </div>
 
-        <button type="submit">Get Code</button>
+        <button type="submit" style="margin-top:2%;">Get Code</button>
       </form>
 
     </div>
   </div>
 
   <script>
-    function openNav() {
-      document.getElementById("mySidepanel").style.width = "150px";
-    }
-
-    function closeNav() {
-      document.getElementById("mySidepanel").style.width = "0";
-    }
-
     function closepanel() {
       document.getElementById("mySidepanel").style.width = "0";
     }
 
     function back() {
       window.history.back();
+    }
+
+    function toggleCustomfields() {
+      var paymentMethod = document.getElementById('payment_method');
+      var customPaymentFields = document.getElementById('custom_payment_fields');
+      if (paymentMethod.value === 'custom') {
+        customPaymentFields.style.display = 'block';
+      } else {
+        customPaymentFields.style.display = 'none';
+      }
     }
   </script>
 

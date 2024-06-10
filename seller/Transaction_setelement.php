@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=2">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/mobile.css" />
     <link rel="stylesheet" href="/style/style.css" />
@@ -91,13 +91,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="settle_amount"><b>Balance Remains to Settle:</b> <span id="balanceRemains">Rs.0.00</span></label>
                 <br><br>
                 <button type="submit" name="add_sales_person">Update Details</button>
+                <button type="reset" style="background-color: transparent;color:green;margin-bottom:0%;">Clear</button>
             </form>
         </div>
     </div>
 
     <script>
         function back() {
-            alert("ht");
             window.history.back();
         }
     </script>

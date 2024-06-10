@@ -125,12 +125,22 @@
             <div class="mySlides">
                 <div class="container">
                     <h3>About us</h3>
+                    <br>
+                    <label>Lotus Hardware And Electricals(PVT).LTD</label>
+                    <br>
+                    <label style="font-size: 14px; text-align:center;padding:10px;line-space:10px;">
+                        As a leading company of Sri Lanka We Proudly Provide reliable Hardware And Electrical solution tht Most Fit for Your life.
+                    </label>
                 </div>
             </div>
 
             <div class="mySlides">
                 <div class="container" style="background-color:indianred;">
-                    <h3>Contact Us</h3>
+                    <h3>Contact Us</h3><br>
+                    <label>Lotus Hardware And Electricals(PVT).LTD</label>
+                    <br>
+                    <label>Lotus Hardware And Electricals(PVT).LTD<br>Karadagoda,<br>Thihagoda,<br>Mathare.
+                        Main Branch</label>
                 </div>
             </div>
 

@@ -49,4 +49,3 @@ while ($row = mysqli_fetch_assoc($customerResult)) {
 
 // Output PDF as download
 $pdf->Output('customer_data_report.pdf', 'D');
-echo '<script>alert("completed");</script>';

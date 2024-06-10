@@ -243,17 +243,19 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         <br>
         <label for=" payment_amount">Payment Amount: Rs.</label>
-        <input type="text" name="payment_amount" id="payment_amount" oninput="calculateBalance()">
+        <span id="error-message" style="color: red; display: none;font-size:12px;">Please enter a valid positive number.</span>
+        <input type="number" name="payment_amount" id="payment_amount" min="0" oninput="calculateBalance(),validateAndToggleLink(event)">
+
 
         <label for="balance" style="color: indianred;">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
 
         <table>
             <tr style="background-color:white;">
-                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;"><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
+                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;" onclick='validatezero(event)'><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: block;"><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;" onclick='validatezeroinput(event)'><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
         </form>
     </div>
     <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -262,17 +264,67 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             window.history.back();
         }
 
+        function validatezeroinput(event) {
+            var paymentMethod = document.getElementById("payment_amount").value;
+            if (paymentMethod === "") {
+                event.preventDefault(); // Prevent link from being followed
+                alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
+            }
+        }
+
+        function validatezero(event) {
+            var paymentMethod = document.getElementById("payment_amount").value;
+            if (paymentMethod === "") {
+                event.preventDefault(); // Prevent link from being followed
+                alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
+            } else {
+                document.getElementById("payment_amount").disabled = true;
+                document.getElementById("payment_amount").value = "Once you click Download Sales Receipt This Can't be Reversed";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField = document.getElementById('payment_amount');
+            const errorMessage = document.getElementById('error-message');
+
+            inputField.addEventListener('input', () => {
+                const value = inputField.value;
+                if (value === '' || /^[0-9]+(\.[0-9]*)?$/.test(value)) {
+                    inputField.style.borderBottomColor = 'green';
+                    errorMessage.style.display = 'none';
+
+                } else {
+                    errorMessage.style.display = 'block';
+                    inputField.style.borderBottomColor = 'red';
+                }
+            });
+        });
+
+
+        function validatePaymentMethod(event) {
+            var paymentMethod = document.getElementById("payment_amount").value;
+            if (paymentMethod === "") {
+                event.preventDefault() // Prevent form submission
+                alert("Please Enter Amount in total Field or if You don't make any payment just leave 0");
+            }
+        }
+
 
         function calculateBalance() {
             var totalAmount = <?php echo isset($totalAmount) ? $totalAmount : 0; ?>;
             var paymentAmountInput = document.getElementById('payment_amount');
-            var balanceInput = document.getElementById('remainBalance');
+            var balanceElement = document.getElementById('remainBalance');
 
             var paymentAmount = parseFloat(paymentAmountInput.value) || 0;
             var balance = totalAmount - paymentAmount;
 
-            balanceInput.textContent = balance.toFixed(2);
+            if (balance < 0) {
+                balance = Math.abs(balance).toFixed(2) + " (pre payment)";
+            } else {
+                balance = balance.toFixed(2);
+            }
 
+            balanceElement.textContent = balance;
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'set_session_variables.php', true);
@@ -280,7 +332,6 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
             // Send the data
             xhr.send('totalAmount=' + totalAmount + '&paymentAmount=' + paymentAmount + '&balance=' + balance);
-
         }
 
 
@@ -291,23 +342,6 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 for (var i = 0; i < formElements.length; i++) {
                     formElements[i].disabled = true;
                 }
-            });
-        });
-        document.addEventListener("DOMContentLoaded", function() {
-            var myLink = document.getElementById("myLink");
-            var confirmButton = document.getElementById("confirmButton");
-            var inputField = document.getElementById("payment_amount");
-
-            myLink.addEventListener("click", function(event) {
-                // Prevent the default action of the link
-                event.preventDefault();
-                // After 2 seconds, enable the confirm button
-                setTimeout(function() {
-                    confirmButton.style.display = "block";
-                    inputField.disabled = true;
-                }, 4000);
-                // Redirect to process_payment.php
-                window.location.href = myLink.href;
             });
         });
     </script>

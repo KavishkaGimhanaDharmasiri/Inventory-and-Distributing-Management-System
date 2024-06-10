@@ -16,124 +16,126 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 }
 $route_query = "SELECT * FROM route";
 $result1 = mysqli_query($connection, $route_query);
+if ($_SESSION["state"] == 'seller') {
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Include your database connection file
-    // Extract data from the form
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $telephone = $_POST['telephone'];
-    $address = $_POST['address'];
-
-
-    if ($_POST['email'] === null || $_POST['email'] === "") {
-        $email = null;
-    } else {
-        $email = $_POST['email'];
-    }
-
-    $storename = $_POST['storename'];
-    $storeregno = $_POST['storeregno'];
-    $storeaddress = $_POST['storeaddress'];
-    $location = $_POST['location'];
-    try {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Include your database connection file
+        // Extract data from the form
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $telephone = $_POST['telephone'];
+        $address = $_POST['address'];
 
 
-        $valid_query = "SELECT * FROM users WHERE  telphone_no= $telephone OR email='$email'";
-        $result6 = mysqli_query($connection, $valid_query);
+        if ($_POST['email'] === null || $_POST['email'] === "") {
+            $email = null;
+        } else {
+            $email = $_POST['email'];
+        }
 
-        if (mysqli_num_rows($result6) === 0) {
-            echo '<script>alert("grrt");</script>';
-            $pdo->beginTransaction();
+        $storename = $_POST['storename'];
+        $storeregno = $_POST['storeregno'];
+        $storeaddress = $_POST['storeaddress'];
+        $location = $_POST['location'];
+        try {
 
-            // Insert data into the customer table
-            $customer_insert_query = "INSERT INTO users (firstName, LastName, telphone_no, Address, email) 
+
+            $valid_query = "SELECT * FROM users WHERE  telphone_no= $telephone OR email='$email'";
+            $result6 = mysqli_query($connection, $valid_query);
+
+            if (mysqli_num_rows($result6) === 0) {
+                echo '<script>alert("grrt");</script>';
+                $pdo->beginTransaction();
+
+                // Insert data into the customer table
+                $customer_insert_query = "INSERT INTO users (firstName, LastName, telphone_no, Address, email) 
                          VALUES (:firstName, :LastName, :telphone_no, :Address, :email)";
 
-            $stmt2 = $pdo->prepare($customer_insert_query);
-            $stmt2->bindParam(':firstName', $firstname);
-            $stmt2->bindParam(':LastName', $lastname);
-            $stmt2->bindParam(':telphone_no', $telephone);
-            $stmt2->bindParam(':Address', $address);
-            $stmt2->bindParam(':email', $email);
-            $stmt2->execute();
+                $stmt2 = $pdo->prepare($customer_insert_query);
+                $stmt2->bindParam(':firstName', $firstname);
+                $stmt2->bindParam(':LastName', $lastname);
+                $stmt2->bindParam(':telphone_no', $telephone);
+                $stmt2->bindParam(':Address', $address);
+                $stmt2->bindParam(':email', $email);
+                $stmt2->execute();
 
-            $user_id = $pdo->lastInsertId();
+                $user_id = $pdo->lastInsertId();
 
-            if ($_SESSION["state"] === 'seller') {
-                $route_sale = $_SESSION['route_id'];
-                $cus_state = "wholeseller";
+                if ($_SESSION["state"] === 'seller') {
+                    $route_sale = $_SESSION['route_id'];
+                    $cus_state = "wholeseller";
 
-                $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
+                    $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
                            VALUES (:user_id, :route_id, :sto_reg_no, :sto_tep_number, :sto_name, :sto_loc)";
 
-                $stmt3 = $pdo->prepare($store_insert_query);
-                $stmt3->bindParam(':user_id', $user_id);
-                $stmt3->bindParam(':route_id', $route_sale);
-                $stmt3->bindParam(':sto_reg_no', $storeregno);
-                $stmt3->bindParam(':sto_tep_number', $telephone);
-                $stmt3->bindParam(':sto_name', $storename);
-                $stmt3->bindParam(':sto_loc', $location);
-                $stmt3->execute();
-            }
-            // Insert data into the store table
-            $lastFiveDigits = substr((string)$telephone, -5);
+                    $stmt3 = $pdo->prepare($store_insert_query);
+                    $stmt3->bindParam(':user_id', $user_id);
+                    $stmt3->bindParam(':route_id', $route_sale);
+                    $stmt3->bindParam(':sto_reg_no', $storeregno);
+                    $stmt3->bindParam(':sto_tep_number', $telephone);
+                    $stmt3->bindParam(':sto_name', $storename);
+                    $stmt3->bindParam(':sto_loc', $location);
+                    $stmt3->execute();
+                }
+                // Insert data into the store table
+                $lastFiveDigits = substr((string)$telephone, -5);
 
-            // Insert data into the login table
-            $login_insert_query = "INSERT INTO login (user_id, username, password, state, Active_state,route_id) VALUES (:user_id, :username, :password, :state, :Active_state,:route_id)";
-
-
-            $stmt4 = $pdo->prepare($login_insert_query);
-            $stmt4->bindParam(':user_id', $user_id);
-            $stmt4->bindParam(':username', $firstname);
-            $stmt4->bindParam(':password', $lastFiveDigits);
-            $stmt4->bindParam(':state', $cus_state);
-            $stmt4->bindParam(':Active_state', NULL);
-            $stmt4->bindParam(':route_id', $route_sale);
-            $stmt4->execute();
+                // Insert data into the login table
+                $login_insert_query = "INSERT INTO login (user_id, username, password, state, Active_state,route_id) VALUES (:user_id, :username, :password, :state, :Active_state,:route_id)";
 
 
-            $pdo->commit();
-            $modifiedNumber = '94' . substr($telephone, 1);
-
-            $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
-            $body = "\nDear $firstname,\n\n"
-                . "Thank you for registering with Lotus Electricals(PVT).LTD.\n"
-                . "\nYour username is: $firstname\n"
-                . "Your generated password is: $lastFiveDigits\n"
-                . "\nPlease keep your login details secure.\n\n"
-                . "Best regards,\nLotus Electicals (PVT)LTD";
+                $stmt4 = $pdo->prepare($login_insert_query);
+                $stmt4->bindParam(':user_id', $user_id);
+                $stmt4->bindParam(':username', $firstname);
+                $stmt4->bindParam(':password', $lastFiveDigits);
+                $stmt4->bindParam(':state', $cus_state);
+                $stmt4->bindParam(':Active_state', NULL);
+                $stmt4->bindParam(':route_id', $route_sale);
+                $stmt4->execute();
 
 
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            sendmail($Subject, $body, $email, $firstname);
+                $pdo->commit();
+                $modifiedNumber = '94' . substr($telephone, 1);
 
-            $message = $Subject . $body;
-            $smsbody = urlencode($message);
+                $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
+                $body = "\nDear $firstname,\n\n"
+                    . "Thank you for registering with Lotus Electricals(PVT).LTD.\n"
+                    . "\nYour username is: $firstname\n"
+                    . "Your generated password is: $lastFiveDigits\n"
+                    . "\nPlease keep your login details secure.\nTo Easy Access to Services you can download The Application from here : https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file\n\n"
+                    . "Best regards,\nLotus Electicals (PVT)LTD";
 
-            //sending sms to customer
-            sendsms($modifiedNumber, $smsbody);
-            echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                sendmail($Subject, $body, $email, $firstname);
+
+                $message = $Subject . $body;
+                $smsbody = urlencode($message);
+
+                //sending sms to customer
+                sendsms($modifiedNumber, $smsbody);
+                echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
                             <button onclick="redirectToIndex()" class="sucess">OK</button>
                             </div>';
-        } else {
-            echo '<div id="overlay"></div><div id="successModel">
+            } else {
+                echo '<div id="overlay"></div><div id="successModel">
         <div class="j">
         <p style="color: indianred; font-size: 13pt; font-weight: bold; font-family: Calibri; margin-top: 0px; text-align: center;">Customer is Already Availble under Entered Telephone Number or Email Address<br>Please Check Whether Entered Details are Correct.</p></div>
         <button onclick="redirectTonormal()" class="fail">OK</button>
         </div>';
+            }
+        } catch (Exception $e) {
+            // Rollback the transaction in case of an error
+            $pdo->rollBack();
+            echo "Failed: " . $e->getMessage();
         }
-    } catch (Exception $e) {
-        // Rollback the transaction in case of an error
-        $pdo->rollBack();
-        echo "Failed: " . $e->getMessage();
-    }
-    // Set the email subject and body
+        // Set the email subject and body
 
 
-    if (isset($error_message)) {
-        echo '<div class="alert alert-danger">' . $error_message . '</div>';
+        if (isset($error_message)) {
+            echo '<div class="alert alert-danger">' . $error_message . '</div>';
+        }
     }
 }
 ?>
@@ -141,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="/style/divs.css">
@@ -245,27 +247,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" name="location" id="location" class="form-control" placeholder="e.g:Hambantota" required>
                 </div>
 
-                <?php
-                $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
-                if ($userState === 'seller') : ?>
-                    <button type="submit" name="add_sales_person">Add Sales Person</button>
-                <?php endif; ?>
-                <br>
-                <button type="reset">Clear Data</button>
+                <button type="submit" name="add_sales_person">Add Sales Person</button>
+                <button type="reset" style="background-color: transparent;color:green;">Clear Data</button>
             </form>
         </div>
     </div>
 
     <script type="text/javascript" src="divs.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function back() {
             window.history.back();
         }

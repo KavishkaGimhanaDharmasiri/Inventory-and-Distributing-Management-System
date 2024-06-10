@@ -69,4 +69,4 @@ foreach ($mainCategories as $mainCat => $subProducts) {
 }
 
 // Output PDF as download
-$pdf->Output('customer_data_report.pdf', 'D');
+$pdf->Output('product_data.pdf', 'D');

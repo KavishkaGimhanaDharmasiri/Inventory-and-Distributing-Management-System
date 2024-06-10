@@ -14,7 +14,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -208,6 +208,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
                 $subCat = $row_pending["sub_cat"];
                 $count = $row_pending["order_count"];
                 $date = $row_pending["ord_date"];
+                $_SESSION['date'] = $row_pending["ord_date"];;
                 // If main category already exists in the array, append the sub product
                 if (array_key_exists($mainCat, $mainCategories_pending)) {
                     // Check if the subcategory already exists, if yes, add the count
@@ -228,7 +229,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
                     $mainCategories_pending[$mainCat] = array(array("sub_cat" => $subCat, "order_count" => $count));
                 }
             }
-            echo "<h4>Order Made on $date is Now on Pending";
+            echo "<h4>Order Made on " . $_SESSION['date'] . " is Now on Pending";
             // Output pending orders
             echo "<div class='main-categories'>";
             foreach ($mainCategories_pending as $mainCat => $subProducts) {

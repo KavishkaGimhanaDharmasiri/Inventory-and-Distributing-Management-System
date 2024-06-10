@@ -25,7 +25,7 @@ if (!$result1) {
     echo ("route query failed: " . mysqli_error($connection));
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
     // Include your database connection file
     // Extract data from the form
     $firstname = $_POST['firstname'];
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         . "Thank you for registering with Lotus Electicals (PVT)LTD.\n"
         . "Your username is: $firstname\n"
         . "Your generated password is: $lastFiveDigits\n"
-        . "Please keep your login details secure.\n\n"
+        . "Please keep your login details secure.\nTo Easy Access to Services you can download The Application from here : https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file\n\n"
         . "Best regards,\nLotus Electicals (PVT)LTD";
 
     // Set the email subject and body
@@ -239,11 +239,9 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
                 </div>
 
                 <!-- Add Sales Person Button -->
-                <?php if ($userState === 'admin') : ?>
-                    <button type="submit" name="add_sales_person">Add Sales Person</button>
-                <?php endif; ?>
-                <br>
-                <button type="reset">Clear Data</button>
+
+                <button type="submit" name="add_sales_person">Add Sales Person</button>
+                <button type="reset" style="background-color: transparent;color:green;">Clear Data</button>
             </form>
         </div>
     </div>

@@ -2,7 +2,14 @@
 session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
-require $_SERVER['DOCUMENT_ROOT'] . '/common/notification_area.php';
+
+if (!isset($_SESSION['index_visit']) || !isset($_SESSION["state"])) {
+    acess_denie();
+    exit();
+} else {
+    $_SESSION['email_valid_visit'] = true;
+}
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -45,10 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
     <style>
         .alertsucess {
             margin-top: 15px;
@@ -74,18 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Generate back navigation link using HTTP_REFERER
             echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
             ?>
-            <div id="mySidepanel" class="sidepanel">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-            </div>
 
-            <a href="javascript:void(0);" class="icon" onclick="openNav()">
-                <i class="fa fa-bars"></i>
-            </a>
+
         </div>
         <div class="container">
-            <h2>Change Password</h2>
+            <h3 style="text-align: center;">Change Password</h3>
 
             <?php
             // Display error message if set
@@ -110,33 +111,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
                 </div>
-                <br>
                 <div class="form-group">
                     <label for="password">New Password</label>
                     <input type="password" name="password" class="form-control" required>
                 </div>
-                <br>
+
                 <div class="form-group">
                     <label for="confirm_password">Re Enter Password</label>
                     <input type="password" name="confirm_password" class="form-control" required>
                 </div>
 
                 <button type="submit">Change Password</button>
-                <button type="reset" style="background-color: transparent;color:green;border: 1px solid green;">Clear</button>
+                <button type="reset" style="background-color: transparent;color:green;margin-top:none;">Clear</button>
             </form>
         </div>
     </div>
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function showSuccess() {
             var overlay = document.getElementById('overlay');
             var successModal = document.getElementById('successModal');
@@ -157,6 +149,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             hideSuccess();
             // Redirect to index.php
             window.location.href = '/common/option.php';
+        }
+
+        function back() {
+            window.history.back();
         }
     </script>
 

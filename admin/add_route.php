@@ -8,7 +8,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
     // Include your database connection file
 
     try {
@@ -85,14 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script type="text/javascript" src="/javascript/divs.js"></script>
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
-
         function redirectToIManage() {
             hideSuccess();
             // Redirect to index.php

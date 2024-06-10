@@ -15,7 +15,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -106,7 +106,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
         echo '<div class="containers">';
 
-        echo '<div class="box">';
+        echo '<div class="box" style="margin-top:5%;">';
         echo "<h4>Order State </h4><br>";
         echo "<table>";
 
