@@ -7,7 +7,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 
     exit();
 } else {
-    $_SESSION['manage_employee_visit'] = true;
+    $_SESSION['sale_order_visit'] = true;
 }
 ?>
 <!DOCTYPE html>
@@ -15,6 +15,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sales Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/mobile.css">
     <link rel="stylesheet" href="/style/style.css">
@@ -104,12 +105,28 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         </div>
         <?php
         $route_id = $_SESSION['route_id'];
-        $query = "SELECT * FROM payment where route_id=$route_id ORDER BY ord_id DESC";
+        $query = "";
+        if ($_SESSION["state"] === 'seller') {
+            $query = "SELECT * FROM payment where route_id=$route_id ORDER BY ord_id DESC";
+        } elseif ($_SESSION["state"] === 'wholeseller') {
+            $user_id = $_SESSION['user_id'];
+            $customerQuery = "SELECT sto_name FROM customers WHERE user_id=$user_id";
+            $customerResult = mysqli_query($connection, $customerQuery);
+            if ($customerResult) {
+                if ($customerRow = mysqli_fetch_assoc($customerResult)) {
+                    $customerName = $customerRow['sto_name'];
+                }
+            }
+            $query = "SELECT * FROM payment where route_id=$route_id AND store_name='$customerName' ORDER BY ord_id DESC";
+        } elseif ($_SESSION["state"] === 'admin') {
+            $query = "SELECT * FROM payment ORDER BY ord_id DESC";
+        }
+
         $result = mysqli_query($connection, $query);
         $currentmonth = date('Y-m');
         // Check if there are any orders
         if (mysqli_num_rows($result) > 0) {
-            echo '<input type="text" id="orderSearch" onkeyup="searchOrders()" placeholder="Search for Order Date Try Like This 2020-04-12..." style="margin-top:5%;">';
+            echo '<input type="text" id="orderSearch" onkeyup="searchOrders()" placeholder="Search for Order Date Try Like This 2020-04-12..." style="margin-top:5%;background-color:transparent;">';
             echo '<div id="orderContainer">';
             echo '<h4 style="color:red;">Recent Sale Orders</h4>';
             $previous_orders_displayed = false;

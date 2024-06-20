@@ -25,17 +25,37 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            background: linear-gradient(270deg, #3cba68, #fefefe, #ffffff);
+            background-size: 180% 180%;
+            animation: gradient-animation 7s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: transparent;
         }
 
         th,
         td {
-            padding: 6px;
+            padding: 4px;
             text-align: left;
         }
 
@@ -63,6 +83,10 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
         li:hover {
             background-color: #bdffa1;
+        }
+
+        input[type="checkbox"] {
+            padding-top: 10px;
         }
     </style>
 </head>
@@ -144,40 +168,41 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         }
         if ($_SESSION["state"] === "admin") {
             $sql2 = "SELECT f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f 
-            LEFT JOIN feed_item i ON i.feed_id = f.feed_id WHERE AND DATE_FORMAT(feed_date, '$currentMonthYear')";
+            LEFT JOIN feed_item i ON i.feed_id = f.feed_id WHERE DATE_FORMAT(feed_date, '$currentMonthYear')";
         }
 
         $result2 = mysqli_query($connection, $sql2);
 
         // Initialize an array to store main categories and their related sub products
         $mainCategories = array();
+        if ($result2) {
 
-        while ($row2 = mysqli_fetch_assoc($result2)) {
-            $mainCat = $row2["main_cat"];
-            $subCat = $row2["sub_cat"];
-            $count = $row2["count"];
+            while ($row2 = mysqli_fetch_assoc($result2)) {
+                $mainCat = $row2["main_cat"];
+                $subCat = $row2["sub_cat"];
+                $count = $row2["count"];
 
-            // If main category already exists in the array, append the sub product
-            if (array_key_exists($mainCat, $mainCategories)) {
-                // Check if the subcategory already exists, if yes, add the count
-                $found = false;
-                foreach ($mainCategories[$mainCat] as &$subProduct) {
-                    if ($subProduct['sub_cat'] === $subCat) {
-                        $subProduct['count'] += $count;
-                        $found = true;
-                        break;
+                // If main category already exists in the array, append the sub product
+                if (array_key_exists($mainCat, $mainCategories)) {
+                    // Check if the subcategory already exists, if yes, add the count
+                    $found = false;
+                    foreach ($mainCategories[$mainCat] as &$subProduct) {
+                        if ($subProduct['sub_cat'] === $subCat) {
+                            $subProduct['count'] += $count;
+                            $found = true;
+                            break;
+                        }
                     }
+                    // If subcategory not found, add it to the array
+                    if (!$found) {
+                        $mainCategories[$mainCat][] = array("sub_cat" => $subCat, "count" => $count);
+                    }
+                } else {
+                    // If main category doesn't exist, create a new entry in the array
+                    $mainCategories[$mainCat] = array(array("sub_cat" => $subCat, "count" => $count));
                 }
-                // If subcategory not found, add it to the array
-                if (!$found) {
-                    $mainCategories[$mainCat][] = array("sub_cat" => $subCat, "count" => $count);
-                }
-            } else {
-                // If main category doesn't exist, create a new entry in the array
-                $mainCategories[$mainCat] = array(array("sub_cat" => $subCat, "count" => $count));
             }
         }
-
         // Loop through main categories and display them with clickable functionality
         echo "<div class='main-categories'>";
         foreach ($mainCategories as $mainCat => $subProducts) {

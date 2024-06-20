@@ -15,12 +15,13 @@ if (!isset($_SESSION['index_visit'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Get the email from the POST data
   $email = $_POST['email'];
+  $telephone = $_POST['telenumber'];
 
   // Validate the user credentials
-  $query = "SELECT * FROM users WHERE email='$email'";
+  $query = "SELECT * FROM users WHERE email='$email' OR telphone_no='$telephone'";
   $result = mysqli_query($connection, $query);
 
-  if ($result && mysqli_num_rows($result) > 1) {
+  if ($result && mysqli_num_rows($result) == 1) {
     // Fetch user data
     $row = mysqli_fetch_assoc($result);
     $code = generateRandomCode();
@@ -33,11 +34,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $row["email"];
     $firstname = $row["firstName"];
 
+
     $Subject = "Password Change Request";
-    $body = "Vertify your Email address\n\nEnter Below Vertification Code for Continue Change Password \n\nVertification code is :  " . $code . "\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+    $body = "Vertify Account\n\nEnter Below Vertification Code for Continue Change Password \n\nVertification code is :  " . $code . "\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
 
-
-    sendmail($Subject, $body, $user, $firstname);
+    $modifiedNumber = '94' . substr($telephone, 1);
+    if ($email == null || $email == "" || $telephone != "") {
+      sendsms($modifiedNumber, $message);
+    } elseif ($telephone == null || $telephone == "" || $email != "") {
+      sendmail($Subject, $body, $user, $firstname);
+      $modifiedNumber = '94' . substr($telephone, 1);
+    }
+    echo 'window.alert("Field cannot be empty.")';
 
     // Redirect to the OTP validation page
     header("Location:/common/otp_validation.php");
@@ -96,15 +104,16 @@ function generateRandomCode($length = 5)
       }
       ?>
 
-      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;">
+      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;" id="emailForm">
 
         <div class="form-group">
 
-          <label for="email" id="elabel">E-Mail Address </label>
-          <input type="email" name="email" id="email" class="form-control" placeholder="noreply@gmail.com" style="margin-bottom: 2%;">
-          <label for="email" id="tlabel">Telephone Number </label>
-          <input type="text" name="number" id="mobile" class="form-control" placeholder="XXXXXXXXXX" style="margin-bottom: 2%;" maxlength="10">
-          <a href="" onclick="toggleCustomfields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;">Try Another Way</a>
+          <label for="email_lab" id="email_lab">E-Mail Address </label>
+          <input type="email" name="email" id="email_field" class="form-control" placeholder="noreply@email.com" style="margin-bottom: 2%;">
+          <label for="telephone" id="telephone_lab" style="display: none;">Telephone Number </label>
+          <input type="text" name="telenumber" id="telephone_field" class="form-control" placeholder="07XXXXXXXXX" style="margin-bottom: 2%;display: none;" maxlength="10">
+          <label onclick="toggleCustomfields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;cursor:pointer;" id="show_telephone">Try Another Way</label>
+          <label onclick="togglelablefields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;display:none;cursor:pointer;" id="show_email">Try Another Way</label>
         </div>
 
         <button type="submit" style="margin-top:2%;">Get Code</button>
@@ -114,22 +123,61 @@ function generateRandomCode($length = 5)
   </div>
 
   <script>
-    function closepanel() {
-      document.getElementById("mySidepanel").style.width = "0";
-    }
-
     function back() {
       window.history.back();
     }
 
-    function toggleCustomfields() {
-      var paymentMethod = document.getElementById('payment_method');
-      var customPaymentFields = document.getElementById('custom_payment_fields');
-      if (paymentMethod.value === 'custom') {
-        customPaymentFields.style.display = 'block';
-      } else {
-        customPaymentFields.style.display = 'none';
+    document.getElementById('emailForm').addEventListener('submit', function(event) {
+      var emailField = document.getElementById('email_field');
+      var telephone_Field = document.getElementById('telephone_field');
+
+      if (emailField.value.trim() === "" || telephone_Field.value.trim() === "") {
+        event.preventDefault();
+        window.alert("Field cannot be empty.");
       }
+
+    });
+
+    function toggleCustomfields() {
+      var email_label = document.getElementById('email_lab');
+      var email_Field = document.getElementById('email_field');
+      var telephone_label = document.getElementById('telephone_lab');
+      var telephone_Field = document.getElementById('telephone_field');
+      var show_telephone = document.getElementById('show_telephone');
+      var show_email = document.getElementById('show_email');
+
+      email_label.style.display = 'none';
+      email_Field.style.display = 'none';
+      email_Field.value = "";
+      show_telephone.style.display = 'none';
+      show_email.style.display = 'block';
+
+      telephone_label.style.display = 'block';
+      telephone_Field.style.display = 'block';
+
+
+    }
+
+    function togglelablefields() {
+      var email_label = document.getElementById('email_lab');
+      var email_Field = document.getElementById('email_field');
+      var telephone_label = document.getElementById('telephone_lab');
+      var telephone_Field = document.getElementById('telephone_field');
+      var show_telephone = document.getElementById('show_telephone');
+      var show_email = document.getElementById('show_email');
+
+      telephone_Field = "";
+      show_email.style.display = 'none';
+      telephone_label.style.display = 'none';
+      telephone_Field.style.display = 'none';
+      email_label.style.display = 'block';
+      email_Field.style.display = 'block';
+      show_telephone.style.display = 'block';
+
+
+
+
+
     }
   </script>
 

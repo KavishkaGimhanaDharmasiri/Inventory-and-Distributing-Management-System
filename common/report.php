@@ -21,6 +21,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <title>Report</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="/style/mobile.css">
@@ -227,7 +228,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
                     <div class="form-group">
                         <label for="sto_name" style="display: none;" id="sto">Store Customer<lable style="color: red; font-size: 14pt;">&nbsp;*</label></label>
-                        <select name="customer" id="customer" style="display: none;" required>
+                        <select name="customer" id="customer" style="display: none;">
                             <option value="">Select Customer</option>
                             <?php
                             while ($customerRow = mysqli_fetch_assoc($customerResult)) {

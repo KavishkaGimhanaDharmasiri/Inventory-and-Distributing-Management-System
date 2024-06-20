@@ -1,5 +1,11 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+
+// Suppress error display and log them
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/error.log');
+
 // Retrieve selected store name and sales order date from the request
 $selectedStore = $_GET['store'];
 $selectedDate = $_GET['date'];
@@ -7,10 +13,12 @@ $selectedDate = $_GET['date'];
 // Query to retrieve remaining balance from the payment table
 list($selectedYear, $selectedMonth) = explode('-', $selectedDate);
 
-// Query to retrieve remaining balance based on year and month
-$sql = "SELECT balance FROM payment WHERE store_name = '$selectedStore' AND YEAR(payment_date) = '$selectedYear' AND MONTH(payment_date) = '$selectedMonth'";
-
-$result = mysqli_query($connection, $sql);
+// Prepare and execute the SQL query
+$sql = "SELECT balance FROM payment WHERE store_name = ? AND YEAR(payment_date) = ? AND MONTH(payment_date) = ?";
+$stmt = mysqli_prepare($connection, $sql);
+mysqli_stmt_bind_param($stmt, 'sii', $selectedStore, $selectedYear, $selectedMonth);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 if (mysqli_num_rows($result) > 0) {
     // Fetch the remaining balance

@@ -31,4 +31,3 @@ if (isset($_POST['input'])) {
     // If no input is provided, return an empty array
     echo json_encode(array());
 }
-$_SESSION['product_id'] = $row['product_id'];

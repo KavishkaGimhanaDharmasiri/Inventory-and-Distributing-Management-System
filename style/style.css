@@ -5,6 +5,22 @@ body {
   background-size: cover;
   background-color: rgb(255, 255, 255);
   -webkit-user-select: none;
+  background: linear-gradient(270deg, #b4fdce, #fefefe, #ffffff);
+  background-size: 180% 180%;
+  animation: gradient-animation 7s ease infinite;
+}
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .container {
@@ -16,7 +32,7 @@ body {
   margin-bottom: 2%;
 }
 .order-form {
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;

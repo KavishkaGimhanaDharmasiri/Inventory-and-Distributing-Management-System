@@ -16,6 +16,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 <head>
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
+    <title>Manage Employee</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -49,13 +50,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
-        }
     </script>
 
 </body>

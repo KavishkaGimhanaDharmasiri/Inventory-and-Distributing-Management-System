@@ -107,6 +107,19 @@ function handleAddOrder($connection)
 
     $selectedStore = $_POST["customers"];
     $_SESSION['selected_store'] = $selectedStore;
+    $route_id = $_SESSION['route_id'];
+    $customeridQuery = "SELECT user_id FROM customers WHERE sto_name='$selectedStore' AND route_id=$route_id";
+    $customeridResult = mysqli_query($connection, $customeridQuery);
+
+    // Check for database query sucess
+    if ($customeridResult) {
+        if ($row = mysqli_fetch_assoc($customeridResult)) {
+            $selecteduserid = $row['user_id'];
+            $_SESSION['selected_store_id'] = $selecteduserid;
+        }
+    }
+
+
 
     // Check if there's already an order for the selected main category
     $existingOrderIndex = null;
@@ -232,6 +245,7 @@ function displayOrderTable()
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>New Order</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -268,7 +282,7 @@ function displayOrderTable()
                 <select name="customers" id="customers" required>
                     <option value=""><b>Select Customer<b></option>
                     <?php
-                    while ($customerRow = mysqli_fetch_assoc($customerResult)) {
+                    while ($customerRow = mysqli_fetch_assoc($customerResult)) { //setting query result to customers
                         $selected = ($_SESSION['selected_store'] == $customerRow['sto_name']) ? 'selected' : '';
                         echo "<option value='{$customerRow['sto_name']}' $selected>{$customerRow['sto_name']}</option>";
                     }
@@ -279,7 +293,7 @@ function displayOrderTable()
                 <select name="main_category" id="main_category">
                     <option value="">Select Main Product</option>
                     <?php
-                    while ($row = mysqli_fetch_assoc($result)) {
+                    while ($row = mysqli_fetch_assoc($result)) { //setting query result to cmain product
                         $selected = (isset($_POST['main_category']) && $_POST['main_category'] == $row['main_cat']) ? 'selected' : '';
                         echo "<option value='{$row['main_cat']}' $selected>{$row['main_cat']}</option>";
                     }
@@ -294,28 +308,23 @@ function displayOrderTable()
                         $subcategories = getSubcategories($selectedMainCategory, $connection);
 
                         // Display the main category only once
-                        echo "<div>";
-                        echo "<label><b>Main Product</label>";
-                        echo "<span>$selectedMainCategory</span>";
-                        echo "</div>";
-                        foreach ($subcategories as $index => $subcategory) {
-                            echo "<div>";
-                            echo "<label for='count[$subcategory[sub_cat]]' id='r'><b>$subcategory[sub_cat]</label>";
-                            echo '<input type="number" name="counts[]" id="count[$subcategory[sub_cat]]" min="0" required >';
-                            echo "<input type='hidden' name='subcategories[]' value='$subcategory[sub_cat]'>";
-                            echo "</div>";
-                        }
+
                     }
                     ?>
                 </div>
-
-                <button type="submit" name="add_order"><i class="fa fa-plus" style="font-size: 14px;" onclick="validatecustomer(event)"></i>&nbsp;&nbsp;Add Items</button>
+                <?php
+                if (!isset($_SESSION['process_payment'])) {
+                    echo '<button type="submit" name="add_order" id="orderButton" onclick="validatecustomer(event)"  id="orderButton" disabled><i class="fa fa-plus" style="font-size: 14px;" ></i>&nbsp;&nbsp;Add Items</button>';
+                } else {
+                    echo '<button type="button"  onclick="redirectconfirm(event)"><i class="fa fa-plus" style="font-size: 14px;"></i>&nbsp;&nbsp;Add Items</button>';
+                }
+                ?>
 
                 <?php displayOrderTable(); ?>
                 <br>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo '<label for="payment_method"><b>Payment Method</label>';
+                    echo '<label for="payment_method"><b>Payment Method</label>'; //payment method selection
                     echo '<select name="payment_method" id="payment_method" onchange="toggleCustomPaymentFields()" >';
                     if (isset($_SESSION['selected_payment_method'])) {
                         echo "<option value='{$_SESSION['selected_payment_method']}' selected>{$_SESSION['selected_payment_method']}</option>";
@@ -347,14 +356,19 @@ function displayOrderTable()
 
                 <!-- Display Confirm Order button if there are items in the order -->
                 <?php
-                if (!empty($_SESSION['order_details'])) {
+                if (isset($_SESSION['process_payment']) && !empty($_SESSION['order_details'])) {
+                    echo "<button type='button' class='confirm-order-button' name='confirm_order' onclick='redirectconfirm(event)'>
+                        <i class='fa fa-check' style='font-size: 14px;'></i>&nbsp;&nbsp;Confirm Order</button>";
+                } else if (!empty($_SESSION['order_details'])) {
                     echo "<button type='submit' class='confirm-order-button' name='confirm_order' onclick='validatePaymentMethod(event)'>
                     <i class='fa fa-check' style='font-size: 14px;'></i>&nbsp;&nbsp;Confirm Order</button>";
                 }
                 ?>
                 <?php
-                if (!empty($_SESSION['order_details'])) {
+                if (!isset($_SESSION['process_payment']) && !empty($_SESSION['order_details'])) {
                     echo "<button type='button' name='clear_order' style='color:green; background-color:transparent;'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
+                } else {
+                    echo "<button type='button'  style='color:green; background-color:transparent;' onclick='redirectconfirm(event)'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
                 }
                 ?>
 
@@ -386,33 +400,63 @@ function displayOrderTable()
 
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function closeintro() {
             document.getElementById("advertise").style.display = "none";
 
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const inputField = document.getElementsByName('counts[]');
-            const errorMessage = document.getElementById('error-message');
+        function validateNumber(input) {
+            input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
+        }
 
-            inputField.addEventListener('input', () => {
-                const value = inputField.value;
-                if (value === '' || /^[0-9]+(\.[0-9]*)?$/.test(value)) {
-                    inputField.style.borderBottomColor = 'green';
-                    errorMessage.style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.querySelector('form'); // Adjust the selector if you have multiple forms
 
-                } else {
-                    errorMessage.style.display = 'block';
-                    inputField.style.borderBottomColor = 'red';
+            form.addEventListener('submit', function(event) {
+                var inputs = form.querySelectorAll('input[name="counts[]"]');
+                for (var i = 0; i < inputs.length; i++) {
+                    if (!/^\d+$/.test(inputs[i].value)) {
+                        alert('Please enter a valid integer for all count fields.');
+                        event.preventDefault();
+                        return false;
+                    }
                 }
+                return true;
             });
+        });
+
+        document.getElementById('customers').addEventListener('change', function() {
+            var storeName = this.value;
+
+            if (storeName) {
+                $.ajax({
+                    url: 'check_order.php',
+                    type: 'POST',
+                    data: {
+                        store_name: storeName
+                    },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.order_exists) {
+                            alert('An order has already been placed for this customer in the current month.');
+                            document.getElementById('orderButton').disabled = true;
+                        } else {
+                            document.getElementById('orderButton').disabled = false;
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('orderButton').disabled = true;
+            }
         });
 
 
 
-        function validatecustomer(event) {
+
+
+        function validatecustomer(event) { //valiadte customer select before form submission
             var customer = document.getElementById("customers").value;
             if (customer === "") {
                 event.preventDefault(); // Prevent form submission
@@ -420,7 +464,7 @@ function displayOrderTable()
             }
         }
 
-        function validatePaymentMethod(event) {
+        function validatePaymentMethod(event) { // validate payment method selection before sublitting the form
             var paymentMethod = document.getElementById("payment_method").value;
             if (paymentMethod === "") {
                 event.preventDefault(); // Prevent form submission
@@ -428,10 +472,14 @@ function displayOrderTable()
             }
         }
 
-        function back() {
+        function redirectconfirm(event) {
+            window.location.href = "redirect.html";
+        }
+
+        function back() { //back link
             window.history.back();
         }
-        document.getElementById('main_category').addEventListener('change', function() {
+        document.getElementById('main_category').addEventListener('change', function() { //load subcategoried from file using request
             var mainCategory = this.value;
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
@@ -443,7 +491,7 @@ function displayOrderTable()
             xhttp.send();
         });
 
-        function toggleCustomPaymentFields() {
+        function toggleCustomPaymentFields() { //showing and hiding payment fields according to selected payment method
             var paymentMethod = document.getElementById('payment_method');
             var customPaymentFields = document.getElementById('custom_payment_fields');
             if (paymentMethod.value === 'custom') {
@@ -452,7 +500,7 @@ function displayOrderTable()
                 customPaymentFields.style.display = 'none';
             }
         }
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() { //specialy for payment method "credit" handling with period
             var paymentMethodSelect = document.getElementById('payment_method');
             var creditPeriodLabel = document.getElementById('credit_period_label');
             var creditPeriodInput = document.getElementById('credit_period');
@@ -509,7 +557,7 @@ function displayOrderTable()
 
                     removeButtons.forEach(function(button, index) {
                         if (button.checked) {
-                            selectedIndexes.push(index);
+                            selectedIndexes.push(index); //add selected index to the array
                         }
                     });
 
@@ -538,7 +586,7 @@ function displayOrderTable()
                             }
                         }
                     };
-                    xhr.send('selectedIndexes=' + JSON.stringify(selectedIndexes));
+                    xhr.send('selectedIndexes=' + JSON.stringify(selectedIndexes)); //send request
 
                 });
             }
@@ -546,6 +594,7 @@ function displayOrderTable()
 
         });
     </script>
+
 
 </body>
 

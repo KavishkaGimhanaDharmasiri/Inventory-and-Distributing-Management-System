@@ -29,22 +29,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
     // Include your database connection file
     // Extract data from the form
     $firstname = $_POST['firstname'];
+    $_SESSION['firstname'] = $firstname;
     $lastname = $_POST['lastname'];
+    $_SESSION['lastname'] = $lastname;
     $telephone = $_POST['telephone'];
+    $_SESSION['telephone'] = $telephone;
     $address = $_POST['address'];
+    $_SESSION['address'] = $address;
+
+
 
 
     if ($_POST['email'] === null || $_POST['email'] === "") {
         $email = null;
     } else {
         $email = $_POST['email'];
+        $_SESSION['email'] = $email;
     }
 
-    $storename = $_POST['storename'];
-    $storeregno = $_POST['storeregno'];
-    $storeaddress = $_POST['storeaddress'];
-    $location = $_POST['location'];
     $route_id = $_POST['route'];
+
     $_SESSION['sale_route'] = $route_id;
 
 
@@ -56,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
         $result6 = mysqli_query($connection, $valid_query);
 
 
-        if ($result6 === 0) {
+        if (mysqli_num_rows($result6) === 0) {
 
             // Insert data into the customer table
             $customer_insert_query = "INSERT INTO users (firstName, LastName, telphone_no, Address, email) 
@@ -72,25 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
 
             $user_id = $pdo->lastInsertId();
 
-            if ($_SESSION["state"] === 'admin') {
-                $route_sale = $_SESSION['sale_route'];
-                $cus_state = "seller";
-            } else if ($_SESSION["state"] === 'seller') {
-                $route_sale = $_SESSION['route_id'];
-                $cus_state = "wholeseller";
-
-                $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
-                           VALUES (:user_id, :route_id, :sto_reg_no, :sto_tep_number, :sto_name, :sto_loc)";
-
-                $stmt3 = $pdo->prepare($store_insert_query);
-                $stmt3->bindParam(':user_id', $user_id);
-                $stmt3->bindParam(':route_id', $route_sale);
-                $stmt3->bindParam(':sto_reg_no', $storeregno);
-                $stmt3->bindParam(':sto_tep_number', $telephone);
-                $stmt3->bindParam(':sto_name', $storename);
-                $stmt3->bindParam(':sto_loc', $location);
-                $stmt3->execute();
-            }
             // Insert data into the store table
             $lastFiveDigits = substr((string)$telephone, -5);
 
@@ -108,49 +93,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
             $stmt4->execute();
             $login_insert = mysqli_query($connection, $login_insert_query);
             $modifiedNumber = '94' . substr($telephone, 1);
+            $pdo->commit();
+
+
+            $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
+            $body = "\nDear $firstname,\n\n"
+                . "Thank you for registering with Lotus Electicals (PVT)LTD.\n"
+                . "Your username is: $firstname\n"
+                . "Your generated password is: $lastFiveDigits\n"
+                . "Please keep your login details secure.\nTo Easy Access to Services you can download The Application from here : https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file\n\n"
+                . "Best regards,\nLotus Electicals (PVT)LTD";
+
+            // Set the email subject and body
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            sendmail($Subject, $body, $email, $firstname);
+
+            //sending sms to customer
+            $message = $Subject . $body;
+            $smsbody = urlencode($message);
+
+            sendsms($modifiedNumber, $smsbody);
+
+            unset($_SESSION['firstname']);
+            unset($_SESSION['email']);
+            unset($_SESSION['lastname']);
+            unset($_SESSION['telephone']);
+            unset($_SESSION['address']);
+            session_write_close();
+
+            echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+                            <button onclick="redirectToIndex()" class="sucess">OK</button>
+                            </div>';
+            mysqli_close($connection);
+        } else {
+            echo '<div id="overlay"></div><div id="successModel">
+        <div class="j">
+        <p style="color: indianred; font-size: 13pt; font-weight: bold; font-family: Calibri; margin-top: 0px; text-align: center;">Customer is Already Availble under Entered Telephone Number or Email Address<br>Please Check Whether Entered Details are Correct.</p></div>
+        <button onclick="redirectTonormal()" class="fail">OK</button>
+        </div>';
+
+            $_POST['firstname'] = $_SESSION['firstname'];
+            $_POST['lastname'] = $_SESSION['lastname'];
+            $_POST['telephone'] = $_SESSION['telephone'];
+            $_POST['address'] = $_SESSION['address'];
+            $_POST['email'] = $_SESSION['email'];
         }
-        $pdo->commit();
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         $pdo->rollBack();
         echo "Failed: " . $e->getMessage();
     }
-    //sending sms and email
-    $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
-    $body = "\nDear $firstname,\n\n"
-        . "Thank you for registering with Lotus Electicals (PVT)LTD.\n"
-        . "Your username is: $firstname\n"
-        . "Your generated password is: $lastFiveDigits\n"
-        . "Please keep your login details secure.\nTo Easy Access to Services you can download The Application from here : https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file\n\n"
-        . "Best regards,\nLotus Electicals (PVT)LTD";
-
     // Set the email subject and body
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    sendmail($Subject, $body, $email, $firstname);
 
-    //sending sms to customer
-    $message = $Subject . $body;
-    $smsbody = urlencode($message);
 
-    sendsms($modifiedNumber, $smsbody);
-    echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
-                    <button onclick="redirectToIndex()" class="sucess">OK</button>
-                    </div>';
-    mysqli_close($connection);
+    if (isset($error_message)) {
+        echo '<div class="alert alert-danger">' . $error_message . '</div>';
+    }
 }
-
-if (isset($error_message)) {
-    echo '<div class="alert alert-danger">' . $error_message . '</div>';
-}
-
-$userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Sales Person</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -198,8 +205,7 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
 
         </div>
         <div class="container">
-            <h2 id="customer_data">Customer Details</h2>
-            <h2 id="sales_data" style="display: none;">Sales Person Details</h2>
+            <h3 id="customer_data" style="text-align: center;">Customer Details</h3>
 
 
             <form method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>" onsubmit="return validateForm()">
@@ -247,34 +253,6 @@ $userState = isset($_SESSION["state"]) ? $_SESSION["state"] : '';
     </div>
     <script type="text/javascript" src="/javascript/divs.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var userState = "<?php echo $userState; ?>";
-
-            // Hide/show form elements based on user state
-            if (userState === 'admin') {
-                document.getElementById("storenamelable").style.display = "none";
-                document.getElementById("storeregnolable").style.display = "none";
-                document.getElementById("storelocnolable").style.display = "none";
-                document.getElementById("storeaddresslable").style.display = "none";
-                document.getElementById("storename").style.display = "none";
-                document.getElementById("storeregno").style.display = "none";
-                document.getElementById("storeaddress").style.display = "none";
-                document.getElementById("location").style.display = "none";
-                document.getElementById("sto_detail").style.display = "none";
-                document.getElementById("sep_hr").style.display = "none";
-                document.getElementById("customer_data").style.display = "none";
-                document.getElementById("Route_name").style.display = "block";
-                document.getElementById("route").style.display = "block";
-                document.getElementById("sales_data").style.display = "block";
-                // Hide other relevant elements
-            } else if (userState === 'seller') {
-                // Hide elements related to admins
-                document.getElementById("whole_persion").style.display = "none";
-
-
-            }
-        });
-
         function validateForm() {
             // Check if first name contains only letters
             var firstname = document.forms[0]["firstname"].value;

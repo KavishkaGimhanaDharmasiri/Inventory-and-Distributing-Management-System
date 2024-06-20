@@ -83,3 +83,46 @@ function sendsms($number, $message)
     // Make the HTTP request
     $response = file_get_contents($apiUrl);
 }
+
+function sendremsms()
+{
+    $route_id = $_SESSION['route_id'];
+    include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+    $sqlq = "SELECT sto_tep_number,store_name,balance,payment_date from customers c left join payment p on c.user_id=p.user_id
+        WHERE p.balance > 0
+          AND p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) - INTERVAL DAY(CURDATE())-1 DAY
+          AND p.payment_date < DATE_SUB(CURDATE(), INTERVAL DAY(CURDATE()) DAY) AND p.route_id=$route_id;";
+    $results = $connection->query($sqlq);
+    if ($results) {
+        while ($rowSrore = mysqli_fetch_assoc($results)) {
+            $sto_telephone = $rowSrore['sto_tep_number'];
+            $sto_name = $rowSrore['store_name'];
+            $sto_balance = $rowSrore['balance'];
+            $sto_payment_date = $rowSrore['payment_date'];
+
+            $message = "Order Made on $sto_payment_date by $sto_name have $sto_balance remaining to Settle during Last month.
+            Please Settle the Above Amount As soon as Posible.\n\nThank You.\nLotus Electicals (PVT)LTD.";
+            sendsms($sto_telephone, $message);
+            sleep(1); //sending massage
+        }
+
+        try {
+            $currentmonth = date('Y-m-d');
+            $state = 'yes';
+            $id = 1;
+            $pdo->beginTransaction();
+            $query = "UPDATE notification SET not_date=:not_date, state=:state  WHERE not_id=:not_id";
+
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':not_date', $currentmonth);
+            $stmt->bindParam(':state', $state);
+            $stmt->bindParam(':not_id', $id);
+
+            $stmt->execute();
+            $pdo->commit();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            echo '<script>alert(' . $e->getMessage() . ');</script>';
+        }
+    }
+}

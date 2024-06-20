@@ -2,7 +2,7 @@
 session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
-if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !isset($_SESSION["route_id"]) || !isset($_SESSION["state"])) {
+if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !isset($_SESSION["state"])) {
     acess_denie();
     exit();
 } else {
@@ -14,6 +14,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <title>Customer Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -95,21 +96,34 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
             $search_query = "AND p.store_name LIKE '%$search%'";
         }
         $currentmonth = date('Y-m');
-        $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
+        $sql = "";
+
+        if ($_SESSION["state"] === 'seller') {
+            $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
         FROM orders o 
         LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
         WHERE p.route_id = $route_id AND p.order_type='customer'  
         GROUP BY p.store_name, o.main_cat, o.sub_cat
         ORDER BY p.store_name, ord_date DESC";
+        } elseif ($_SESSION["state"] === 'admin') {
+            $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
+            FROM orders o 
+            LEFT JOIN primary_orders p ON o.ord_id = p.ord_id  
+            GROUP BY p.store_name, o.main_cat, o.sub_cat
+            ORDER BY p.store_name, ord_date DESC";
+        }
+
+
 
         $result = $connection->query($sql);
 
         if ($result) {
             if ($result->num_rows > 0) {
                 $currentStore = "";
+                $currentDate = "";
                 $currentMainCat = "";
                 $currentmonth = date('Y-m');
-                echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;margin-top:5%;">';
+                echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;margin-top:5%;background-color:transparent;">';
                 echo "<h4 style='color:red;'>Recent Customer Orders</h4>";
                 echo '<div id="storeList" ></div>';
                 echo '<div id="result" >';
@@ -120,7 +134,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                     if ($year_month === $currentmonth) {
 
                         // Start of a new store, close the previous div if not the first one
-                        if ($currentStore != $row["store_name"]) {
+                        if ($currentStore != $row["store_name"] && $currentDate != $row['ord_date']) {
                             if ($currentStore != "") {
                                 echo "</div>"; // Close previous store's details
                             }
@@ -149,7 +163,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                             echo '<h4 style="color:red;">Previous Customer Orders</h4>';
                             $previous_orders_displayed = true; // Set the flag to true after displaying the header
                         }
-                        if ($currentStore != $row["store_name"] || $year_month == "2024-02") {
+                        if ($currentStore != $row["store_name"] && $currentDate != $row['ord_date']) {
                             if ($currentStore != "") {
                                 $preo = $row['ord_date'];
                                 echo "</div>"; // Close previous store's details

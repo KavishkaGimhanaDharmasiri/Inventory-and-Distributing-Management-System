@@ -3,7 +3,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] != 'wholeseller') {
     acess_denie();
     exit();
 } else {
@@ -16,12 +16,10 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 
 <head>
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
-    <title>Manage Orders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/option.css">
-
 
 </head>
 
@@ -39,19 +37,18 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
             ?>
         </div>
         <div class="options-container">
-            <a href="/common/view_order.php" class="option" id="option1">
-                <div>View Customer Order</div>
+            <a href="my_order.php" class="option" id="option1">
+                <div>My Pre Orders</div>
             </a>
             <a href="/common/sale_order1.php" class="option" id="option1">
-                <div>View Sales Orders</div>
+                <div>My Sale Orders</div>
             </a>
 
         </div>
     </div>
+
+
     <script>
-        function back() {
-            window.history.back();
-        }
     </script>
 
 </body>
