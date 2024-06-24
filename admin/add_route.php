@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add Route</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/divs.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">

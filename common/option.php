@@ -97,6 +97,7 @@ session_write_close();
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
   <title>Option</title>
+  <link rel="icon" href="/images/tab_icon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/style/mobile.css">
   <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -429,9 +430,13 @@ session_write_close();
 
       // Set the event handler to manage the response
       xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          // Do something with the response
-          console.log(xhr.responseText);
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            // Do something with the response
+            console.log(xhr.responseText);
+          } else {
+            console.error("Error: " + xhr.status + " - " + xhr.statusText);
+          }
         }
       };
 

@@ -14,7 +14,7 @@ $selectedDate = $_GET['date'];
 list($selectedYear, $selectedMonth) = explode('-', $selectedDate);
 
 // Prepare and execute the SQL query
-$sql = "SELECT balance FROM payment WHERE store_name = ? AND YEAR(payment_date) = ? AND MONTH(payment_date) = ?";
+$sql = "SELECT ord_id, balance FROM payment WHERE store_name = ? AND YEAR(payment_date) = ? AND MONTH(payment_date) = ?";
 $stmt = mysqli_prepare($connection, $sql);
 mysqli_stmt_bind_param($stmt, 'sii', $selectedStore, $selectedYear, $selectedMonth);
 mysqli_stmt_execute($stmt);
@@ -24,6 +24,8 @@ if (mysqli_num_rows($result) > 0) {
     // Fetch the remaining balance
     $row = mysqli_fetch_assoc($result);
     $remainingBalance = $row['balance'];
+    $ord_id = $row['ord_id'];
+    $_SESSION['settleord_id'] = $ord_id;
 
     // Return the remaining balance as JSON
     echo json_encode(['balance' => $remainingBalance]);

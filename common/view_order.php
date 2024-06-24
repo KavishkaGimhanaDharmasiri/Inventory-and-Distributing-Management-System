@@ -15,6 +15,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Customer Orders</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -99,7 +100,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         $sql = "";
 
         if ($_SESSION["state"] === 'seller') {
-            $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
+            $sql = "SELECT  MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
         FROM orders o 
         LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
         WHERE p.route_id = $route_id AND p.order_type='customer'  
@@ -108,7 +109,8 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         } elseif ($_SESSION["state"] === 'admin') {
             $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
             FROM orders o 
-            LEFT JOIN primary_orders p ON o.ord_id = p.ord_id  
+            LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
+             WHERE p.order_type='customer' 
             GROUP BY p.store_name, o.main_cat, o.sub_cat
             ORDER BY p.store_name, ord_date DESC";
         }

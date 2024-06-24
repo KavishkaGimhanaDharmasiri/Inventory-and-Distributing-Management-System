@@ -20,26 +20,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
+
     // Validate that the two entered passwords match
-    /*  if ($new_password !== $confirm_password) {
-        $error_message = "Passwords do not match.";
-    } else {*/
-    // Hash the new password
-    // $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    if ($new_password === $confirm_password) {
+        $hashed_password = password_hash($confirm_password, PASSWORD_DEFAULT);
 
-    // Update the password in the database
-    $query = "UPDATE login SET password='$new_password' WHERE user_id=$user_id";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        // Password update successful
-        // header('Location:divs.php');
-        echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+        $query = "UPDATE login SET password=? WHERE user_id=?";
+        if ($stmt = mysqli_prepare($connection, $query)) {
+            mysqli_stmt_bind_param($stmt, 'si', $hashed_password, $user_id);
+            if (mysqli_stmt_execute($stmt)) {
+                echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
                     <button onclick="redirectToIndex()" class="sucess">OK</button>
                     </div>';
-    } else {
+            } else {
+                $error_message = "Password update failed. Please try again.";
+            }
+            mysqli_stmt_close($stmt);
+        }
+        /*  $query = "UPDATE login SET password='$hashed_password' WHERE user_id=$user_id";
+        $result = mysqli_query($connection, $query);
+        // Hash the new password
+        // $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
-        $error_message = "Password update failed. Please try again.";
+        // Update the password in the database
+
+
+        if ($result) {
+            // Password update successful
+            // header('Location:divs.php');
+            echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+                    <button onclick="redirectToIndex()" class="sucess">OK</button>
+                    </div>';
+        } else {
+
+            $error_message = "Password update failed. Please try again.";
+        }*/
     }
     //}
     unset($_SESSION['code']);
@@ -54,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Change Password</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">

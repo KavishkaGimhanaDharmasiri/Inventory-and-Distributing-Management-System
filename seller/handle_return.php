@@ -115,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["resetitem"])) {
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Item Returns</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">

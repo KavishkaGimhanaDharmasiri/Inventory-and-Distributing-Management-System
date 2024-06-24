@@ -69,33 +69,34 @@ if ($_SESSION["state"] == 'seller') {
 
             $user_id = $pdo->lastInsertId();
 
-            if ($_SESSION["state"] === 'seller') {
-                $route_sale = $_SESSION['route_id'];
-                $cus_state = "wholeseller";
+            $route_sale = $_SESSION['route_id'];
+            $cus_state = "wholeseller";
 
-                $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
+            $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
                            VALUES (:user_id, :route_id, :sto_reg_no, :sto_tep_number, :sto_name, :sto_loc)";
 
-                $stmt3 = $pdo->prepare($store_insert_query);
-                $stmt3->bindParam(':user_id', $user_id);
-                $stmt3->bindParam(':route_id', $route_sale);
-                $stmt3->bindParam(':sto_reg_no', $storeregno);
-                $stmt3->bindParam(':sto_tep_number', $telephone);
-                $stmt3->bindParam(':sto_name', $storename);
-                $stmt3->bindParam(':sto_loc', $location);
-                $stmt3->execute();
-            }
+            $stmt3 = $pdo->prepare($store_insert_query);
+            $stmt3->bindParam(':user_id', $user_id);
+            $stmt3->bindParam(':route_id', $route_sale);
+            $stmt3->bindParam(':sto_reg_no', $storeregno);
+            $stmt3->bindParam(':sto_tep_number', $telephone);
+            $stmt3->bindParam(':sto_name', $storename);
+            $stmt3->bindParam(':sto_loc', $location);
+            $stmt3->execute();
             // Insert data into the store table
             $lastFiveDigits = substr((string)$telephone, -5);
 
+            $hashed_password = password_hash($lastFiveDigits, PASSWORD_DEFAULT);
+            $cus_state = "wholeseller";
             // Insert data into the login table
-            $login_insert_query = "INSERT INTO login (user_id, username, password, state, Active_state,route_id) VALUES (:user_id, :username, :password, :state, :Active_state,:route_id)";
+            $login_insert_query = "INSERT INTO login (user_id, username, password, state, Active_state, route_id) 
+            VALUES (:user_id, :username, :password, :state, :Active_state, :route_id)";
 
 
             $stmt4 = $pdo->prepare($login_insert_query);
             $stmt4->bindParam(':user_id', $user_id);
             $stmt4->bindParam(':username', $firstname);
-            $stmt4->bindParam(':password', $lastFiveDigits);
+            $stmt4->bindParam(':password', $hashed_password);
             $stmt4->bindParam(':state', $cus_state);
             $stmt4->bindParam(':Active_state', NULL);
             $stmt4->bindParam(':route_id', $route_sale);
@@ -123,6 +124,7 @@ if ($_SESSION["state"] == 'seller') {
 
             //sending sms to customer
             sendsms($modifiedNumber, $smsbody);
+            echo '<script>alert("Massage Sent Sucessfully");</script>';
 
             //clear user enterd details
             unset($_SESSION['storename']);
@@ -176,6 +178,7 @@ if ($_SESSION["state"] == 'seller') {
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Add Customer</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="/style/divs.css">
@@ -230,7 +233,6 @@ if ($_SESSION["state"] == 'seller') {
         </div>
         <div class="container">
             <h3 id="customer_data">Customer Details</h3>
-            <h2 id="sales_data" style="display: none;">Sales Person Details</h2>
 
 
             <form id="customerForm" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>" onsubmit="return validateForm()">
@@ -277,7 +279,7 @@ if ($_SESSION["state"] == 'seller') {
                     <input type="text" name="location" id="location" class="form-control" placeholder="e.g:Hambantota" required>
                 </div>
 
-                <button type="submit" name="add_sales_person" id="submitButton" disabled>Add Sales Person</button>
+                <button type="submit" name="add_sales_person" id="submitButton" disabled>Add Wholesale Customer</button>
                 <button type="reset" style="background-color: transparent;color:green;">Clear Data</button>
             </form>
         </div>
@@ -338,7 +340,7 @@ if ($_SESSION["state"] == 'seller') {
 
             if (telephone || email) {
                 $.ajax({
-                    url: 'check_customer.php',
+                    url: '/common/check_customer.php',
                     type: 'POST',
                     data: {
                         telephone: telephone,

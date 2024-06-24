@@ -195,6 +195,7 @@ function displayOrderTable()
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Distripute Products</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -250,16 +251,6 @@ function displayOrderTable()
                         $subcategories = getSubcategories($selectedMainCategory, $connection);
 
                         // Display the main category only once
-                        echo "<div>";
-                        echo "<span>$selectedMainCategory</span>";
-                        echo "</div>";
-                        foreach ($subcategories as $index => $subcategory) {
-                            echo "<div>";
-                            echo "<label for='count[$subcategory[sub_cat]]'>$subcategory[sub_cat]</label>";
-                            echo "<input type='number' name='counts[]' id='count[$subcategory[sub_cat]]' required>";
-                            echo "<input type='hidden' name='subcategories[]' value='$subcategory[sub_cat]'>";
-                            echo "</div>";
-                        }
                     }
                     ?>
                 </div>
@@ -300,6 +291,26 @@ function displayOrderTable()
             };
             xhttp.open('GET', '/common/get_subcategories.php?main_category=' + mainCategory, true);
             xhttp.send();
+        });
+
+        function validateNumber(input) {
+            input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.querySelector('form'); // Adjust the selector if you have multiple forms
+
+            form.addEventListener('submit', function(event) {
+                var inputs = form.querySelectorAll('input[name="counts[]"]');
+                for (var i = 0; i < inputs.length; i++) {
+                    if (!/^\d+$/.test(inputs[i].value)) {
+                        alert('Please enter a valid integer for all count fields.');
+                        event.preventDefault();
+                        return false;
+                    }
+                }
+                return true;
+            });
         });
 
         function showSuccess() {

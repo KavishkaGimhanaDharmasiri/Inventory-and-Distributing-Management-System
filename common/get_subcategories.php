@@ -35,25 +35,3 @@ if (isset($_GET['main_category'])) {
 }
 
 mysqli_close($connection);
-?>
-<script>
-    function validateNumber(input) {
-        input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var form = document.querySelector('form'); // Adjust the selector if you have multiple forms
-
-        form.addEventListener('submit', function(event) {
-            var inputs = form.querySelectorAll('input[name="counts[]"]');
-            for (var i = 0; i < inputs.length; i++) {
-                if (!/^\d+$/.test(inputs[i].value)) {
-                    alert('Please enter a valid integer for all count fields.');
-                    event.preventDefault();
-                    return false;
-                }
-            }
-            return true;
-        });
-    });
-</script>

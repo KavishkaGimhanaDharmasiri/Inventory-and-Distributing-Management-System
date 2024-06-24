@@ -7,6 +7,15 @@ require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/Exception.p
 require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/vendor/phpmailer/phpmailer/src/SMTP.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if the function name is set and matches the expected value
+    if (isset($_POST['functionName']) && $_POST['functionName'] === 'sendremsms') {
+        // Call the sendremsms function
+        sendremsms();
+    } else {
+        echo "Invalid function name.";
+    }
+}
 
 function sendmail($Subject, $body, $user, $firstname)
 {

@@ -34,3 +34,15 @@
 [19-Jun-2024 09:03:20 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
 [19-Jun-2024 09:03:20 UTC] PHP Stack trace:
 [19-Jun-2024 09:03:20 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0
+[21-Jun-2024 08:44:57 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
+[21-Jun-2024 08:44:57 UTC] PHP Stack trace:
+[21-Jun-2024 08:44:57 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0
+[21-Jun-2024 08:51:39 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
+[21-Jun-2024 08:51:39 UTC] PHP Stack trace:
+[21-Jun-2024 08:51:39 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0
+[23-Jun-2024 12:36:23 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
+[23-Jun-2024 12:36:23 UTC] PHP Stack trace:
+[23-Jun-2024 12:36:23 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0
+[23-Jun-2024 12:48:41 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
+[23-Jun-2024 12:48:41 UTC] PHP Stack trace:
+[23-Jun-2024 12:48:41 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0

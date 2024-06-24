@@ -15,18 +15,21 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
 $route_id = $_SESSION['route_id'];
 // Fetch total sales amounts for each month of the current year
 $currentYear = date('Y');
-$currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
-FROM payment 
-WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id
-GROUP BY MONTH(payment_date)";
-$currentYearResult = mysqli_query($connection, $currentYearQuery);
-
-// Fetch total sales amounts for each month of the previous year
 $previousYear = $currentYear - 1;
-$previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
-FROM payment 
-WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id
-GROUP BY MONTH(payment_date)";
+$currentYearQuery = "";
+$previousYearQuery = "";
+if ($_SESSION["state"] === "seller") {
+    $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
+
+    // Fetch total sales amounts for each month of the previous year
+    $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
+}
+if ($_SESSION["state"] === "admin") {
+    $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear GROUP BY MONTH(payment_date)";
+    // Fetch total sales amounts for each month of the previous year
+    $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear GROUP BY MONTH(payment_date)";
+}
+$currentYearResult = mysqli_query($connection, $currentYearQuery);
 $previousYearResult = mysqli_query($connection, $previousYearQuery);
 
 // Initialize arrays to store monthly sales amounts for the current and previous years
