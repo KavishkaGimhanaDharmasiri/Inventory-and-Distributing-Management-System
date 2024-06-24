@@ -3,7 +3,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_SESSION["state"] != 'wholeseller') {
     acess_denie();
     exit();
 } else {
@@ -23,7 +23,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/option.css">
 
-
 </head>
 
 <body>
@@ -40,19 +39,18 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
             ?>
         </div>
         <div class="options-container">
-            <a href="/common/view_order.php" class="option" id="option1">
-                <div>View Customer Order</div>
+            <a href="my_order.php" class="option" id="option1">
+                <div>My Pre Orders</div>
             </a>
             <a href="/common/sale_order1.php" class="option" id="option1">
-                <div>View Sales Orders</div>
+                <div>My Sale Orders</div>
             </a>
 
         </div>
     </div>
+
+
     <script>
-        function back() {
-            window.history.back();
-        }
     </script>
 
 </body>

@@ -10,16 +10,24 @@ $route_id = $_SESSION['route_id'];
 $customer = $_SESSION['customer'];
 
 // Define $customerQuery variable
-$customerQuery = "";
 
-if ($_SESSION['customer'] == "all") {
-    // Fetch customer data query
-    $customerQuery = "SELECT u.firstName, u.LastName, u.email, c.sto_name, c.sto_tep_number, c.sto_reg_no, c.sto_name, c.sto_loc FROM customers c left join users u on c.user_id=u.user_id WHERE c.route_id=$route_id";
-} else {
-    $customerQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer' AND route_id=$route_id";
+$customerdataQuery = "";
+if ($_SESSION["state"] === "seller") {
+    if ($customer === "all") {
+        $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE c.route_id=$route_id";
+    } else {
+        $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer' AND route_id=$route_id";
+    }
+}
+if ($_SESSION["state"] === "admin") {
+    if ($customer === "all") {
+        $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id ";
+    } else {
+        $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer'";
+    }
 }
 
-$customerResult = mysqli_query($connection, $customerQuery);
+$customerResult = mysqli_query($connection, $customerdataQuery);
 
 // Initialize PDF
 $pdf = new FPDF('P', 'mm', 'A5');

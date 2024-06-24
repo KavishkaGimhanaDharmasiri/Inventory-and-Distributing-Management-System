@@ -4,6 +4,7 @@ session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/email_sms.php");
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
+
 if (!isset($_SESSION['index_visit'])) {
   acess_denie();
   exit();
@@ -11,16 +12,18 @@ if (!isset($_SESSION['index_visit'])) {
   $_SESSION['email_valid_visit'] = true;
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Get the email from the POST data
-  $email = $_POST['email'];
+  $email = $_POST['email'] ?? '';
+  $telephone = $_POST['telenumber'] ?? '';
 
   // Validate the user credentials
-  $query = "SELECT * FROM users WHERE email='$email'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT * FROM users WHERE email=? OR telphone_no=?";
+  $stmt = $connection->prepare($query);
+  $stmt->bind_param('ss', $email, $telephone);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-  if ($result && mysqli_num_rows($result) > 1) {
+  if ($result && mysqli_num_rows($result) == 1) {
     // Fetch user data
     $row = mysqli_fetch_assoc($result);
     $code = generateRandomCode();
@@ -30,23 +33,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION["email"] = $row["email"];
     $_SESSION["firstName"] = $row["firstName"];
     $_SESSION['user_id'] = $row["user_id"];
-    $user = $row["email"];
-    $firstname = $row["firstName"];
 
     $Subject = "Password Change Request";
-    $body = "Vertify your Email address\n\nEnter Below Vertification Code for Continue Change Password \n\nVertification code is :  " . $code . "\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+    $body = "Verify Account\n\nEnter Below Verification Code to Continue Changing Password \n\nVerification code is: $code\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+    $modifiedNumber = '94' . substr($telephone, 1);
 
-
-    sendmail($Subject, $body, $user, $firstname);
+    if (!empty($email)) {
+      sendmail($Subject, $body, $row["email"], $row["firstName"]);
+    } elseif (!empty($telephone)) {
+      sendsms($modifiedNumber, $body);
+    }
 
     // Redirect to the OTP validation page
-    header("Location:/common/otp_validation.php");
-    //exit();
+    header("Location: /common/otp_validation.php");
+    exit();
   } else {
-    // Display an error message if credentials are invalid
-    $error_message = "Invalid Email Address.";
+    $error_message = "Invalid Email Address or Telephone Number.";
   }
 }
+
 function generateRandomCode($length = 5)
 {
   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -64,7 +69,8 @@ function generateRandomCode($length = 5)
 
 <head>
   <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
-  <title>Email Vertification</title>
+  <title>Email Verification</title>
+  <link rel="icon" href="/images/tab_icon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/style/mobile.css">
   <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -78,33 +84,30 @@ function generateRandomCode($length = 5)
 
 <body>
 
-  <!-- Simulate a smartphone / tablet -->
   <div class="mobile-container">
 
-    <!-- Top Navigation Menu -->
     <div class="topnav">
-      <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
+      <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px;"><i class="fa fa-angle-left"></i></a>
     </div>
 
     <div class="container">
       <h3>Validation</h3>
 
       <?php
-      // Display error message if set
       if (isset($error_message)) {
         echo '<div class="alert alert-danger">' . $error_message . '</div>';
       }
       ?>
 
-      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;">
+      <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="z-index:9999;" id="emailForm">
 
         <div class="form-group">
-
-          <label for="email" id="elabel">E-Mail Address </label>
-          <input type="email" name="email" id="email" class="form-control" placeholder="noreply@gmail.com" style="margin-bottom: 2%;">
-          <label for="email" id="tlabel">Telephone Number </label>
-          <input type="text" name="number" id="mobile" class="form-control" placeholder="XXXXXXXXXX" style="margin-bottom: 2%;" maxlength="10">
-          <a href="" onclick="toggleCustomfields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;">Try Another Way</a>
+          <label for="email_lab" id="email_lab">E-Mail Address</label>
+          <input type="email" name="email" id="email_field" class="form-control" placeholder="noreply@email.com" style="margin-bottom: 2%;">
+          <label for="telephone" id="telephone_lab" style="display: none;">Telephone Number</label>
+          <input type="text" name="telenumber" id="telephone_field" class="form-control" placeholder="07XXXXXXXXX" style="margin-bottom: 2%;display: none;" maxlength="10" oninput='validateNumber(this)'>
+          <label onclick="toggleCustomFields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;cursor:pointer;" id="show_telephone">Try Another Way</label>
+          <label onclick="toggleLabelFields()" style="color:green;font-size:14px;margin-top:0%;font-weight:bold;margin-left: 0;margin-right: 0;display:none;cursor:pointer;" id="show_email">Try Another Way</label>
         </div>
 
         <button type="submit" style="margin-top:2%;">Get Code</button>
@@ -114,22 +117,42 @@ function generateRandomCode($length = 5)
   </div>
 
   <script>
-    function closepanel() {
-      document.getElementById("mySidepanel").style.width = "0";
-    }
-
     function back() {
       window.history.back();
     }
 
-    function toggleCustomfields() {
-      var paymentMethod = document.getElementById('payment_method');
-      var customPaymentFields = document.getElementById('custom_payment_fields');
-      if (paymentMethod.value === 'custom') {
-        customPaymentFields.style.display = 'block';
-      } else {
-        customPaymentFields.style.display = 'none';
+    function validateNumber(input) {
+      input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
+    }
+
+    document.getElementById('emailForm').addEventListener('submit', function(event) {
+      var emailField = document.getElementById('email_field');
+      var telephoneField = document.getElementById('telephone_field');
+
+      if (emailField.value.trim() === "" && telephoneField.value.trim() === "") {
+        event.preventDefault();
+        window.alert("Both fields cannot be empty.");
       }
+    });
+
+    function toggleCustomFields() {
+      document.getElementById('email_lab').style.display = 'none';
+      document.getElementById('email_field').style.display = 'none';
+      document.getElementById('email_field').value = "";
+      document.getElementById('show_telephone').style.display = 'none';
+      document.getElementById('show_email').style.display = 'block';
+      document.getElementById('telephone_lab').style.display = 'block';
+      document.getElementById('telephone_field').style.display = 'block';
+    }
+
+    function toggleLabelFields() {
+      document.getElementById('telephone_lab').style.display = 'none';
+      document.getElementById('telephone_field').style.display = 'none';
+      document.getElementById('telephone_field').value = "";
+      document.getElementById('show_email').style.display = 'none';
+      document.getElementById('email_lab').style.display = 'block';
+      document.getElementById('email_field').style.display = 'block';
+      document.getElementById('show_telephone').style.display = 'block';
     }
   </script>
 

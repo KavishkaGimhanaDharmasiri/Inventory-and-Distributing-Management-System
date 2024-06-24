@@ -23,6 +23,8 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
 <head>
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
+    <title>Payment</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -51,15 +53,22 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         </div>
 
         <?php
-        $query = "SELECT DISTINCT main_cat FROM product";
+        $query = "SELECT DISTINCT main_cat FROM product"; //silecting main product from product table
         $result = mysqli_query($connection, $query);
 
         if (!$result) {
             die("Database query failed: " . mysqli_error($connection));
         }
+
+        $selectedUserId = $_SESSION['selected_store_id'];
+        $last_month_rem = "SELECT balance FROM payment WHERE balance < 0 AND payment_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) - INTERVAL DAY(CURDATE())-1 DAY
+          AND payment_date < DATE_SUB(CURDATE(), INTERVAL DAY(CURDATE()) DAY) and user_id=$selectedUserId";
+        $Rem_bal_result = mysqli_query($connection, $last_month_rem);
+
+
         function getSubcategories($mainCategory, $connection)
         {
-            $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'";
+            $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'"; //selecting subcategory according to main category
             $result = mysqli_query($connection, $query);
 
             if (!$result) {
@@ -77,6 +86,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         function getPaymentMethodPrices($mainCategory, $subCategory, $connection)
 
         {
+            //getting different prices from product table
             $query = "SELECT cashPrice, checkPrice, creditPrice FROM product WHERE main_cat = '$mainCategory' AND sub_cat = '$subCategory'";
             $result = mysqli_query($connection, $query);
 
@@ -104,7 +114,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             }
         }
         echo '<div class="order-form ">';
-        echo '<form  action="payment.php" method="post">';
+        echo '<form  action="payment.php" method="post">'; //redirect the form
         echo '<h3>Order Details</h3>';
 
 
@@ -125,11 +135,11 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 $prices = getPaymentMethodPrices($order['main_category'], $order['sub_category'], $connection);
 
                 switch ($selectedPaymentMethod) {
-                    case 'cash':
+                    case 'cash': //payment method cash
                         $unitprice = $prices['cashPrice'];
                         $subtotal = $order['count'] * $prices['cashPrice'];
                         break;
-                    case 'check':
+                    case 'check': //payment method check
                         $unitprice = $prices['checkPrice'];
                         $subtotal = $order['count'] * $prices['checkPrice'];
                         break;
@@ -149,20 +159,20 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
 
                         switch ($priceRange) {
-                            case '100-500':
+                            case '100-500': //dicount price range 100-500
                                 $unitprice = $prices['cashPrice'] - $customPaymentAmount100;
                                 $subtotal = $order['count'] * ($prices['cashPrice'] - $customPaymentAmount100);
                                 break;
-                            case '500-1500':
+                            case '500-1500': //dicount price range 500-1500
                                 $unitprice = $prices['cashPrice'] - $customPaymentAmount500;
                                 $subtotal = $order['count'] * ($prices['cashPrice'] - $customPaymentAmount500);
                                 break;
-                            case '1500-5000':
+                            case '1500-5000': //dicount price range 1500-5000
                                 $unitprice = $prices['cashPrice'] - $customPaymentAmount1500;
                                 $subtotal = $order['count'] * ($prices['cashPrice'] - $customPaymentAmount1500);
                                 break;
                             default:
-                                $unitprice = $prices['cashPrice'];
+                                $unitprice = $prices['cashPrice']; //put no any value for defalt price
                                 $subtotal = $order['count'] * $prices['cashPrice'];
                                 break;
                         }
@@ -173,7 +183,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 }
 
                 $totalAmount += $subtotal;
-
+                // order table with details
                 // echo "<td>{$order['main_category']}</td>";
                 echo "<td ><b>{$order['sub_category']}</td>";
                 echo "<td style='text-align:center; padding:10px;'><b>{$unitprice}</td>";
@@ -191,12 +201,12 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             echo "<p>No order details found. Please go back and add items to your order.</p>";
         }
 
-        date_default_timezone_set('Asia/Colombo');
+        date_default_timezone_set('Asia/Colombo'); //time zone
 
         // Get the current local time
         $localTime = date('Y-F-d h:i:a');
 
-        $query = "SELECT user_id FROM customers WHERE sto_name='$select_store'";
+        $query = "SELECT user_id FROM customers WHERE sto_name='$select_store'"; //get userid of selected store
         $result = mysqli_query($connection, $query);
 
         if (!$result) {
@@ -207,7 +217,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             $row = mysqli_fetch_assoc($result);
 
             $userid = $row["user_id"];
-            $query1 = "SELECT * FROM users WHERE user_id='$userid'";
+            $query1 = "SELECT * FROM users WHERE user_id='$userid'"; //select user according to user id
             $result1 = mysqli_query($connection, $query1);
 
             if (!$result1) {
@@ -238,24 +248,47 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
         <h3>Payment Information</h3>
 
-        <label for="total_amount" style="color: indianred;">Total Amount : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label>
+        <label for="total_amount" style="color: indianred;">Total Amount of the Bill : Rs.<?php echo isset($totalAmount) ? $totalAmount : ''; ?></label><br>
 
+        <?php
+        $rem_bal_of_La_Mo = 0.0;
+        $fomatrem = 0.0;
+        if ($Rem_bal_result) {
+            if ($row = mysqli_fetch_assoc($Rem_bal_result)) {
+                $rem_bal_of_La_Mo = $row['balance'];
+                $remamout = $rem_bal_of_La_Mo;
+                $fomatrem = number_format($remamout, 2, '.', ',');
+            }
+            echo '<label for="rem_amount" style="color: indianred;">Prepaid Amount of Last Month  : Rs.' . abs($fomatrem) . '</label><br>';
+            $totalAmount = $totalAmount + $rem_bal_of_La_Mo;
+            echo '<label for="new_total_amount" style="color: indianred;">New Total Amount of Bill : ' . $totalAmount . '</label><br>';
+        }
 
-        <br>
+        ?>
         <label for=" payment_amount">Payment Amount: Rs.</label>
-        <span id="error-message" style="color: red; display: none;font-size:12px;">Please enter a valid positive number.</span>
-        <input type="number" name="payment_amount" id="payment_amount" min="0" oninput="calculateBalance(),validateAndToggleLink(event)">
-
+        <span id="error-message" style="color: red; display: none;font-size:12px;">Please enter a valid Payment Amount..</span>
+        <?php
+        if (!isset($_SESSION['process_payment'])) {
+            echo '<input type="text" name="payment_amount" id="payment_amount" min="0" oninput="calculateBalance(),validateAndToggleLink(event)" value="" style="color: red;font-size:14px;font-weight:bold;" placeholder="0.00">';
+        } else {
+            echo '<input type="text" name="payment_amount" id="payment_amount" min="0"  value="Once you click Download Sales Receipt This Can\'t be Reversed" style="color: red;font-size:14px;font-weight:bold;" disabled';
+        }
+        ?>
 
         <label for="balance" style="color: indianred;">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
 
         <table>
             <tr style="background-color:white;">
-                <th style="background-color:white;"><a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;" onclick='validatezero(event)'><i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt</a>
+                <th style="background-color:white;">
+                    <a href="process_confirm.php" id="myLink" name="test_pdf" style="cursor: pointer; color:indianred; font-weight:bold;" onclick="markLinkAsClicked(event),handleLinkClick(event)">
+                        <i class="fa fa-angle-double-down" style="font-size: 20px;"></i>&nbsp;&nbsp;Download Sales Receipt
+                    </a>
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: block;" onclick='validatezeroinput(event)'><i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order</button>
+        <button type="submit" id="confirmButton" name="confirm" style="display: block;" onclick="handleSubmit(event)">
+            <i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order
+        </button>
         </form>
     </div>
     <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -263,27 +296,53 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         function back() {
             window.history.back();
         }
-
-        function validatezeroinput(event) {
-            var paymentMethod = document.getElementById("payment_amount").value;
-            if (paymentMethod === "") {
-                event.preventDefault(); // Prevent link from being followed
-                alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey && event.key === 'r') || event.key === 'F5') {
+                event.preventDefault();
             }
-        }
+        });
 
-        function validatezero(event) {
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        document.addEventListener('submit', function(event) {
+            event.preventDefault();
+        }, true);
+
+
+        let linkClicked = false;
+
+        function markLinkAsClicked(event) {
             var paymentMethod = document.getElementById("payment_amount").value;
             if (paymentMethod === "") {
                 event.preventDefault(); // Prevent link from being followed
                 alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
             } else {
+                linkClicked = true;
                 document.getElementById("payment_amount").disabled = true;
                 document.getElementById("payment_amount").value = "Once you click Download Sales Receipt This Can't be Reversed";
+                history.replaceState(null, null, 'redirect.html');
+
+                // Add new state for this navigation
+                history.pushState(null, null, event.target.href);
+
+                // Navigate to the new URL
+                window.location.href = event.target.href; //replce history with redirect another page
+
+
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+
+        function handleSubmit(event) {
+            if (!linkClicked) {
+                event.preventDefault();
+                alert('Please click the Download Sales Receipt Before Confirm Order.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { //validate the payment amount field only accept positive integer 
             const inputField = document.getElementById('payment_amount');
             const errorMessage = document.getElementById('error-message');
 
@@ -310,16 +369,18 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         }
 
 
-        function calculateBalance() {
+        function calculateBalance() { //calculate balance ontype on payment amount field
             var totalAmount = <?php echo isset($totalAmount) ? $totalAmount : 0; ?>;
             var paymentAmountInput = document.getElementById('payment_amount');
-            var balanceElement = document.getElementById('remainBalance');
+            var balanceElement = document.getElementById('remainBalance'); //set remainng balance
 
             var paymentAmount = parseFloat(paymentAmountInput.value) || 0;
-            var balance = totalAmount - paymentAmount;
+            var balance = totalAmount - paymentAmount; //calculate balance
+
+            var minusBalance = balance; //get minus balance
 
             if (balance < 0) {
-                balance = Math.abs(balance).toFixed(2) + " (pre payment)";
+                balance = Math.abs(balance).toFixed(2) + " (Pre Payment)"; //setbalace as .00 points
             } else {
                 balance = balance.toFixed(2);
             }
@@ -327,15 +388,15 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             balanceElement.textContent = balance;
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'set_session_variables.php', true);
+            xhr.open('POST', 'set_session_variables.php', true); //setting total and other things to session
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
             // Send the data
-            xhr.send('totalAmount=' + totalAmount + '&paymentAmount=' + paymentAmount + '&balance=' + balance);
+            xhr.send('totalAmount=' + totalAmount + '&paymentAmount=' + paymentAmount + '&balance=' + minusBalance);
+
         }
 
-
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() { //disable editing payment amount field after submission
             // Disable form elements after submission
             document.getElementById('paymentform').addEventListener('submit', function() {
                 var formElements = this.elements;

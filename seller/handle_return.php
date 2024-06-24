@@ -14,23 +14,47 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 $route_id = $_SESSION['route_id'];
 $customerQuery = "SELECT sto_name FROM customers WHERE route_id=$route_id";
 $customerResult = mysqli_query($connection, $customerQuery);
-if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
-    // Initialize returnItems array to avoid error
-    $returnItems = [];
 
-    if (isset($_POST['return_items'])) {
-        $returnItemsJSON = $_POST['return_items'];
-        // Decode JSON data
-        $returnItems = json_decode($returnItemsJSON, true);
+if (!isset($_SESSION['items'])) {
+    $_SESSION['items'] = array();
+}
+
+function isDuplicateItem($store, $name, $count)
+{
+    foreach ($_SESSION['items'] as $item) {
+        if ($item['store'] === $store && $item['name'] === $name && $item['count'] === $count) {
+            return true;
+        }
+    }
+    return false;
+}
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["Add_list"]) && $_SESSION["state"] == 'seller') {
+
+    $selectedStore = $_POST["customers"];
+    $_SESSION['selected_store'] = $selectedStore;
+    $selectedname = $_POST["product_count"];
+    $selectedcount = $_POST["pcount"];
+    $product_id = $_SESSION['product_id'];
+
+    // Add item details to session
+    if (!isDuplicateItem($selectedStore, $selectedname, $selectedcount)) {
+        $_SESSION['items'][] = array(
+            'id' => $product_id,
+            'store' => $selectedStore,
+            'name' => $selectedname,
+            'count' => $selectedcount
+        );
     }
 
-    if (isset($_SESSION['selected_store'])) {
-        $selectedStore = $_SESSION['selected_store'];
-    } else {
-        $selectedStore = $_POST["customers"];
-    }
-    // Decode JSON data
-
+    // Generate a new token for the next form submission
+}
+// $_POST["customers"] = $_SESSION['selected_stores'];
+// Decode JSON data
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm"]) && $_SESSION["state"] == 'seller') {
+    $selectedStore = $_POST["customers"];
+    $selectedcount = $_POST["pcount"];
+    $product_id = $_SESSION['product_id'];
     $localTime = date('Y-m-d h:i');
     try {
 
@@ -44,40 +68,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
         $stmt2->execute();
         $return_id = $pdo->lastInsertId();
 
-        foreach ($returnItems as $item) {
-            echo '<script>alert("alert 1");</script>';
-            $productName = $item['productName'];
-            $productCount = $item['productCount'];
-            $productId = $item['product_Id'];
-            echo '<script>alert("alert");</script>';
-            // Assuming you have sanitized your inputs to prevent SQL injection
-            //    $productName = mysqli_real_escape_string($connection, $productName);
-            //   $productCount = mysqli_real_escape_string($connection, $productCount);
-            //$product_id=$_SESSION['product_id'] ;
-            // Insert data into the return_item table
-
+        foreach ($_SESSION['items'] as $item) {
+            $productid = $item['id'];
+            $productName = $item['name'];
+            $productCount = $item['count'];
             $query = "INSERT INTO return_item (return_id, product_id, product_name,count) VALUES (:return_id, :product_id, :product_name, :count)";
             $stmt1 = $pdo->prepare($query);
             $stmt1->bindParam(':return_id', $return_id);
-            $stmt1->bindParam(':product_id', $productId);
+            $stmt1->bindParam(':product_id', $productid);
             $stmt1->bindParam(':product_name', $productName);
             $stmt1->bindParam(':count', $productCount);
             $stmt1->execute();
         }
         $pdo->commit();
+        echo '<script>alert("Items Returned Sucessfully");</script>';
+        unset($_SESSION['items']);
+        // End the session
+        session_write_close();
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         $pdo->rollBack();
         echo '<script>alert("' . $e->getMessage() . '");</script>';
     }
 
-    /* $insert_return = "INSERT INTO `returns`(route_id,store_name,return_date) VALUES($route_id,'$selectedStore',$localTime')";
-    mysqli_query($connection, $insert_return);
-
-    // Insert each returned item into the database
-    foreach ($returnItems as $item) {
-        $productName = $item['productName'];
-        $productCount = $item['productCount'];
+    /*
 
         // Assuming you have sanitized your inputs to prevent SQL injection
         $productName = mysqli_real_escape_string($connection, $productName);
@@ -88,6 +102,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
         mysqli_query($connection, $query);
     }*/
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["resetitem"])) {
+    unset($_SESSION['items']);
+    // End the session
+    session_write_close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -95,6 +114,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <title>Item Returns</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -157,34 +178,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
                     ?>
                 </select>
                 <br>
-                <br>
                 <label for="product"><b>Return Product Name<b></label>
-                <input type="text" class="form-control" id="product_count" placeholder="Type Return Product..">
+                <input type="text" class="form-control" id="product_count" name="product_count" placeholder="Type Return Product..">
 
 
-                <div id="suggestedResults" class="list-group"></div>
-                <label for="product"><b>Return Product Name<b></label>
-                <input type="number" class="form-control" id="pcount" placeholder="Enter count Of Return..">
+                <div id="suggestedResults" class="list-group"></div><br>
+                <label for="product"><b>Product Count<b></label>
+                <input type="number" class="form-control" id="pcount" name="pcount" placeholder="Enter count Of Return..">
                 <br>
-                <button type="button" id="Add_list" name="Add_list">Add to List</button>
+                <button type="submit" id="Add_list" name="Add_list" onclick="checkemptyness(event)">Add to List</button>
                 <br>
 
 
                 <!-- Table to display selected products -->
-                <table id="productTable" class="table" style="display: none;">
+
+
+                <?php
+
+                if (isset($_SESSION['items']) && count($_SESSION['items']) > 0) {
+                    echo '<table>
                     <thead>
                         <tr>
-                            <th style="width: 90%; text-align:left;" id="leftth">Product Name</th>
-                            <th style="width: 20%;" id="rightth"> Count</th>
+                            <th id="leftth">Product Name</th>
+                            <th id="rightth">Count</th>
                         </tr>
                     </thead>
-                    <tbody id="productList">
-                        <!-- Selected products will be displayed here -->
-                    </tbody>
+                    <tbody>';
+                    foreach ($_SESSION['items'] as $item) {
+                        echo "<tr>";
+                        echo "<td ><b>" . htmlspecialchars($item['name']) . "</td>";
+                        echo "<td style='text-align:center;'><b>" . htmlspecialchars($item['count']) . "</td>";
+                        echo "</tr>";
+                    }
+                }
+                ?>
+                </tbody>
                 </table>
                 <br>
-                <br>
-                <button type="submit" id="confirm" name="confirm" style="display: none;">Confirm Return</button>
+                <?php
+                if (!empty($_SESSION['items'])) {
+                    echo '<button type="submit" id="confirm" name="confirm" style="">Confirm Return</button>';
+                }
+                ?>
+                <?php
+                if (!empty($_SESSION['items'])) {
+                    echo '<button type="submit" id="resetitem" name="resetitem" style="background-color:transparent;color:green;margin-top:0px;">Clear</button>';
+                }
+                ?>
             </form>
         </div>
     </div>
@@ -194,6 +234,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
         function back() {
             window.history.back();
         }
+
+        function checkemptyness(event) {
+            var customerField = document.getElementById('customers');
+            var product_Field = document.getElementById('product_count');
+            var product_Field = document.getElementById('pcount');
+
+            if (customerField.value.trim() === "" || product_Field.value.trim() === "" || product_Field.value.trim() === "") {
+                event.preventDefault();
+                window.alert("Field cannot be empty.");
+            }
+
+        }
+
         $(document).ready(function() {
             var typingTimer;
             var doneTypingInterval = 500; // Adjust the delay (in milliseconds) as needed
@@ -233,16 +286,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'seller') {
                 $('#suggestedResults').empty();
             });
 
-            $('#Add_list').on('click', function() {
-                document.getElementById('productTable').style.display = 'block';
-                document.getElementById('confirm').style.display = 'block';
-                var selectedProduct = $('#product_count').val();
-                var productCount = $('#pcount').val(); // Assuming product count is also entered in the same input field
-                if (selectedProduct.trim() !== '' && productCount.trim() !== '') {
-                    $('#productList').append('<tr><td>' + selectedProduct + '</td><td>' + productCount + '</td></tr>');
-                    $('#product_count').val('');
-                }
-            });
+            /*  $('#Add_list').on('click', function() {
+                  document.getElementById('productTable').style.display = 'block';
+                  document.getElementById('confirm').style.display = 'block';
+                  var selectedProduct = $('#product_count').val();
+                  var productCount = $('#pcount').val(); // Assuming product count is also entered in the same input field
+                  if (selectedProduct.trim() !== '' && productCount.trim() !== '') {
+                      $('#productList').append('<tr><td>' + selectedProduct + '</td><td>' + productCount + '</td></tr>');
+                      $('#product_count').val('');
+                  }
+              });*/
         });
     </script>
 

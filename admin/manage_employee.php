@@ -16,6 +16,8 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 <head>
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1, user-scalable=no">
+    <title>Manage Employee</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -31,10 +33,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
         </div>
         <div class="options-container">
             <a href="add_customer.php" class="option" id="option1">
@@ -49,12 +48,8 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 
     <script>
-        function openNav() {
-            document.getElementById("mySidepanel").style.width = "150px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidepanel").style.width = "0";
+        function back() {
+            window.history.back();
         }
     </script>
 

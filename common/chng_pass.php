@@ -20,16 +20,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
+
     // Validate that the two entered passwords match
-    if ($new_password !== $confirm_password) {
-        $error_message = "Passwords do not match.";
-    } else {
+    if ($new_password === $confirm_password) {
+        $hashed_password = password_hash($confirm_password, PASSWORD_DEFAULT);
+
+        $query = "UPDATE login SET password=? WHERE user_id=?";
+        if ($stmt = mysqli_prepare($connection, $query)) {
+            mysqli_stmt_bind_param($stmt, 'si', $hashed_password, $user_id);
+            if (mysqli_stmt_execute($stmt)) {
+                echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
+                    <button onclick="redirectToIndex()" class="sucess">OK</button>
+                    </div>';
+            } else {
+                $error_message = "Password update failed. Please try again.";
+            }
+            mysqli_stmt_close($stmt);
+        }
+        /*  $query = "UPDATE login SET password='$hashed_password' WHERE user_id=$user_id";
+        $result = mysqli_query($connection, $query);
         // Hash the new password
         // $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
         // Update the password in the database
-        $query = "UPDATE login SET password='$new_password' WHERE user_id=$user_id";
-        $result = mysqli_query($connection, $query);
+
 
         if ($result) {
             // Password update successful
@@ -40,8 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
 
             $error_message = "Password update failed. Please try again.";
-        }
+        }*/
     }
+    //}
     unset($_SESSION['code']);
     session_write_close();
     // Close the database connection
@@ -53,6 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <title>Change Password</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/mobile.css">
@@ -77,31 +94,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
 
 
         </div>
         <div class="container">
             <h3 style="text-align: center;">Change Password</h3>
-
             <?php
             // Display error message if set
-            if (isset($error_message)) {
+            /*  if (isset($error_message)) {
                 echo '<div class="alert alert-danger">' . $error_message . '</div>';
             } else if (isset($sucess_message)) {
-            }
+            }*/
 
             ?>
 
-            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <form id="passwordForm" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <?php
-
                     // Check if the 'username' key exists in the $_SESSION array
                     // If it exists, assign its value to the $username variable
                     $username = $_SESSION["username"];
@@ -112,22 +123,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 </div>
                 <div class="form-group">
+                    <label id="errorMessage" style="color: red; display: none;margin-top:none;text-align:center;"></label>
                     <label for="password">New Password</label>
-                    <input type="password" name="password" class="form-control" required>
+                    <input type="password" name="password" id="password" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Re Enter Password</label>
-                    <input type="password" name="confirm_password" class="form-control" required>
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+
                 </div>
 
-                <button type="submit">Change Password</button>
+                <button type="submit" id="submitButton">Change Password</button>
                 <button type="reset" style="background-color: transparent;color:green;margin-top:none;">Clear</button>
             </form>
         </div>
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function showSuccess() {
             var overlay = document.getElementById('overlay');
@@ -136,6 +149,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             overlay.style.display = 'block';
             successModal.style.display = 'block';
         }
+
+        $(document).ready(function() {
+            function validatePasswords() {
+                var password = $('#password').val();
+                var confirmPassword = $('#confirm_password').val();
+
+                if (password !== confirmPassword) {
+                    $('#errorMessage').text('Passwords do not match.').show();
+                    $('#submitButton').prop('disabled', true);
+                } else {
+                    $('#errorMessage').hide();
+                    $('#submitButton').prop('disabled', false);
+                }
+            }
+            $('#password, #confirm_password').on('input', validatePasswords);
+        });
 
         function hideSuccess() {
             var overlay = document.getElementById('overlay');

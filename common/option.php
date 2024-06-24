@@ -19,12 +19,19 @@ $query = "SELECT * FROM users WHERE user_id = '$user_idn'";
 $result = mysqli_query($connection, $query);
 
 $currentmonth = date('Y-m');
-
-$sqlq = "SELECT * FROM payment WHERE balance > 4000 AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentmonth'";
+$route_id = $_SESSION['route_id'];
+$sqlq = "SELECT * FROM payment WHERE balance > 0 
+              AND payment_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) - INTERVAL DAY(CURDATE()) - 1 DAY 
+              AND payment_date < DATE_SUB(CURDATE(), INTERVAL DAY(CURDATE()) DAY) 
+              AND route_id = $route_id";
 $results = $connection->query($sqlq);
 
 $sqlpassword = "SELECT l.password,u.telphone_no FROM users u LEFT JOIN login l ON l.user_id=u.user_id  WHERE l.user_id= $user_idn";
 $result2 = $connection->query($sqlpassword);
+
+$notify = "SELECT not_content ,state, DATE_FORMAT(not_date, '%Y-%m') AS formatted_date FROM notification;";
+
+$notfy_result = $connection->query($notify);
 
 $sqlcustomer = "SELECT sto_name,route_id FROM customers WHERE user_id = '$user_idn'";
 $resultcustomer = $connection->query($sqlcustomer);
@@ -76,6 +83,7 @@ unset($_SESSION['balance']);
 unset($_SESSION['selected_payment_method']);
 unset($_SESSION['selected_store']);
 unset($_SESSION['process_payment']);
+unset($_SESSION['items']);
 //unset($_SESSION['sales_recipt_download']);
 unset($_SESSION['send_massage']);
 
@@ -88,6 +96,8 @@ session_write_close();
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+  <title>Option</title>
+  <link rel="icon" href="/images/tab_icon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/style/mobile.css">
   <link rel="stylesheet" type="text/css" href="/style/style.css">
@@ -116,13 +126,15 @@ session_write_close();
           <?php
           if ($_SESSION["state"] === 'seller') {
             if ($results->num_rows > 0) {
+
               echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
             }
           }
-          if (isset($_SESSION["state"])) {
-            if ($samepassword == true) {
-              echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
+          /*   }
             }
+          }*/
+          if ($samepassword == true) {
+            echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
           }
 
           ?>Notification</a>
@@ -130,11 +142,11 @@ session_write_close();
         <br>
         <a href="javascript:void(0)" onclick="logout()">Logout</a>
       </div>
-      <a href="javascript:void(0);" class="icon" onclick="openNav()">
-        <i class="fa fa-bars"></i>
+      <a href="javascript:void(0);" class="icon" onclick="openNav()" style=" background-color: transparent;">
+        <i class=" fa fa-bars" style="background-color: transparent;"></i>
         <?php
         if ($_SESSION["state"] == 'seller') { //if seller login show bagage
-          if ($results->num_rows > 0) {
+          if ($results->num_rows > 0 || $samepassword == true) {
             echo '<span class="badge" id="bages"></span>';
           }
         }
@@ -157,19 +169,31 @@ session_write_close();
 
           if ($_SESSION["state"] === 'seller') {
             if ($results->num_rows > 0) {
-              echo '<div id="notificationContent" style="padding: 5px;">
+
+              if ($notfy_result) {
+                if ($rownot = mysqli_fetch_assoc($notfy_result)) {
+                  $not_content = $rownot['not_content'];
+                  $not_date = $rownot['formatted_date'];
+                  $not_state = $rownot['state'];
+                  $currentmonth = date('Y-m');
+                  if ($currentmonth > $not_date  && $not_state == "no") {
+                    echo '<div id="notificationContent" style="padding: 5px;">
             <div class="contain">
-              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">Some of These Customers have outstanding balance remaining</a>
+              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">' . $not_content . '</a>
               <a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a>
             </div>
             <div class="contain">
 
-              <a href="javascript:void(0)" onclick="view_cus()" class="view" style="font-size: 11px;cursor:pointer;color:blue;">View detils</a>
-              <a href="javascript:void(0)" onclick="sendSMS()" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>
+               <a href="javascript:void(0)" onclick="showdetails(event)" id="view" style="font-size: 11px;cursor:pointer;color:blue;">View details</a>
+    
+              <a href="javascript:void(0)" onclick="sendSMS(event)" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>
             </div>
            
           </div>';
-              echo ' <div id="notifications">hihbhjhjb</div>';
+                    echo '<div id="notifications" style="display:none;"><a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a></div>';
+                  }
+                }
+              }
             }
           }
           if (isset($_SESSION["state"])) {
@@ -253,7 +277,7 @@ session_write_close();
       }
       ?>
 
-      <a href="/customer/my_order.php" class="option" id="option8" style="display: none;">
+      <a href="/customer/order.php" class="option" id="option8" style="display: none;">
         <div>My Orders</div>
       </a>
       <a href="/admin/System_Manage.php" class="option" id="option9" style="display: none;">
@@ -290,11 +314,11 @@ session_write_close();
       document.getElementById("mySidepanel").style.width = "0px";
       document.getElementById("bages").style.display = "none";
       document.getElementById("bagesd").style.display = "none";
-      <?php $_SESSION["notification"] = true; ?>
     }
 
     function closenot() {
       document.getElementById("mynotification").style.width = "0px";
+      //document.getElementById("notifications").style.display = "none";
     }
 
     function hidenotifi() {
@@ -318,6 +342,7 @@ session_write_close();
         document.getElementById("option10").style.display = "block";
         document.getElementById("option11").style.display = "block";
       <?php elseif ($_SESSION["state"] === 'admin') : ?>
+        document.getElementById("option2").style.display = "block";
         document.getElementById("option4").style.display = "block";
         document.getElementById("option5").style.display = "block";
         document.getElementById("option6").style.display = "block";
@@ -394,7 +419,7 @@ session_write_close();
 
       // Define the PHP file and function to call
       var phpFile = "email_sms.php";
-      var functionName = "sendsms";
+      var functionName = "sendremsms";
 
       // Prepare the data to send
       var data = new FormData();
@@ -405,9 +430,13 @@ session_write_close();
 
       // Set the event handler to manage the response
       xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          // Do something with the response
-          console.log(xhr.responseText);
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            // Do something with the response
+            console.log(xhr.responseText);
+          } else {
+            console.error("Error: " + xhr.status + " - " + xhr.statusText);
+          }
         }
       };
 
@@ -420,8 +449,9 @@ session_write_close();
       window.location.href = 'chng_pass.php';
     }
     // When clicking on the notification bell
-
-    function view_cus() {
+  </script>
+  <script>
+    function showdetails(event) {
       document.getElementById("notifications").style.display = "block";
       $.ajax({
         url: 'fetch_notifications.php', // Change this to your PHP script that fetches the notifications
@@ -431,6 +461,10 @@ session_write_close();
         },
         success: function(data) {
           $('#notifications').html(data);
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX error:", status, error);
+          $('#notifications').html("An error occurred while fetching notifications.");
         }
       });
     }

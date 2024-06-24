@@ -21,6 +21,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
+    <title>Report</title>
+    <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="/style/mobile.css">
@@ -227,7 +229,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
                     <div class="form-group">
                         <label for="sto_name" style="display: none;" id="sto">Store Customer<lable style="color: red; font-size: 14pt;">&nbsp;*</label></label>
-                        <select name="customer" id="customer" style="display: none;" required>
+                        <select name="customer" id="customer" style="display: none;">
                             <option value="">Select Customer</option>
                             <?php
                             while ($customerRow = mysqli_fetch_assoc($customerResult)) {
@@ -260,11 +262,20 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
 
                         if (isset($_POST["receiptType"]) && $_POST["receiptType"] == "customerdata") {
-
-                            if ($customer === "all") {
-                                $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE c.route_id=$route_id";
-                            } else {
-                                $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer' AND route_id=$route_id";
+                            $customerdataQuery = "";
+                            if ($_SESSION["state"] === "seller") {
+                                if ($customer === "all") {
+                                    $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE c.route_id=$route_id";
+                                } else {
+                                    $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer' AND route_id=$route_id";
+                                }
+                            }
+                            if ($_SESSION["state"] === "admin") {
+                                if ($customer === "all") {
+                                    $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id ";
+                                } else {
+                                    $customerdataQuery = "SELECT u.firstName,u.LastName,u.email,c.sto_name,c.sto_tep_number,c.sto_reg_no,c.sto_name,c.sto_loc from customers c left join users u on c.user_id=u.user_id WHERE sto_name='$customer'";
+                                }
                             }
                             $customerdataresult = mysqli_query($connection, $customerdataQuery);
 
@@ -286,12 +297,16 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             }
                         } else if (isset($_POST["receiptType"]) && $_POST["receiptType"] == "salessummery") {
 
-                            $route_id = $_SESSION['route_id']; // Replace with the specific route_id you want to generate the report for
-                            $sql = "SELECT p.payment_date, p.total, p.payment_method,p.balance, o.main_cat, o.sub_cat, o.order_count FROM payment p
-        INNER JOIN primary_orders po ON p.ord_id = po.ord_id
-        INNER JOIN orders o ON po.ord_id = o.ord_id
-        WHERE p.route_id = $route_id";
-
+                            $route_id = $_SESSION['route_id'];
+                            $sql = "";
+                            if ($_SESSION["state"] === "seller") {
+                                // Replace with the specific route_id you want to generate the report for
+                                $sql = "SELECT p.payment_date, p.total, p.payment_method,p.balance, o.main_cat, o.sub_cat, o.order_count FROM payment p INNER JOIN primary_orders po ON p.ord_id = po.ord_id INNER JOIN orders o ON po.ord_id = o.ord_id WHERE p.route_id = $route_id";
+                            }
+                            if ($_SESSION["state"] === "admin") {
+                                // Replace with the specific route_id you want to generate the report for
+                                $sql = "SELECT p.payment_date, p.total, p.payment_method,p.balance, o.main_cat, o.sub_cat, o.order_count FROM payment p INNER JOIN primary_orders po ON p.ord_id = po.ord_id INNER JOIN orders o ON po.ord_id = o.ord_id";
+                            }
                             $result = mysqli_query($connection, $sql);
 
                             // Process the data
@@ -457,33 +472,38 @@ $customerResult = mysqli_query($connection, $customerQuery);
                         }
 
                         if ($_POST["receiptType"] === "salecompare") {
-
                             $currentYear = date('Y');
-                            $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
-                     FROM payment 
-                     WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id
-                     GROUP BY MONTH(payment_date)";
-                            $currentYearResult = mysqli_query($connection, $currentYearQuery);
-
-                            // Fetch total sales amounts for each month of the previous year
                             $previousYear = $currentYear - 1;
-                            $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales 
-                      FROM payment 
-                      WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id
-                      GROUP BY MONTH(payment_date)";
-                            $previousYearResult = mysqli_query($connection, $previousYearQuery);
+                            $currentYearQuery = "";
+                            $previousYearQuery = "";
+                            if ($_SESSION["state"] === "seller") {
+                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
 
+                                // Fetch total sales amounts for each month of the previous year
+                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
+                            }
+                            if ($_SESSION["state"] === "admin") {
+                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear GROUP BY MONTH(payment_date)";
+                                // Fetch total sales amounts for each month of the previous year
+                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear GROUP BY MONTH(payment_date)";
+                            }
+                            $currentYearResult = mysqli_query($connection, $currentYearQuery);
+                            $previousYearResult = mysqli_query($connection, $previousYearQuery);
                             // Initialize arrays to store monthly sales amounts for the current and previous years
                             $currentYearSales = array_fill(1, 12, 0); // Initialize with 0 for each month
                             $previousYearSales = array_fill(1, 12, 0);
-
+                            if ($currentYearResult) {
+                                while ($row = mysqli_fetch_assoc($currentYearResult)) {
+                                    $currentYearSales[$row['month']] = $row['total_sales'];
+                                }
+                            }
                             // Populate arrays with fetched data
-                            while ($row = mysqli_fetch_assoc($currentYearResult)) {
-                                $currentYearSales[$row['month']] = $row['total_sales'];
+                            if ($currentYearResult) {
+                                while ($row = mysqli_fetch_assoc($currentYearResult)) {
+                                    $previousYearSales[$row['month']] = $row['total_sales'];
+                                }
                             }
-                            while ($row = mysqli_fetch_assoc($previousYearResult)) {
-                                $previousYearSales[$row['month']] = $row['total_sales'];
-                            }
+
 
                             // Calculate percentage increase/decrease for each month compared to the previous year
                             $percentageChanges = array();
