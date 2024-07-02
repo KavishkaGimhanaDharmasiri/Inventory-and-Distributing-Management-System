@@ -6,7 +6,7 @@ function acess_denie()
 
   echo '<div id="body"><div  class="dencon">
   <p style="color: indianred; font-size: 13pt; font-weight: bold; font-family: Calibri; margin-top: 0px; text-align: center;">Acess Denied</p><br>
-  <a href="/index.php" style="font-weight: bold; text-decoration: none;color: white;"><button  style="width: 50px;
+ <a href="javascript:void(0)" onclick="back()" style="font-weight: bold; text-decoration: none;color: white;"><button  style="width: 50px;
             padding: 8px;
             background-color: indianred;
             color: #fff;
@@ -36,3 +36,9 @@ function acess_denie()
     border: 1px solid indianred;
   }
 </style>
+
+<script>
+  function back() {
+    window.history.back();
+  }
+</script>

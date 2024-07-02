@@ -79,10 +79,8 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">customer orders</span></a>
+
         </div>
         <?php
         // Assuming $route_id is already defined
@@ -98,34 +96,56 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         }
         $currentmonth = date('Y-m');
         $sql = "";
+        $select_store = "";
 
         if ($_SESSION["state"] === 'seller') {
-            $sql = "SELECT  MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
+            $sql = "SELECT  MAX(p.ord_date) as ord_date,max(p.ord_id) as ord_id, p.store_name, o.main_cat, o.sub_cat, min(o.order_count) AS total_count
         FROM orders o 
-        LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
-        WHERE p.route_id = $route_id AND p.order_type='customer'  
+        LEFT JOIN primary_orders p ON p.ord_id = o.ord_id 
+        WHERE p.route_id = $route_id AND p.order_type='customer'
         GROUP BY p.store_name, o.main_cat, o.sub_cat
-        ORDER BY p.store_name, ord_date DESC";
+        ORDER BY ord_date DESC";
         } elseif ($_SESSION["state"] === 'admin') {
-            $sql = "SELECT MAX(p.ord_date) as ord_date, p.store_name, o.main_cat, o.sub_cat, SUM(o.order_count) AS total_count
-            FROM orders o 
-            LEFT JOIN primary_orders p ON o.ord_id = p.ord_id 
-             WHERE p.order_type='customer' 
-            GROUP BY p.store_name, o.main_cat, o.sub_cat
-            ORDER BY p.store_name, ord_date DESC";
-        }
+            $sql = "SELECT  MAX(p.ord_date) as ord_date,max(p.ord_id) as ord_id, p.store_name, o.main_cat, o.sub_cat, min(o.order_count) AS total_count
+        FROM orders o 
+        LEFT JOIN primary_orders p ON p.ord_id = o.ord_id 
+        WHERE p.order_type='customer' 
+        GROUP BY p.store_name, o.main_cat, o.sub_cat
+        ORDER BY ord_date DESC;";
+        } elseif ($_SESSION["state"] === 'wholeseller') {
+            $user_id = $_SESSION['user_id'];
+            $customerQuery = "SELECT sto_name FROM customers WHERE user_id=$user_id";
+            $customerResult = mysqli_query($connection, $customerQuery);
 
+            // Check for database query failures
+            if ($customerResult) {
+                if ($row1 = mysqli_fetch_assoc($customerResult)) {
+                    $select_store = $row1['sto_name'];
+                }
+            }
+            $sql = "SELECT  MAX(p.ord_date) as ord_date,max(p.ord_id) as ord_id, p.store_name, o.main_cat, o.sub_cat, min(o.order_count) AS total_count
+        FROM orders o 
+        LEFT JOIN primary_orders p ON p.ord_id = o.ord_id 
+        WHERE p.route_id = $route_id AND p.order_type='customer' AND p.store_name='$select_store'
+        GROUP BY p.store_name, o.main_cat, o.sub_cat
+        ORDER BY ord_date DESC";
+        }
 
 
         $result = $connection->query($sql);
 
         if ($result) {
             if ($result->num_rows > 0) {
+
                 $currentStore = "";
                 $currentDate = "";
                 $currentMainCat = "";
                 $currentmonth = date('Y-m');
-                echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;margin-top:5%;background-color:transparent;">';
+                if ($_SESSION["state"] === 'seller' || $_SESSION["state"] === 'admin') {
+                    echo '<input type="text" id="search" name="search" placeholder="Search by store name..." value="' . $search_input . '" style="margin-bottom: 10px;margin-top:5%;background-color:transparent;">';
+                } elseif ($_SESSION["state"] === 'wholeseller') {
+                    echo '<input type="text" id="orderSearch" onkeyup="searchOrders()" placeholder="Search for Order Date Try Like This 2020-04-12..." style="margin-top:5%;background-color:transparent;">';
+                }
                 echo "<h4 style='color:red;'>Recent Customer Orders</h4>";
                 echo '<div id="storeList" ></div>';
                 echo '<div id="result" >';
@@ -133,17 +153,18 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                 while ($row = $result->fetch_assoc()) {
                     $sale_date = $row['ord_date']; // Assuming $row['payment_date'] contains '2024-02-20'
                     $year_month = date('Y-m', strtotime($sale_date));
-                    if ($year_month === $currentmonth) {
+                    if ($year_month == $currentmonth) {
 
                         // Start of a new store, close the previous div if not the first one
-                        if ($currentStore != $row["store_name"] && $currentDate != $row['ord_date']) {
+                        if ($currentStore != $row["ord_id"]) {
+
                             if ($currentStore != "") {
                                 echo "</div>"; // Close previous store's details
                             }
-                            $currentStore = $row["store_name"];
+                            $currentStore = $row["ord_id"];
                             echo '<div class="store">';
 
-                            echo "<div class='store-name' onclick='showStore(\"$currentStore\")'>$currentStore<i class='fa fa-angle-down' style='float:right; font-size:20px; font-weight:bold;'></i></div>";
+                            echo "<div class='store-name' onclick='showStore(\"$currentStore\")'>{$row["store_name"]} - $sale_date<i class='fa fa-angle-down' style='float:right; font-size:20px; font-weight:bold;'></i></div>";
                             echo "<div id='$currentStore' class='order-details' style='display: none;'>"; // Initially hide order details
                             // Reset current main category
                             $currentMainCat = "";
@@ -165,16 +186,17 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                             echo '<h4 style="color:red;">Previous Customer Orders</h4>';
                             $previous_orders_displayed = true; // Set the flag to true after displaying the header
                         }
-                        if ($currentStore != $row["store_name"] && $currentDate != $row['ord_date']) {
+                        if ($currentStore != $row["ord_id"]) {
                             if ($currentStore != "") {
                                 $preo = $row['ord_date'];
                                 echo "</div>"; // Close previous store's details
                             }
-                            $currentStore = $row["store_name"];
+                            $currentStore = $row["ord_id"];
                             echo '<div class="store">';
 
-                            echo "<div class='store-name' onclick='showStore(\"$currentStore\")'>$currentStore<i class='fa fa-angle-down' style='float:right; font-size:20px; font-weight:bold;'></i></div>";
-                            echo "<div id='$currentStore' class='order-details' style='display: none;'>"; // Initially hide order details
+                            echo "<div class='store-name' onclick='showStore(\"$currentStore\")'>{$row["store_name"]} - $sale_date<i class='fa fa-angle-down' style='float:right; font-size:20px; font-weight:bold;'></i></div>";
+                            echo "<div id='$currentStore'  class='order-details' style='display: none;'>"; // Initially hide order details
+
                             // Reset current main category
                             $currentMainCat = "";
                         }
@@ -193,7 +215,6 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
                 // Close the last div
                 echo "</div>"; // Close last store's details
                 echo "</div>"; // Close last store
-
             } else {
                 echo '<div class="container"><h4 style="text-align:center;">No Result found </h4></div>';
             }

@@ -71,7 +71,7 @@ if ($_SESSION["state"] == 'seller') {
 
             $route_sale = $_SESSION['route_id'];
             $cus_state = "wholeseller";
-
+            $Active_state = "active";
             $store_insert_query = "INSERT INTO customers (user_id, route_id, sto_reg_no, sto_tep_number, sto_name, sto_loc) 
                            VALUES (:user_id, :route_id, :sto_reg_no, :sto_tep_number, :sto_name, :sto_loc)";
 
@@ -87,7 +87,6 @@ if ($_SESSION["state"] == 'seller') {
             $lastFiveDigits = substr((string)$telephone, -5);
 
             $hashed_password = password_hash($lastFiveDigits, PASSWORD_DEFAULT);
-            $cus_state = "wholeseller";
             // Insert data into the login table
             $login_insert_query = "INSERT INTO login (user_id, username, password, state, Active_state, route_id) 
             VALUES (:user_id, :username, :password, :state, :Active_state, :route_id)";
@@ -98,7 +97,7 @@ if ($_SESSION["state"] == 'seller') {
             $stmt4->bindParam(':username', $firstname);
             $stmt4->bindParam(':password', $hashed_password);
             $stmt4->bindParam(':state', $cus_state);
-            $stmt4->bindParam(':Active_state', NULL);
+            $stmt4->bindParam(':Active_state', $Active_state);
             $stmt4->bindParam(':route_id', $route_sale);
             $stmt4->execute();
 
@@ -228,8 +227,8 @@ if ($_SESSION["state"] == 'seller') {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add customer</span></a>
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
         </div>
         <div class="container">
             <h3 id="customer_data">Customer Details</h3>

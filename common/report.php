@@ -13,8 +13,19 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 $customerQuery = "SELECT sto_name FROM customers";
 $customerResult = mysqli_query($connection, $customerQuery);
+$route_id = $_SESSION['route_id'];
 
-// Close the database connection
+$dateQuery = "SELECT DISTINCT DATE_FORMAT(payment_date, '%Y') AS formatted_date FROM payment";
+$stmt = $connection->prepare($dateQuery);
+$stmt->execute();
+$dateResult = $stmt->get_result();
+
+$years = array();
+
+// Iterate over the results and store them in the array
+foreach ($dateResult as $row) {
+    $years[] = $row['formatted_date'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,6 +33,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
     <title>Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" href="/images/tab_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style/style.css">
@@ -118,10 +130,16 @@ $customerResult = mysqli_query($connection, $customerQuery);
             text-align: left;
         }
 
-        h4,
+
         ul,
         li {
-            color: black;
+            color: gray;
+            font-size: 13px;
+
+        }
+
+        h5 {
+            text-decoration: underline;
         }
 
         tr:hover,
@@ -140,7 +158,7 @@ $customerResult = mysqli_query($connection, $customerQuery);
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">report</span></a>
         </div>
         <div class="container">
             <h3 style="text-align: center;">Report Generation</h3>
@@ -163,7 +181,6 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             <option value="salessummery">Sales Summary</option>
                             <option value="customerdata">Customer Data</option>
                             <option value="salecompare">Sales Comparison</option>
-                            <option value="return">Return summery</option>
                             <option value="product">product Details</option>
                         </select>
                     </div>
@@ -181,19 +198,20 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             </th>
 
                         </tr>
-
                         <tr>
+                            <th><label id="date_from" style="display: none;color:indianred;">Date From</label></th>
+                        </tr>
+                        <tr>
+
                             <th>
                                 <div id="yearDropdown" class="dropdown" style="display: none;">
                                     <label for="year">Select Year</label>
                                     <select id="year" name="year">
                                         <!-- Populate with years dynamically -->
-                                        <?php
-                                        $currentYear = date('Y');
-                                        for ($i = $currentYear; $i >= $currentYear - 10; $i--) {
-                                            echo "<option value='$i'>$i</option>";
-                                        }
-                                        ?>
+                                        <?php foreach ($years as $year) {
+                                            // $select = ($_SESSION['paydate_date'] == $dateRow['formatted_date']) ? 'selected' : '';
+                                            echo "<option value='$year'>$year</option>";
+                                        } ?>
                                     </select>
                                 </div>
                             </th>
@@ -225,6 +243,52 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 </div>
                             </th>
                         </tr>
+                        <tr>
+                            <th><label id="date_to" style="display: none;color:indianred;">Date to</label></th>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <div id="yearDropdown1" class="dropdown1" style="display: none;">
+                                    <label for="year1">Select Year</label>
+                                    <select id="year1" name="year1">
+                                        <!-- Populate with years dynamically -->
+                                        <?php foreach ($years as $year) {
+                                            // $select = ($_SESSION['paydate_date'] == $dateRow['formatted_date']) ? 'selected' : '';
+                                            echo "<option value='$year'>$year</option>";
+                                        } ?>
+                                    </select>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div id="monthDropdown1" class="dropdown1" style="display: none;">
+                                    <label for="month1">Select Month</label>
+                                    <select id="month1" name="month1">
+                                        <?php
+                                        for ($i = 1; $i <= 12; $i++) {
+                                            $monthName = date('F', mktime(0, 0, 0, $i, 1));
+                                            echo "<option value='$i'>$monthName</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </th>
+
+                            <th>
+                                <div id="dayDropdown1" class="dropdown1" style="display: none;">
+                                    <label for="day1">Select Day</label>
+                                    <select id="day1" name="day1">
+                                        <?php
+                                        for ($i = 1; $i <= 31; $i++) {
+                                            echo "<option value='$i'>$i</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+
                     </table>
 
                     <div class="form-group">
@@ -237,19 +301,22 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 echo "<option value='{$customerRow['sto_name']}' $selectedCustomer>{$customerRow['sto_name']}</option>";
                             }
                             ?>
-                            <option value="all">All Customer</option>
+                            <option value="all" selected>All Customer</option>
                         </select>
                     </div>
 
 
+
                     <button type="submit"><i class="fa fa-file-text"></i> &nbsp;Generate Report</button>
                     <button type="reset" style="background-color: transparent;color:green;">Clear</button>
+
                     <?php
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $duration = $_POST['duration'];
                         $year = $_POST['year'];
                         $month = $_POST['month'];
                         $day = $_POST['day'];
+                        $sql2 = "";
 
                         // Corrected SQL query with single quotes around variables
 
@@ -296,22 +363,216 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 echo "No Customer Details Found";
                             }
                         } else if (isset($_POST["receiptType"]) && $_POST["receiptType"] == "salessummery") {
+                            echo '<hr>';
+                            echo '<h4 style="text-decoration:underline;color:indianred;text-align:center;">Comprehensive Sales Report</h4>';
+
 
                             $route_id = $_SESSION['route_id'];
                             $sql = "";
                             if ($_SESSION["state"] === "seller") {
-                                // Replace with the specific route_id you want to generate the report for
-                                $sql = "SELECT p.payment_date, p.total, p.payment_method,p.balance, o.main_cat, o.sub_cat, o.order_count FROM payment p INNER JOIN primary_orders po ON p.ord_id = po.ord_id INNER JOIN orders o ON po.ord_id = o.ord_id WHERE p.route_id = $route_id";
+                                if ($_POST["duration"] == "yearly" && isset($_POST["year"]) && isset($_POST["year1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+
+                                    $sql1 = "SELECT  DATE_FORMAT(p.payment_date, '%Y-%m') AS month, SUM(p.total) AS sales_revenue
+                FROM payment p
+                INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                INNER JOIN orders o ON po.ord_id = o.ord_id
+                WHERE  YEAR(p.payment_date) IN (:year1, :year2) AND p.route_id = :route_id
+                GROUP BY  DATE_FORMAT(p.payment_date, '%Y-%m')
+                ORDER BY  DATE_FORMAT(p.payment_date, '%Y-%m');";
+
+                                    $stmt1 = $pdo->prepare($sql1);
+                                    $stmt1->execute(['year1' => $start, 'year2' => $end, 'route_id' => $route_id]);
+                                    $data = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Encode data as JSON
+                                    $jsonData = json_encode($data);
+
+
+                                    echo ' <canvas id="salesChart" width="400" height="200"></canvas>';
+
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE (YEAR(p.payment_date) IN (?, ?)) AND p.route_id = ?";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("iii", $start, $end, $route_id);
+                                    $stmt->execute();
+                                }
+                                if ($_POST["duration"] == "monthly" && isset($_POST["year"]) && isset($_POST["year1"]) && isset($_POST["month"]) && isset($_POST["month1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+                                    $start_mon = intval($_POST["month"]);
+                                    $end_mon = intval($_POST["month1"]);
+
+                                    $begin_date = sprintf("%04d-%02d", $start, $start_mon);
+                                    $end_date = sprintf("%04d-%02d", $end, $end_mon);
+
+                                    $sql1 = "SELECT  DATE_FORMAT(p.payment_date, '%Y-%m') AS month, SUM(p.total) AS sales_revenue
+                FROM payment p
+                INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                INNER JOIN orders o ON po.ord_id = o.ord_id
+                WHERE  DATE_FORMAT(p.payment_date, '%Y-%m') BETWEEN :year1 AND :year2 AND p.route_id = :route_id
+                GROUP BY  DATE_FORMAT(p.payment_date, '%Y-%m')
+                ORDER BY  DATE_FORMAT(p.payment_date, '%Y-%m');";
+
+                                    $stmt1 = $pdo->prepare($sql1);
+                                    $stmt1->execute(['year1' => $begin_date, 'year2' => $end_date, 'route_id' => $route_id]);
+                                    $data = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Encode data as JSON
+                                    $jsonData = json_encode($data);
+
+
+                                    echo ' <canvas id="salesChart" width="400" height="200"></canvas>';
+
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE DATE_FORMAT(p.payment_date, '%Y-%m') BETWEEN ? AND ? AND p.route_id = ?";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("ssi", $begin_date, $end_date, $route_id);
+                                    $stmt->execute();
+                                }
+
+                                if ($_POST["duration"] == "daily" && isset($_POST["year"]) && isset($_POST["year1"]) && isset($_POST["month"]) && isset($_POST["month1"]) && isset($_POST["day"]) && isset($_POST["day1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+                                    $start_mon = intval($_POST["month"]);
+                                    $end_mon = intval($_POST["month1"]);
+                                    $start_date = intval($_POST["day"]);
+                                    $end_date = intval($_POST["day1"]);
+
+                                    // Format the dates
+                                    $begin_date = sprintf("%04d-%02d-%02d", $start, $start_mon, $start_date);
+                                    $end_date = sprintf("%04d-%02d-%02d", $end, $end_mon, $end_date);
+
+                                    // Prepare the SQL query using prepared statements to prevent SQL injection
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE p.payment_date BETWEEN ? AND ? AND p.route_id = ?";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("ssi", $begin_date, $end_date, $route_id);
+                                    $stmt->execute();
+                                }
                             }
                             if ($_SESSION["state"] === "admin") {
-                                // Replace with the specific route_id you want to generate the report for
-                                $sql = "SELECT p.payment_date, p.total, p.payment_method,p.balance, o.main_cat, o.sub_cat, o.order_count FROM payment p INNER JOIN primary_orders po ON p.ord_id = po.ord_id INNER JOIN orders o ON po.ord_id = o.ord_id";
+                                if ($_POST["duration"] == "yearly" && isset($_POST["year"]) && isset($_POST["year1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+
+
+                                    $sql1 = "SELECT DATE_FORMAT(p.payment_date, '%Y-%m') AS month, SUM(p.total) AS sales_revenue
+                FROM payment p
+                INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                INNER JOIN orders o ON po.ord_id = o.ord_id
+                WHERE YEAR(p.payment_date) IN (:year1, :year2)
+                GROUP BY DATE_FORMAT(p.payment_date, '%Y-%m')
+                ORDER BY DATE_FORMAT(p.payment_date, '%Y-%m');";
+
+                                    $stmt1 = $pdo->prepare($sql1);
+                                    $stmt1->execute(['year1' => $start, 'year2' => $end]);
+                                    $data = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Encode data as JSON
+                                    $jsonData = json_encode($data);
+
+
+                                    echo ' <canvas id="salesChart" width="400" height="200"></canvas>';
+
+
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE (YEAR(p.payment_date) IN (?, ?))";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("ii", $start, $end);
+                                    $stmt->execute();
+                                }
+                                if ($_POST["duration"] == "monthly" && isset($_POST["year"]) && isset($_POST["year1"]) && isset($_POST["month"]) && isset($_POST["month1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+                                    $start_mon = intval($_POST["month"]);
+                                    $end_mon = intval($_POST["month1"]);
+
+                                    $begin_date = sprintf("%04d-%02d", $start, $start_mon);
+                                    $end_date = sprintf("%04d-%02d", $end, $end_mon);
+
+
+
+                                    $sql1 = "SELECT  DATE_FORMAT(p.payment_date, '%Y-%m') AS month, SUM(p.total) AS sales_revenue
+                FROM payment p
+                INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                INNER JOIN orders o ON po.ord_id = o.ord_id
+                WHERE  DATE_FORMAT(p.payment_date, '%Y-%m') BETWEEN :year1 AND :year2
+                GROUP BY  DATE_FORMAT(p.payment_date, '%Y-%m')
+                ORDER BY  DATE_FORMAT(p.payment_date, '%Y-%m');";
+
+                                    $stmt1 = $pdo->prepare($sql1);
+                                    $stmt1->execute(['year1' => $begin_date, 'year2' => $end_date]);
+                                    $data = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Encode data as JSON
+                                    $jsonData = json_encode($data);
+
+
+                                    echo ' <canvas id="salesChart" width="400" height="200"></canvas>';
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE DATE_FORMAT(p.payment_date, '%Y-%m') BETWEEN ? AND ?";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("ss", $begin_date, $end_date);
+                                    $stmt->execute();
+                                }
+
+                                if ($_POST["duration"] == "daily" && isset($_POST["year"]) && isset($_POST["year1"]) && isset($_POST["month"]) && isset($_POST["month1"]) && isset($_POST["day"]) && isset($_POST["day1"])) {
+                                    $start = intval($_POST["year"]);
+                                    $end = intval($_POST["year1"]);
+                                    $start_mon = intval($_POST["month"]);
+                                    $end_mon = intval($_POST["month1"]);
+                                    $start_date = intval($_POST["day"]);
+                                    $end_date = intval($_POST["day1"]);
+
+                                    // Format the dates
+                                    $begin_date = sprintf("%04d-%02d-%02d", $start, $start_mon, $start_date);
+                                    $end_date = sprintf("%04d-%02d-%02d", $end, $end_mon, $end_date);
+
+                                    // Prepare the SQL query using prepared statements to prevent SQL injection
+
+                                    $sql = "SELECT p.payment_date, p.total, p.payment_method, p.balance, o.main_cat, o.sub_cat, o.order_count
+                    FROM payment p
+                    INNER JOIN primary_orders po ON p.ord_id = po.ord_id
+                    INNER JOIN orders o ON po.ord_id = o.ord_id
+                    WHERE p.payment_date BETWEEN ? AND ? ";
+
+                                    $stmt = $connection->prepare($sql);
+                                    $stmt->bind_param("ss", $begin_date, $end_date);
+                                    $stmt->execute();
+                                }
                             }
-                            $result = mysqli_query($connection, $sql);
+                            $result = $stmt->get_result();
 
                             // Process the data
                             $sales_data = array();
-                            while ($row = mysqli_fetch_assoc($result)) {
+                            while ($row = $result->fetch_assoc()) {
                                 $sales_data[] = $row;
                             }
 
@@ -355,16 +616,29 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             foreach ($payment_method_percentages as &$percentage) {
                                 $percentage = ($percentage / $total_transactions) * 100;
                             }
-
-                            echo '<h3 style="text-decoration:underline;color:indianred;text-align:center;">Comprehensive Sales Report</h3>';
-                            echo '<label>Total Revenue : LKR.' . $total_revenue . '</label><br>';
-                            echo '<label>Total Outstanding : LKR.' . $total_balance . '</label><br>';
-                            echo '<label>Total Quantity Sold :' . $total_quantity_sold . ' items</label>';
-                            echo '<hr>';
+                            if ($_SESSION["state"] === "seller") {
+                                echo '<hr>';
+                                echo '<h5 style="color:gray;">Total Revenue : LKR.' . $total_revenue . '</h5>';
+                                echo '<h5 style="color:gray;">Total Outstanding : LKR.' . $total_balance . '</h5>';
+                                echo '<h5 style="color:gray;">Total Quantity Sold :' . $total_quantity_sold . ' items</h5>';
+                                echo '<hr>';
+                            }
+                            if ($_SESSION["state"] === "admin") {
+                                $sales_datar = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                                $jsonDatas = json_encode($sales_datar);
+                                echo ' <canvas id="salesChartr" width="400" height="200"></canvas>';
+                                foreach ($sales_datar as $sale) {
+                                    echo '<h5 style="color:indianred;">Route: ' . $sale['route'] . '</h5>';
+                                    echo '<h5 style="color:gray;">Total Revenue: LKR ' . number_format($sale['total_sales'], 2) . '</h5>';
+                                    echo '<h5 style="color:gray;">Total Outstanding: LKR ' . number_format($sale['total_balance'], 2) . '</h5>';
+                                    echo '<h5 style="color:gray;">Total Quantity Sold: ' . $sale['total_quantity_sold'] . ' items</h5>';
+                                    echo '<hr>';
+                                }
+                            }
                             //<!-- Chart for Sales by Category -->
                             echo ' <div style="height:300px; align-items: center; justify-content: center; ">
-        <h4>Sales By Category</h4>
-        <canvas id="salesByCategoryChart" width="400" height="250"></canvas></div>';
+                                    <h5 style="color:gray;text-align:center;">Sales By Category</h5>
+                                    <canvas id="salesByCategoryChart" width="400" height="250"></canvas></div>';
                             echo '<hr>';
 
                             $subcategories_max_count = array();
@@ -394,8 +668,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
                                 $subcategories = array_slice($subcategories, 0, 3);
                             }
 
-                            echo '<h4>Items Sold of Top Three Subcategories by Each Main Category</h4>';
-                            echo '<ul>';
+                            echo '<h5 style="color:gray;text-align:center;">Items Sold of Top Three Subcategories by Each Main Category</h5>';
+                            echo '<ul >';
                             foreach ($subcategories_max_count as $main_category => $subcategories) :
                                 echo '<li><b>' . $main_category;
                                 echo '<ul>';
@@ -407,18 +681,14 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             endforeach;
                             echo '</ul>';
                             echo '<hr>';
-                            echo '<h4>Percentage of Payment Method Used</h4>';
-                            echo '<div style="width:210px; margin-left:20%; ">
-            
-        <canvas id="paymentMethodsChart" width="100px" height="150px"></canvas>
-    
-        </div>';
+                            echo '<h5 style="color:gray;text-align:center;">Percentage of Payment Method Used</h5>';
+                            echo '<div style="width:210px; margin-left:22%; ">
+
+                            <canvas id="paymentMethodsChart" width="100px" height="150px"></canvas>
+
+                            </div>';
                             echo '<br>';
-                        }
-
-
-
-                        if ($_POST["receiptType"] === "product") {
+                        } else if ($_POST["receiptType"] === "product") {
 
                             $productQuery = "SELECT * from product";
 
@@ -471,21 +741,22 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             echo "<a href='/common/product_data.php' style='color:blue;'>Download as PDF</a>";
                         }
 
-                        if ($_POST["receiptType"] === "salecompare") {
-                            $currentYear = date('Y');
-                            $previousYear = $currentYear - 1;
+                        if ($_POST["receiptType"] === "salecompare" && isset($_POST["year"]) && isset($_POST["year1"])) {
+                            $start = $_POST["year"];
+                            $end = $_POST["year1"];
+
                             $currentYearQuery = "";
                             $previousYearQuery = "";
                             if ($_SESSION["state"] === "seller") {
-                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
+                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = '$start' AND route_id=  $route_id GROUP BY MONTH(payment_date)";
 
                                 // Fetch total sales amounts for each month of the previous year
-                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear AND route_id=  $route_id GROUP BY MONTH(payment_date)";
+                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = '$end' AND route_id=  $route_id GROUP BY MONTH(payment_date)";
                             }
                             if ($_SESSION["state"] === "admin") {
-                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $currentYear GROUP BY MONTH(payment_date)";
+                                $currentYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = '$start' GROUP BY MONTH(payment_date)";
                                 // Fetch total sales amounts for each month of the previous year
-                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = $previousYear GROUP BY MONTH(payment_date)";
+                                $previousYearQuery = "SELECT MONTH(payment_date) AS month, SUM(total) AS total_sales FROM payment WHERE YEAR(payment_date) = '$end' GROUP BY MONTH(payment_date)";
                             }
                             $currentYearResult = mysqli_query($connection, $currentYearQuery);
                             $previousYearResult = mysqli_query($connection, $previousYearQuery);
@@ -522,8 +793,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
                             echo '<table border="1">';
                             echo ' <tr style="background-color:lightgreen;">';
                             echo '<th id="leftth">Month</th>';
-                            echo '<th>' . $currentYear . "" . ' Sales</th><th>Percentage of change</th>';
-                            echo '<th id="rightth">' . $previousYear . "" . ' Sales</th>
+                            echo '<th>' . $start . "" . ' Sales</th><th>Percentage of change</th>';
+                            echo '<th id="rightth">' . $end . "" . ' Sales</th>
                             
         
     </tr>';
@@ -561,54 +832,134 @@ $customerResult = mysqli_query($connection, $customerQuery);
 
     </div>
     <script>
+        // Step 3: Use JavaScript to Render the Chart
+        const ctxt = document.getElementById('salesChart').getContext('2d');
+        const chartData = <?php echo $jsonData; ?>;
+
+        const labels = chartData.map(item => item.month);
+        const data = chartData.map(item => item.sales_revenue);
+
+        const salesChartr = new Chart(ctxt, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Sales Revenue',
+                    data: data,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Sales Revenue'
+                        }
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Revenue by Month'
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
         function back() {
             window.history.back();
         }
     </script>
+
+    <script>
+        // Step 3: Use JavaScript to Render the Chart
+        const ctxz = document.getElementById('salesChartr').getContext('2d');
+        const chartData = <?php echo $jsonDatas; ?>;
+
+        const routes = [...new Set(chartData.map(item => item.route))];
+        const labelsr = [...new Set(chartData.map(item => item.month))];
+
+        const datasets = routes.map(route => {
+            return {
+                label: route,
+                data: labelsr.map(label => {
+                    const item = chartData.find(d => d.route === route && d.month === label);
+                    return item ? item.total_sales : 0;
+                }),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1
+            };
+        });
+
+        const salesChart = new Chart(ctxz, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Sales Revenue'
+                        }
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Revenue by Route and Month'
+                    }
+                }
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const durationSelect = document.getElementById("duration");
-            const yearDropdown = document.getElementById("yearDropdown");
-            const monthDropdown = document.getElementById("monthDropdown");
-            const dayDropdown = document.getElementById("dayDropdown");
-
-            durationSelect.addEventListener("change", function() {
-                const selectedValue = this.value;
-                if (selectedValue === "yearly") {
-                    yearDropdown.style.display = "block";
-                    monthDropdown.style.display = "none";
-                    dayDropdown.style.display = "none";
-                } else if (selectedValue === "monthly") {
-                    yearDropdown.style.display = "block";
-                    monthDropdown.style.display = "block";
-                    dayDropdown.style.display = "none";
-                } else if (selectedValue === "daily") {
-                    yearDropdown.style.display = "block";
-                    monthDropdown.style.display = "block";
-                    dayDropdown.style.display = "block";
-                }
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
             const receiptSelect = document.getElementById("receiptType");
             const duration = document.getElementById('dura');
+            const durationSelect = document.getElementById("duration");
             const dur = document.getElementById('dur');
             const customer = document.getElementById('customer');
             const cus = document.getElementById('sto');
+            const yearDropdown = document.getElementById("yearDropdown");
+            const yearDropdowni = document.getElementById("yearDropdown1");
+            const datefrom = document.getElementById("date_from");
+            const dateto = document.getElementById("date_to");
+
+
 
 
             receiptSelect.addEventListener("change", function() {
                 const selectedValue = this.value;
-                if (selectedValue === "salesreceipt") {
-                    cus.style.display = 'block';
-                    customer.style.display = 'block';
-                    dur.style.display = 'block';
-                    duration.style.display = 'block';
-                } else if (selectedValue === 'salessummery') {
-                    cus.style.display = 'block';
-                    customer.style.display = 'block';
+                if (selectedValue === 'salessummery') {
                     dur.style.display = 'block';
                     duration.style.display = 'block';
 
@@ -625,13 +976,65 @@ $customerResult = mysqli_query($connection, $customerQuery);
                     customer.style.display = 'none';
 
                 } else if (selectedValue === 'salecompare') {
-                    dur.style.display = 'none';
-                    duration.style.display = 'none';
+                    duration.style.display = 'block';
+                    yearDropdown.style.display = 'block';
+                    yearDropdowni.style.display = 'block';
+                    datefrom.style.display = "block";
+                    dateto.style.display = "block";
+                    durationSelect.style.display = 'none';
                     cus.style.display = 'none';
                     customer.style.display = 'none';
 
                 }
 
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const durationSelect = document.getElementById("duration");
+            const yearDropdown = document.getElementById("yearDropdown");
+            const monthDropdown = document.getElementById("monthDropdown");
+            const dayDropdown = document.getElementById("dayDropdown");
+
+            const yearDropdown1 = document.getElementById("yearDropdown1");
+            const monthDropdown1 = document.getElementById("monthDropdown1");
+            const dayDropdown1 = document.getElementById("dayDropdown1");
+
+            const datefrom = document.getElementById("date_from");
+            const dateto = document.getElementById("date_to");
+
+
+
+            durationSelect.addEventListener("change", function() {
+
+                const selectedValue = this.value;
+                if (selectedValue === "yearly") {
+                    yearDropdown.style.display = "block";
+                    yearDropdown1.style.display = "block";
+                    datefrom.style.display = "block";
+                    dateto.style.display = "block";
+                    monthDropdown.style.display = "none";
+                    dayDropdown.style.display = "none";
+                    monthDropdown1.style.display = "none";
+                    dayDropdown1.style.display = "none";
+                } else if (selectedValue === "monthly") {
+                    yearDropdown.style.display = "block";
+                    monthDropdown.style.display = "block";
+                    yearDropdown1.style.display = "block";
+                    monthDropdown1.style.display = "block";
+                    datefrom.style.display = "block";
+                    dateto.style.display = "block";
+                    dayDropdown.style.display = "none";
+                    dayDropdown1.style.display = "none";
+                } else if (selectedValue === "daily") {
+                    yearDropdown.style.display = "block";
+                    monthDropdown.style.display = "block";
+                    dayDropdown.style.display = "block";
+                    yearDropdown1.style.display = "block";
+                    monthDropdown1.style.display = "block";
+                    dayDropdown1.style.display = "block";
+                    datefrom.style.display = "block";
+                    dateto.style.display = "block";
+                }
             });
         });
     </script>
@@ -662,7 +1065,8 @@ $customerResult = mysqli_query($connection, $customerQuery);
                         }
                     }]
                 }
-            }
+            },
+
         });
     </script>
     <script>
@@ -704,9 +1108,6 @@ $customerResult = mysqli_query($connection, $customerQuery);
             }
         });
     </script>
-
-
-
 
 </body>
 

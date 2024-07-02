@@ -28,13 +28,9 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
     <!-- Simulate a smartphone / tablet -->
     <div class="mobile-container">
-
         <!-- Top Navigation Menu -->
         <div class="topnav">
-
-
-            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>
-
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">update details</span></a>
         </div>
         <div class="container">
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -78,7 +74,6 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 
     <script type="text/javascript" src="/javascript/divs.js"></script>
     </div>
-
 
     <script>
         function back() {

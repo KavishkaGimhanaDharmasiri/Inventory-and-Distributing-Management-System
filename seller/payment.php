@@ -46,10 +46,8 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         <div class="topnav">
 
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">payment</span></a>
+
         </div>
 
         <?php
