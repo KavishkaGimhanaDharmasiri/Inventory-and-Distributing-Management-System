@@ -16,18 +16,18 @@
           background-size: 180% 180%;
           animation: gradient-animation 6s ease infinite;*/
   background-size: cover;
-  color: #fff;
+  color: #000000;
   text-align: center;
   padding: 15px;
   cursor: pointer;
   padding-right: 5px;
 
   border-radius: 10px;
-  background: url("wave.gif") no-repeat center center;
+  background: url("wave8.gif") center left;
   /* background: linear-gradient(300deg, #3bb52d, #3bb52d, #3bb52d, #fcfcfc, #33a133, #33a133);
     background-size: 360% 360%;
     animation: gradient-animation 12s ease infinite;*/
-  color: white;
+
   font-weight: bold;
 }
 

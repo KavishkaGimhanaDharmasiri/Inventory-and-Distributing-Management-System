@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modifiedNumber = '94' . substr($telephone, 1);
 
     if (!empty($email)) {
-      sendmail($Subject, $body, $row["email"], $row["firstName"]);
+      // sendmail($Subject, $body, $row["email"], $row["firstName"]);
     } elseif (!empty($telephone)) {
-      sendsms($modifiedNumber, $body);
+      // sendsms($modifiedNumber, $body);
     }
 
     // Redirect to the OTP validation page
@@ -87,7 +87,7 @@ function generateRandomCode($length = 5)
   <div class="mobile-container">
 
     <div class="topnav">
-      <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px;"><i class="fa fa-angle-left"></i></a>
+      <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">validation</span></a>
     </div>
 
     <div class="container">
@@ -131,7 +131,7 @@ function generateRandomCode($length = 5)
 
       if (emailField.value.trim() === "" && telephoneField.value.trim() === "") {
         event.preventDefault();
-        window.alert("Both fields cannot be empty.");
+        window.alert("Field cannot be empty.");
       }
     });
 

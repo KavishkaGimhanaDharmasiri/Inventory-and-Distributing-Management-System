@@ -33,13 +33,11 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">manage orders</span></a>
+
         </div>
         <div class="options-container">
-            <a href="my_order.php" class="option" id="option1">
+            <a href="/common/view_order.php" class="option" id="option1">
                 <div>My Pre Orders</div>
             </a>
             <a href="/common/sale_order1.php" class="option" id="option1">
@@ -51,6 +49,9 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
 
 
     <script>
+        function back() {
+            window.history.back();
+        }
     </script>
 
 </body>

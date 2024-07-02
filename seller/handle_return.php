@@ -35,16 +35,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["Add_list"]) && $_SESSI
     $_SESSION['selected_store'] = $selectedStore;
     $selectedname = $_POST["product_count"];
     $selectedcount = $_POST["pcount"];
-    $product_id = $_SESSION['product_id'];
+    if (isset($_SESSION['product_id'])) {
+        $product_id = $_SESSION['product_id'];
 
-    // Add item details to session
-    if (!isDuplicateItem($selectedStore, $selectedname, $selectedcount)) {
-        $_SESSION['items'][] = array(
-            'id' => $product_id,
-            'store' => $selectedStore,
-            'name' => $selectedname,
-            'count' => $selectedcount
-        );
+        // Add item details to session
+        if (!isDuplicateItem($selectedStore, $selectedname, $selectedcount)) {
+            $_SESSION['items'][] = array(
+                'id' => $product_id,
+                'store' => $selectedStore,
+                'name' => $selectedname,
+                'count' => $selectedcount
+            );
+        }
     }
 
     // Generate a new token for the next form submission
@@ -155,10 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["resetitem"])) {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">return products</span></a>
+
 
             </a>
         </div>

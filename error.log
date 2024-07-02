@@ -46,3 +46,14 @@
 [23-Jun-2024 12:48:41 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php on line 14
 [23-Jun-2024 12:48:41 UTC] PHP Stack trace:
 [23-Jun-2024 12:48:41 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getRemainingBalance.php:0
+[26-Jun-2024 07:11:04 UTC] PHP Fatal error:  Uncaught TypeError: mysqli_stmt_get_result(): Argument #1 ($statement) must be of type mysqli_stmt, string given in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php:35
+Stack trace:
+#0 C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php(35): mysqli_stmt_get_result('')
+#1 {main}
+  thrown in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php on line 35
+[26-Jun-2024 08:03:00 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php on line 14
+[26-Jun-2024 08:03:00 UTC] PHP Stack trace:
+[26-Jun-2024 08:03:00 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php:0
+[26-Jun-2024 08:03:11 UTC] PHP Warning:  Undefined array key 1 in C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php on line 14
+[26-Jun-2024 08:03:11 UTC] PHP Stack trace:
+[26-Jun-2024 08:03:11 UTC] PHP   1. {main}() C:\Users\powertec\Documents\GitHub\Inventory-and-Distributing-Management-System\seller\getSaleSummery.php:0

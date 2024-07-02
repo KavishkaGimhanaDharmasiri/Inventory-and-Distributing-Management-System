@@ -122,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="mobile-container">
         <div class="topnav">
-            <a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px;"><i class="fa fa-angle-left"></i></a>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">settlement</span></a>
         </div>
         <div class="container" id="order-form">
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">

@@ -10,6 +10,13 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 } else {
     $_SESSION['summery_visit'] = true;
 }
+
+$route_id = $_SESSION['route_id'];
+$dateQuery = "SELECT DISTINCT DATE_FORMAT(payment_date, '%Y-%m') AS formatted_date FROM payment";
+$stmt = $connection->prepare($dateQuery);
+//$stmt->bind_param("i", $route_id);
+$stmt->execute();
+$dateResult = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html>
@@ -74,7 +81,10 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         }
 
         .main-category-name:hover {
-            background-color: #45a049;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-bottom: 1px solid green;
+
         }
 
 
@@ -101,10 +111,8 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <?php
-            // Generate back navigation link using HTTP_REFERER
-            echo '<a href="javascript:void(0);" onclick="back()" class="back-link" style="float:left;font-size:25px; "><i class="fa fa-angle-left"></i></a>';
-            ?>
+            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">summery</span></a>
+
         </div>
         <?php
         $routeId = $_SESSION['route_id'];
@@ -123,38 +131,36 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         $result1 = mysqli_query($connection, $sql1);
 
         if ($_SESSION["state"] === "seller") {
-            $sql3 = "SELECT sum(total) sum1,sum(payment_amout) as sum2, sum(balance) as sum3 FROM payment WHERE route_id=$routeId AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentMonthYear'";
+            $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, SUM(CASE WHEN balance >= 0 THEN balance ELSE 0 END) AS sum3 FROM payment p left join route r on p.route_id=r.route_id WHERE p.route_id=$routeId AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentMonthYear'";
         }
         if ($_SESSION["state"] === "admin") {
-            $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, sum(balance) as sum3 FROM payment p left join route r on p.route_id=r.route_id WHERE DATE_FORMAT(p.payment_date, '%Y-%m') = '$currentMonthYear' GROUP BY p.route_id";
+            $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, SUM(CASE WHEN balance >= 0 THEN balance ELSE 0 END) AS sum3 FROM payment p left join route r on p.route_id=r.route_id GROUP BY p.route_id";
         }
         $result3 = mysqli_query($connection, $sql3);
 
         echo '<div class="containers">';
         if ($_SESSION["state"] === "seller") {
             echo '<div class="box" style="margin-top:5%;">';
-            echo "<h4>Order State </h4><br>";
+            echo '<h4 style="text-align:center;text-decoration:underline 2px;">Order State(Order Completed Customers)</h4><br>';
             echo "<table>";
-
-            while ($row = mysqli_fetch_assoc($result)) {
-
-
-                $storeName = $row['store_name'];
-                $storests = $row['order_state'];
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
 
 
-                if ($storests === 'complete') {
-                    echo "<tr>";
-                    echo "<td><input type='checkbox' name='selected_stores' id='select_sto' checked readonly></td>";
-                    echo "<td><b>" . $storeName . "</td>";
-                    echo "<td><b>" . $storests . "</td>";
-                    echo "</tr>";
-                } else {
-                    echo "<td><input type='checkbox' name='selected_stores' id='select_sto'  ></td>";
-                    echo "<td>" . $storeName . "</td>";
-                    echo "<td><b>Not Complete" . "</td>";
-                    echo "</tr>";
+                    $storeName = $row['store_name'];
+                    $storests = $row['order_state'];
+
+
+                    if ($storests === 'complete') {
+                        echo "<tr style='padding:0;margin:0;'>";
+                        echo "<td style='padding:0;margin:0;'><input type='checkbox' name='selected_stores' id='select_sto' checked readonly></td>";
+                        echo "<td style='padding:0;margin:0;'><b>&nbsp;&nbsp;" . $storeName . "</td>";
+                        echo "<td style='padding:0;margin:0;'><b>&nbsp;&nbsp;" . $storests . "</td>";
+                        echo "</tr>";
+                    }
                 }
+            } else {
+                echo "<label style='color:indianred;text-align:center;'>No Details Found</label>";
             }
 
             echo "</table>";
@@ -163,14 +169,14 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         echo '<br>';
 
         echo '<div class="box">';
-        echo "<h4>Remaining Product Details</h4><br>";
+        echo '<h4 style="text-align:center;text-decoration:underline 2px;">Remaining Product Details</h4><br>';
         $sql = "";
         $result2 = "";
         if ($_SESSION["state"] === "seller") {
-            $sql2 = "SELECT f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id WHERE route_id = $routeId AND DATE_FORMAT(feed_date, '%Y-%m') =  '$currentMonthYear'";
+            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE f.route_id = $routeId AND DATE_FORMAT(feed_date, '%Y-%m') =  '$currentMonthYear'";
         }
         if ($_SESSION["state"] === "admin") {
-            $sql2 = "SELECT r.route,f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE DATE_FORMAT(f.feed_date, '%Y-%m') = '$currentMonthYear'";
+            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE DATE_FORMAT(f.feed_date, '%Y-%m') = '$currentMonthYear'";
         }
 
         $result2 = mysqli_query($connection, $sql2);
@@ -179,88 +185,133 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         $mainCategories = array();
         $routes = array();
         if ($result2) {
+            if (mysqli_num_rows($result2) > 0) {
 
-            while ($row2 = mysqli_fetch_assoc($result2)) {
-                $routeName = $row2["route"];
-                $mainCat = $row2["main_cat"];
-                $subCat = $row2["sub_cat"];
-                $count = $row2["count"];
+                while ($row2 = mysqli_fetch_assoc($result2)) {
+                    $routeName = $row2["route"];
+                    $mainCat = $row2["main_cat"];
+                    $subCat = $row2["sub_cat"];
+                    $count = $row2["count"];
 
-                // Ensure the route exists in the array
-                if (!array_key_exists($routeName, $routes)) {
-                    $routes[$routeName] = array();
-                }
+                    // Ensure the route exists in the array
+                    if (!array_key_exists($routeName, $routes)) {
+                        $routes[$routeName] = array();
+                    }
 
-                // Ensure the main category exists for the route
-                if (!array_key_exists($mainCat, $routes[$routeName])) {
-                    $routes[$routeName][$mainCat] = array();
-                }
+                    // Ensure the main category exists for the route
+                    if (!array_key_exists($mainCat, $routes[$routeName])) {
+                        $routes[$routeName][$mainCat] = array();
+                    }
 
-                // Ensure the subcategory exists for the main category
-                $found = false;
-                foreach ($routes[$routeName][$mainCat] as &$subProduct) {
-                    if ($subProduct['sub_cat'] === $subCat) {
-                        $subProduct['count'] += $count;
-                        $found = true;
-                        break;
+                    // Ensure the subcategory exists for the main category
+                    $found = false;
+                    foreach ($routes[$routeName][$mainCat] as &$subProduct) {
+                        if ($subProduct['sub_cat'] === $subCat) {
+                            $subProduct['count'] += $count;
+                            $found = true;
+                            break;
+                        }
+                    }
+
+                    // If subcategory not found, add it to the array
+                    if (!$found) {
+                        $routes[$routeName][$mainCat][] = array("sub_cat" => $subCat, "count" => $count);
                     }
                 }
 
-                // If subcategory not found, add it to the array
-                if (!$found) {
-                    $routes[$routeName][$mainCat][] = array("sub_cat" => $subCat, "count" => $count);
-                }
-            }
+                // Loop through routes, main categories, and subcategories to display them
+                foreach ($routes as $routeName => $mainCategories) {
+                    echo "<div class='route'>";
+                    echo "<label style='color:indianred;'>Route Name : $routeName</label>";
 
-            // Loop through routes, main categories, and subcategories to display them
-            foreach ($routes as $routeName => $mainCategories) {
-                echo "<div class='route'>";
-                echo "<label style='color:red;'>Route Name : $routeName</label>";
+                    foreach ($mainCategories as $mainCat => $subProducts) {
+                        echo "<div class='main-category'>";
+                        echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:black;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px"></i></h4>';
+                        echo "<ul class='sub-categories' style='color:black;display: none;'>";
 
-                foreach ($mainCategories as $mainCat => $subProducts) {
-                    echo "<div class='main-category'>";
-                    echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:black;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px"></i></h4>';
-                    echo "<ul class='sub-categories' style='color:black;display: none;'>";
+                        foreach ($subProducts as $subProduct) {
+                            echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['count']}</label></li>";
+                        }
 
-                    foreach ($subProducts as $subProduct) {
-                        echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['count']}</label></li>";
+                        echo "</ul>";
+                        echo "</div>";
                     }
 
-                    echo "</ul>";
                     echo "</div>";
                 }
-
-                echo "</div>";
+            } else {
+                echo "<label style='color:indianred;text-align:center;'>No Details Found</label>";
             }
 
             echo '</div>';
         }
         echo '<br>';
         echo '<div class="box">';
-        echo "<h4>Sales of (Current Month - $currentMonthYear)</h4><br>";
-        echo "<table>";
-        while ($row3 = mysqli_fetch_assoc($result3)) {
-            if ($_SESSION["state"] === "admin") {
-                echo "<tr>";
-                echo "<td style='color:red'><b>Route Name : " . $row3["route"] . "</td>";
-                echo "<td><b></td>";
-                echo "</tr>";
+        if ($_SESSION["state"] === "seller") {
+            echo '<tabel><tr><td><h4 style="text-align:center;text-decoration:underline 2px;">Sales Summery</h4></td><td>
+                     <select name="dateselect" id="date" required style="background-color:transparent;font-weight:bold;" required>
+                        <option value="">Select Month</option>';
+            while ($dateRow = $dateResult->fetch_assoc()) {
+                if ($currentMonthYear == $dateRow['formatted_date']) {
+                    echo "<option value='{$dateRow['formatted_date']}' $select selected><b>Current Month</option>";
+                }
+                echo "<option value='{$dateRow['formatted_date']}' $select><b>{$dateRow['formatted_date']}</option>";
             }
-            echo "<tr>";
-            echo "<td><b>Total Sales</td>";
-            echo "<td><b>Rs." . $row3["sum1"] . ".00</td>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<td><b>Total Income </td>";
-            echo "<td><b>Rs." . $row3["sum2"] . ".00</td>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<td><b>Total Outstanding</td>";
-            echo "<td><b>Rs." . $row3["sum3"] . ".00</td>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "</tr>";
+            echo "</select></td></tr></tabel>";
         }
+
+
+        if ($result3) {
+            if ($_SESSION["state"] === "admin")
+                echo '<h4 style="text-align:center;text-decoration:underline 2px;">Sales of Current month&nbsp;&nbsp;&nbsp;(' . $currentMonthYear . ')</h4>';
+            while ($row3 = mysqli_fetch_assoc($result3)) {
+
+                if ($row3['route'] != null || $row3['route'] != "") {
+                    if ($_SESSION["state"] === "admin") {
+
+                        echo "<table>";
+                        echo "<tr>";
+                        echo "<td style='color:indianred'><b>Route Name : {$row3['route']}</td>";
+                        echo "<td><b></td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "<td><b>Total Sales</td>";
+                        echo "<td><b>Rs." . $row3["sum1"] . ".00</td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "<td><b>Total Income </td>";
+                        echo "<td><b>Rs." . $row3["sum2"] . ".00</td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "<td><b>Total Outstanding</td>";
+                        echo "<td><b>Rs." . $row3["sum3"] . ".00</td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "</tr>";
+                    }
+                    if ($_SESSION["state"] === "seller") {
+                        echo "<table>";
+                        echo "<tr>";
+                        echo "<td><b>Total Sales</td>";
+                        echo "<td><b><span id='sales'>Rs." . $row3["sum1"] . ".00 </span></td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "<td><b>Total Income </td>";
+                        echo "<td><b><span id='income'>Rs." . $row3["sum2"] . ".00</span></td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "<td><b>Total Outstanding</td>";
+                        echo "<td><b><span id='outstanding'>Rs." . $row3["sum3"] . ".00</span></td>";
+                        echo "</tr>";
+                        echo "<tr>";
+                        echo "</tr>";
+                    }
+                }
+            }
+        } else {
+            echo "<label style='color:indianred;text-align:center;'>No Details Found</label>";
+        }
+
         echo "</table>";
 
         echo "</div>";
@@ -287,6 +338,29 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
         function back() {
             window.history.back();
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const dateSelect = document.getElementById("date");
+            const salesLabel = document.getElementById("sales");
+            const incomeLabel = document.getElementById("income");
+            const outstandingLabel = document.getElementById("outstanding");
+
+            dateSelect.addEventListener("change", updateBalance);
+
+            function updateBalance() {
+                const selectedDate = dateSelect.value;
+                fetch(`getSaleSummery.php?date=${selectedDate}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        salesLabel.textContent = "Rs." + (data.sum1 > 0 ? data.sum1 : 0).toFixed(2);
+                        incomeLabel.textContent = "Rs." + (data.sum2 > 0 ? data.sum2 : 0).toFixed(2);
+                        outstandingLabel.textContent = "Rs." + (data.sum3 > 0 ? data.sum3 : 0).toFixed(2);
+                    })
+                    .catch(error => {
+                        alert('Error fetching remaining balance: ' + error);
+                    });
+            }
+        });
     </script>
 
 </body>

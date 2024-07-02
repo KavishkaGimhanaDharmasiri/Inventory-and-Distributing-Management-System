@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['functionName']) && $_POST['functionName'] === 'sendremsms') {
         // Call the sendremsms function
         sendremsms();
-    } else {
+    } /*else {
         echo "Invalid function name.";
-    }
+    }*/
 }
 
 function sendmail($Subject, $body, $user, $firstname)

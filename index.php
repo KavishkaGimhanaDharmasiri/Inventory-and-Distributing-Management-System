@@ -25,11 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the username and password from the form
     $username = $_POST["username"];
     $password = $_POST["password"];
-
+    $active_state = "active";
     // Validate the user credentials using prepared statements
-    $query = "SELECT * FROM login WHERE username = ?";
+    $query = "SELECT * FROM login WHERE username = ? AND Active_state= ? ";
     $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, 's', $username);
+    mysqli_stmt_bind_param($stmt, 'ss', $username, $active_state);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
@@ -74,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="/images/tab_icon.png">
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="/style/style.css">
     <link rel="stylesheet" type="text/css" href="/style/index.css">
