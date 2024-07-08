@@ -20,6 +20,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
+    $query = "SELECT firstName,LastName,email,l.route_id FROM users u left join login l on u.user_id=l.user_id WHERE u.user_id = $user_id";
+    $result = mysqli_query($connection, $query);
+    if ($result) {
+        if (mysqli_num_rows($result) == 1) { // Check if a matching record is found
+            $row = mysqli_fetch_assoc($result); // Fetch user data
+            // Set session variables
+            $_SESSION["user_log_fname"] = $row["firstName"];
+            $_SESSION["user_log_lname"] = $row["LastName"];
+            $_SESSION["user_log_email"] = $row["email"];
+
+            if ($row["email"] != null)
+                $_SESSION['route_id'] = $row["route_id"];
+        }
+    }
 
     // Validate that the two entered passwords match
     if ($new_password === $confirm_password) {
@@ -37,24 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             mysqli_stmt_close($stmt);
         }
-        /*  $query = "UPDATE login SET password='$hashed_password' WHERE user_id=$user_id";
-        $result = mysqli_query($connection, $query);
-        // Hash the new password
-        // $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-
-        // Update the password in the database
-
-
-        if ($result) {
-            // Password update successful
-            // header('Location:divs.php');
-            echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
-                    <button onclick="redirectToIndex()" class="sucess">OK</button>
-                    </div>';
-        } else {
-
-            $error_message = "Password update failed. Please try again.";
-        }*/
     }
     //}
     unset($_SESSION['code']);
@@ -94,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">change password</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">change password</span></a>
 
 
         </div>

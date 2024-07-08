@@ -15,10 +15,15 @@ if (!isset($_SESSION['index_visit']) || !$_SESSION['index_visit'] || !isset($_SE
 
   $_SESSION['option_visit'] = true;
 }
+
+date_default_timezone_set('Asia/Colombo');
+$currentDateTime = new DateTime(); // Get the current date and time
+
+$cur_date = $currentDateTime->format('Y-m');
 $query = "SELECT * FROM users WHERE user_id = '$user_idn'";
 $result = mysqli_query($connection, $query);
 
-$currentmonth = date('Y-m');
+$currentmonth = $cur_date;
 $route_id = $_SESSION['route_id'];
 $sqlq = "SELECT * FROM payment WHERE balance > 0 
               AND payment_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) - INTERVAL DAY(CURDATE()) - 1 DAY 
@@ -48,6 +53,15 @@ $existing = false;
 if ($resultorder) {
   if (mysqli_num_rows($resultorder) == 1) {
     $existing = true;
+  }
+}
+
+if ($notfy_result) {
+  if ($rownot = mysqli_fetch_assoc($notfy_result)) {
+    $_SESSION['not_content'] = $rownot['not_content'];
+    $_SESSION['not_date'] = $rownot['formatted_date'];
+    $_SESSION['not_state'] = $rownot['state'];
+    $currentmonth = $cur_date;
   }
 }
 
@@ -84,6 +98,9 @@ unset($_SESSION['selected_payment_method']);
 unset($_SESSION['selected_store']);
 unset($_SESSION['process_payment']);
 unset($_SESSION['items']);
+unset($_SESSION["show"]);
+unset($_SESSION["ad_state"]);
+unset($_SESSION['pre_order']);
 //unset($_SESSION['sales_recipt_download']);
 unset($_SESSION['send_massage']);
 
@@ -114,37 +131,33 @@ session_write_close();
     <!-- Top Navigation Menu -->
     <div class="topnav">
 
-      <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">option</span></a>
-
-      <div id="mySidepanel" class="sidepanel" style="height:100%;">
+      <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">option</span></a>
+      <div id="mySidepanel" class="sidepanel" style="height:100%; background-color:brown;z-index: 1;">
         <a href="javascript:void(0)" style="color:white;font-size:13px;margin-top:10px;" class="closebtn" onclick="closeNav()">&#10005;</a>
         <a href="about.php">Info</a>
         <a href="javascript:void(0)" onclick="toggleProfilePanel()">Profile</a>
         <a href="javascript:void(0)" onclick="opennot()">
           <?php
-          if ($_SESSION["state"] === 'seller') {
-            if ($results->num_rows > 0) {
-
+          if ($_SESSION["state"] == 'seller') {
+            if ($results->num_rows > 0 && $cur_date >  $_SESSION['not_date']  &&  $_SESSION['not_state'] == "no") {
               echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
             }
           }
-          /*   }
-            }
-          }*/
           if ($samepassword == true) {
             echo '<span class="badge" id="bagesd" style="right: 40px;"></span>';
           }
-
           ?>Notification</a>
         <br>
         <br>
         <a href="javascript:void(0)" onclick="logout()">Logout</a>
       </div>
+
       <a href="javascript:void(0);" class="icon" onclick="openNav()" style=" background-color: transparent;">
         <i class=" fa fa-bars" style="background-color: transparent;"></i>
         <?php
-        if ($_SESSION["state"] == 'seller') { //if seller login show bagage
-          if ($results->num_rows > 0 || $samepassword == true) {
+        //if seller login show bagage
+        if ($results->num_rows > 0 && $cur_date > $_SESSION['not_date']  &&  $_SESSION['not_state'] == "no") {
+          if ($_SESSION["state"] == 'seller') {
             echo '<span class="badge" id="bages"></span>';
           }
         }
@@ -166,34 +179,24 @@ session_write_close();
           <?php
 
           if ($_SESSION["state"] === 'seller') {
-            if ($results->num_rows > 0) {
-
-              if ($notfy_result) {
-                if ($rownot = mysqli_fetch_assoc($notfy_result)) {
-                  $not_content = $rownot['not_content'];
-                  $not_date = $rownot['formatted_date'];
-                  $not_state = $rownot['state'];
-                  $currentmonth = date('Y-m');
-                  if ($currentmonth > $not_date  && $not_state == "no") {
-                    echo '<div id="notificationContent" style="padding: 5px;">
+            if ($results->num_rows > 0 && $currentmonth > $_SESSION['not_date']  && $_SESSION['not_state'] == "no") {
+              echo '<div id="notificationContent" style="padding: 5px;">
             <div class="contain">
-              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">' . $not_content . '</a>
+              <a href="javascript:void(0)" style="pointer-events: none;font-size:12px;font-weight:normal;">' . $_SESSION['not_content'] . '</a>
               <a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a>
             </div>
             <div class="contain">
 
                <a href="javascript:void(0)" onclick="showdetails(event)" id="view" style="font-size: 11px;cursor:pointer;color:blue;">View details</a>
     
-              <a href="javascript:void(0)" onclick="sendSMS(event)" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>
+              <a href="javascript:void(0)" onclick="sendSMS()" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>
             </div>
            
           </div>';
-                    echo '<div id="notifications" style="display:none;"><a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a></div>';
-                  }
-                }
-              }
+              echo '<div id="notifications" style="display:none;"><a href="javascript:void(0)" style="font-size:12px;" onclick="hidenotifi()">&#10005;</a></div>';
             }
           }
+
           if (isset($_SESSION["state"])) {
             if ($samepassword === true) {
               echo '<div id="notificationContent2" style="padding: 5px;margin-top:5px;">
@@ -237,6 +240,12 @@ session_write_close();
         </div>
       </div>
 
+    </div>
+    <div id="popup" class="popup" onclick="closePopup()">
+      <div class="popup-content">
+        <span class="close" style="font-size: 14px;" onclick="closePopup()">&#10005;</span>
+        <label id="message" style="font-size: 14px;"></label>
+      </div>
     </div>
 
     <div class="options-container">
@@ -292,6 +301,7 @@ session_write_close();
 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="/javascript/test1.js"></script>
   <script>
     function openNav() {
       document.getElementById("mySidepanel").style.width = "150px";
@@ -302,16 +312,21 @@ session_write_close();
     }
 
     function showordernot() {
+      var message = "You Already Made An Order For This Month. Go to My Order to See Activity. Thank You... ";
+      showPopup(message);
 
-      window.alert("You Already Made An Order For This Month. Go to My Order to See Activity. Thank You... ");
+      // window.alert();
     }
 
+
     function opennot() {
+
       document.getElementById("mynotification").style.width = "280px";
       document.getElementById("notificationPanel").style.display = "block";
       document.getElementById("mySidepanel").style.width = "0px";
       document.getElementById("bages").style.display = "none";
       document.getElementById("bagesd").style.display = "none";
+
     }
 
     function closenot() {
@@ -320,12 +335,14 @@ session_write_close();
     }
 
     function hidenotifi() {
+
       document.getElementById("notificationContent").style.display = "none";
       document.getElementById("notifications").style.display = "none";
 
     }
 
     function hidenotifi2() {
+
       document.getElementById("notificationContent2").style.display = "none";
 
     }
@@ -410,38 +427,36 @@ session_write_close();
       // Redirect to index.php
       window.location.href = "/index.php";
     }
-
+  </script>
+  <script>
     function sendSMS() {
-      // Create an AJAX request
+      // Create an XMLHttpRequest object
       var xhr = new XMLHttpRequest();
 
-      // Define the PHP file and function to call
-      var phpFile = "email_sms.php";
-      var functionName = "sendremsms";
+      // Configure it: POST-request for the URL /path/to/email_sms.php
+      xhr.open('POST', 'email_sms.php', true);
 
-      // Prepare the data to send
-      var data = new FormData();
-      data.append('functionName', functionName);
+      // Set up the proper header information along with the request
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      // Configure the AJAX request
-      xhr.open("POST", phpFile, true);
-
-      // Set the event handler to manage the response
+      // Add a state change callback to handle the response
       xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            // Do something with the response
-            console.log(xhr.responseText);
-          } else {
-            console.error("Error: " + xhr.status + " - " + xhr.statusText);
+        if (xhr.readyState == 4) { // Request is complete
+          if (xhr.status == 200) {
+            alert("Massage Sent Sucessfully.") // Request was successful
+            // alert('Success: ' + xhr.responseText);
+          } else { // Request failed
+            // alert('Error: ' + xhr.status);
+            alert("Something Went to Wrong. Try again later.")
           }
         }
       };
 
-      // Send the request
-      xhr.send(data);
+      // Send the request with the function name
+      xhr.send('functionName=sendremsms');
     }
-
+  </script>
+  <script>
     function changePassword() {
       // Implement the logic to change the password here
       window.location.href = 'chng_pass.php';
@@ -467,7 +482,6 @@ session_write_close();
       });
     }
   </script>
-
 </body>
 
 </html>

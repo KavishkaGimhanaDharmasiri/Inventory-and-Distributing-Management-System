@@ -3,10 +3,10 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 
 if (!isset($_SESSION['route_id'])) {
-    echo "Route ID is not set in session.";
+    echo "Information is not set.";
     exit;
 }
-
+$_SESSION["show"] = true;
 $route_id = $_SESSION['route_id'];
 
 if (isset($_POST['action']) && $_POST['action'] === 'get_notifications') {
@@ -24,7 +24,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'get_notifications') {
         while ($row = $result->fetch_assoc()) {
             echo "<p>" . htmlspecialchars($row["store_name"]) . " - Balance: " . htmlspecialchars($row["balance"]) . "</p>";
         }
-        echo '<a href="javascript:void(0)" onclick="sendSMS(event)" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>';
+        echo '<a href="javascript:void(0)" onclick="sendSMS()" style="cursor:pointer;font-size:11px;color:blue;">Send Message</a>';
     } else {
         echo "No notifications";
     }

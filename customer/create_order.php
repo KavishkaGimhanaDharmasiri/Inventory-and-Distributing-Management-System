@@ -81,7 +81,8 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
         $counts = $_POST['counts'] ?? '';
         $selectedStore = $_POST["customer"];
         $_SESSION['selected_store'] = $selectedStore;
-
+        $newUrl = '/common/option.php';
+        echo "<script> history.replaceState(null, null, '$newUrl'); </script>";
         exit();
     }
 
@@ -111,7 +112,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
     // Close the database connectio
 
     // Function to handle adding an order
-    function handleAddOrder($connection)
+    /*function handleAddOrder($connection)
     {
         $mainCategory = $_POST["main_category"];
         $subcategories = getSubcategories($mainCategory, $connection);
@@ -160,11 +161,59 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
 
         // Reset main category to the default value
         $_POST["main_category"] = "";
+    }*/
+
+    function handleAddOrder($connection)
+    {
+        $mainCategory = $_POST["main_category"];
+        $subcategories = getSubcategories($mainCategory, $connection);
+        $counts = $_POST["counts"];
+
+        // Temporary storage for the order details
+        $orderDetails = $_SESSION['order_details'] ?? [];
+        $selectedStore = $_POST["customers"];
+
+        $_SESSION['selected_store'] = $selectedStore;
+
+
+        // Check if there's already an order for the selected main category and subcategory
+        foreach ($subcategories as $index => $subcategory) {
+            $subcategoryExists = false;
+            if ($counts[$index] > 0) {
+                foreach ($orderDetails as &$order) {
+                    if ($order['main_category'] == $mainCategory && $order['sub_category'] == $subcategory['sub_cat']) {
+                        $order['count'] += $counts[$index];
+                        $subcategoryExists = true;
+                        break;
+                    }
+                }
+
+                // If subcategory doesn't exist, add a new order
+                if (!$subcategoryExists) {
+                    $orderDetails[] = [
+                        'main_category' => $mainCategory,
+                        'sub_category' => $subcategory['sub_cat'],
+                        'count' => $counts[$index]
+                    ];
+                }
+            }
+        }
+
+        // Update the session variable with the order details
+        $_SESSION['order_details'] = $orderDetails;
+
+        // Reset main category to the default value
+        $_POST["main_category"] = "";
+        displayOrderTable();
     }
 
     // Function to handle confirming an order
     function handleConfirmOrder()
     {
+        date_default_timezone_set('Asia/Colombo');
+        $currentDateTime = new DateTime();
+        $cur_date = $currentDateTime->format('Y-m-d');
+
         include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
         $orderDetails = $_SESSION['order_details'] ?? [];
         $route_id = $_SESSION['route_id'];
@@ -179,7 +228,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
             $pdo->beginTransaction();
             $ord_type = "customer";
             $ord_state = "complete";
-            $ord_date = date('Y-m-d H:i:s');
+            $ord_date = $cur_date;
             $query3 = "INSERT INTO primary_orders(route_id,ord_date,store_name,order_type,order_state)
      VALUES(:route_id, :ord_date, :store_name, :order_type, :state)";
 
@@ -251,7 +300,7 @@ if (!isset($_SESSION['index_visit']) || !isset($_SESSION['option_visit']) || $_S
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">pre order</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">pre order</span></a>
 
         </div>
         <div class="order-form">

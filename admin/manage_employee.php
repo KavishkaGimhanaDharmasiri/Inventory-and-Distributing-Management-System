@@ -33,7 +33,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || $_S
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">employee manage</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">employee manage</span></a>
         </div>
         <div class="options-container">
             <a href="add_customer.php" class="option" id="option1">

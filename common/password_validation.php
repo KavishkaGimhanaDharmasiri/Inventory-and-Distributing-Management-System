@@ -35,13 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['user_id'] = $row["user_id"];
 
     $Subject = "Password Change Request";
-    $body = "Verify Account\n\nEnter Below Verification Code to Continue Changing Password \n\nVerification code is: $code\n\nDo Not Share with Others\nThank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
-    $modifiedNumber = '94' . substr($telephone, 1);
+    $ebody = "Verify Account<br>Enter Below Verification Code to Continue Changing Password <br><br>Verification code is: $code<br><br>Do Not Share with Others<br>Thank You...!<br><br>Regards,<br>Lotus Electicals (PVT)LTD";
+    $sbody = "Verify Account\nEnter Below Verification Code to Continue Changing Password \n\nVerification code is: $code\n\nDo Not Share with Others<br>Thank You...!\n\nRegards,\nLotus Electicals (PVT)LTD";
+
+    $modifiedNumber = '94' . substr($telephone, 0);
 
     if (!empty($email)) {
-      // sendmail($Subject, $body, $row["email"], $row["firstName"]);
+      sendmail($Subject, $ebody, $row["email"], $row["firstName"]);
     } elseif (!empty($telephone)) {
-      // sendsms($modifiedNumber, $body);
+      sendsms($modifiedNumber, $sbody);
     }
 
     // Redirect to the OTP validation page
@@ -87,7 +89,7 @@ function generateRandomCode($length = 5)
   <div class="mobile-container">
 
     <div class="topnav">
-      <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">validation</span></a>
+      <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">validation</span></a>
     </div>
 
     <div class="container">
@@ -115,6 +117,7 @@ function generateRandomCode($length = 5)
 
     </div>
   </div>
+  <script src="/javascript/test1.js"></script>
 
   <script>
     function back() {
@@ -131,7 +134,9 @@ function generateRandomCode($length = 5)
 
       if (emailField.value.trim() === "" && telephoneField.value.trim() === "") {
         event.preventDefault();
-        window.alert("Field cannot be empty.");
+        var message = "Field cannot be empty.";
+        showPopup(message);
+        //window.alert();
       }
     });
 

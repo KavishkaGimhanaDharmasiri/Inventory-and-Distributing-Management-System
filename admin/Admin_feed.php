@@ -1,97 +1,86 @@
 <?php
 // Start or resume the session
 session_start();
-// Include your database connection file
 include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 
-if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION["state"] != 'admin') {
+
+if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])  || $_SESSION["state"] != 'admin') {
     acess_denie();
     exit();
 } else {
-    $_SESSION['admin_feed_visit'] = true;
+    $_SESSION['new_sale_order_visit'] = true;
 }
-?>
+$route_query = "SELECT * FROM route";
+$result2 = mysqli_query($connection, $route_query);
 
-<!DOCTYPE html>
-<html>
+$query1 = "SELECT DISTINCT main_cat FROM product";
+$result1 = mysqli_query($connection, $query1);
+// Check for database query failures
+if (!$result1 || !$result2) {
+    die("Database query failed: " . mysqli_error($connection));
+}
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1">
-    <title>Distriute Products</title>
-    <link rel="icon" href="/images/tab_icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="/style/mobile.css">
-    <link rel="stylesheet" type="text/css" href="/style/style.css">
-    <link rel="stylesheet" type="text/css" href="/style/divs.css">
-</head>
-
-<body>
-    <?php
-    // Fetch main categories from the database
-    $query = "SELECT DISTINCT main_cat FROM product";
+// Fetch subcategories for the selected main category
+function getSubcategories($mainCategory, $connection)
+{
+    $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'";
     $result = mysqli_query($connection, $query);
 
-    // Check for database query failures
+    // Check for database query failure
     if (!$result) {
         die("Database query failed: " . mysqli_error($connection));
     }
 
-    // Fetch routes from the database
-    $route_query = "SELECT * FROM route";
-    $result1 = mysqli_query($connection, $route_query);
-
-    // Check for database query failures
-    if (!$result1) {
-        die("Database query failed: " . mysqli_error($connection));
+    $subcategories = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $subcategories[] = ['sub_cat' => $row['sub_cat']];
     }
 
-    // Fetch subcategories for the selected main category
-    function getSubcategories($mainCategory, $connection)
-    {
-        $query = "SELECT sub_cat FROM product WHERE main_cat = '$mainCategory'";
-        $result = mysqli_query($connection, $query);
+    return $subcategories;
+}
 
-        // Check for database query failure
-        if (!$result) {
-            die("Database query failed: " . mysqli_error($connection));
-        }
+// Handle adding an order
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"])  && $_SESSION["state"] == 'admin') {
+    // Process form submission and update order details
+    handleAddOrder($connection);
+    // Redirect after processing form submission
+    header("Location: Admin_feed.php");
+    exit();
+}
 
-        $subcategories = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $subcategories[] = ['sub_cat' => $row['sub_cat']];
-        }
+// Handle confirming an order
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])  && $_SESSION["state"] == 'admin') {
+    // Process form submission and redirect to payment page
+    handleConfirmOrder($connection);
 
-        return $subcategories;
-    }
+    $mainCategory = $_POST['main_category'];
+    $subcategories = $_POST['subcategories'] ?? '';
+    $counts = $_POST['counts'] ?? '';
 
-    // Handle adding an order
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_order"]) && $_SESSION["state"] == 'admin') {
-        handleAddOrder($connection);
-        header("Location: Admin_feed.php");
-        exit();
-        // Process form submission and update order details 
-    }
+    // Redirect after processing form submission
+    //exit();
+}
 
-    // Handle confirming an order
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm_order"])  && $_SESSION["state"] == 'admin') {
-        // Process form submission and redirect to payment page
-        handleConfirmOrder($connection);
-        $mainCategory = $_POST['main_category'];
-        $subcategories = $_POST['subcategories'] ?? '';
-        $counts = $_POST['counts'] ?? '';
-    }
+// Close the database connection
 
-    // Function to handle adding an order
-    function handleAddOrder($connection)
-    {
-        $route_id = $_POST["route"];
-        $currentMonthYear = date('Y-m');
-        $sql = "SELECT o.main_cat, o.sub_cat, o.order_count AS total_count
-        FROM orders o
-        LEFT JOIN primary_orders p ON o.ord_id = p.ord_id
-        WHERE p.order_type='customer' AND p.route_id=$route_id
-        AND DATE_FORMAT(p.ord_date, '%Y-%m')='$currentMonthYear'";
+// Function to handle adding an order
+function handleAddOrder($connection)
+{
+    $route_id_name = $_POST["route"];
+
+    list($selected_route_id, $selected_route_name) = explode('-', $route_id_name);
+    $_SESSION['selectRouteName'] = $selected_route_name;
+
+    if (isset($_POST["route"]) && !isset($_SESSION['pre_order'])) {
+        date_default_timezone_set('Asia/Colombo');
+        $currentDateTime = new DateTime(); // Get the current date and time
+        $cur_date = $currentDateTime->format('Y-m');
+        $sql = "SELECT o.main_cat, o.sub_cat, o.order_count AS count
+    FROM orders o
+    LEFT JOIN primary_orders p ON o.ord_id = p.ord_id
+    WHERE p.order_type='customer' AND p.route_id=$selected_route_id
+    AND DATE_FORMAT(p.ord_date, '%Y-%m')='$cur_date'";
 
         $result = $connection->query($sql);
 
@@ -102,7 +91,7 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
             while ($row = $result->fetch_assoc()) {
                 $main_category = $row['main_cat'];
                 $sub_category = $row['sub_cat'];
-                $count = $row['total_count'];
+                $count = $row['count'];
 
                 // Add to the session array
                 $order_details[] = [
@@ -111,85 +100,84 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
                     'count' => $count
                 ];
             }
+            $_SESSION['order_details'] = $order_details;
+            $_SESSION['pre_order'] = true;
         }
+    }
 
-        // Store the order details in the session
-        $_SESSION['order_details'] = $order_details;
-
-        if (isset($_POST["main_category"])) {
-            $mainCategory = $_POST["main_category"];
-            $subcategories = getSubcategories($mainCategory, $connection);
-            if (isset($_POST["counts"]))
-                $counts = $_POST["counts"];
-            $route_id = $_POST["route"];
-            $_SESSION['selectRoute'] = $route_id;
+    $mainCategory = $_POST["main_category"];
+    $subcategories = getSubcategories($mainCategory, $connection);
+    $counts = $_POST["counts"];
 
 
-            // Temporary storage for the order details
-            $orderDetails = $_SESSION['order_details'] ?? [];
-            // Check if there's already an order for the selected main category
-            $existingOrderIndex = null;
-            foreach ($orderDetails as $index => $order) {
-                if ($order['main_category'] == $mainCategory) {
-                    $existingOrderIndex = $index;
+    // Temporary storage for the order details
+    $orderDetails = $_SESSION['order_details'] ?? [];
+
+    // Check if there's already an order for the selected main category and subcategory
+    foreach ($subcategories as $index => $subcategory) {
+        $subcategoryExists = false;
+        if ($counts[$index] > 0) {
+            foreach ($orderDetails as &$order) {
+                if ($order['main_category'] == $mainCategory && $order['sub_category'] == $subcategory['sub_cat']) {
+                    $order['count'] += $counts[$index];
+                    $subcategoryExists = true;
                     break;
                 }
             }
 
-            if ($existingOrderIndex !== null) {
-                // Update the existing order for the selected main category
-                foreach ($subcategories as $index => $subcategory) {
-                    // Check if the count is greater than 0 before updating the order details
-                    if ($counts[$index] > 0) {
-                        $orderDetails[$existingOrderIndex]['sub_category'] = $subcategory['sub_cat'];
-                        $orderDetails[$existingOrderIndex]['count'] = $counts[$index];
-                    }
-                }
-            } else {
-                // Add a new order for the selected main category
-                foreach ($subcategories as $index => $subcategory) {
-                    // Check if the count is greater than 0 before adding to the order details
-                    if ($counts[$index] > 0) {
-                        $orderDetails[] = [
-                            'main_category' => $mainCategory,
-                            'sub_category' => $subcategory['sub_cat'],
-                            'count' => $counts[$index]
-                        ];
-                    }
-                }
+            // If subcategory doesn't exist, add a new order
+            if (!$subcategoryExists) {
+                $orderDetails[] = [
+                    'main_category' => $mainCategory,
+                    'sub_category' => $subcategory['sub_cat'],
+                    'count' => $counts[$index]
+                ];
             }
-
-            // Update the session variable with the order details
-            $_SESSION['order_details'] = $orderDetails;
-
-            // Reset main category to the default value
-            $_POST["main_category"] = "";
         }
     }
+    // Update the session variable with the order details
+    $_SESSION['order_details'] = $orderDetails;
 
-    // Function to handle confirming an order
-    function handleConfirmOrder($connection)
-    {
-        // Check if order_details is set in session
-        if (!isset($_SESSION['order_details']) || empty($_SESSION['order_details'])) {
-            die("No order details found.");
-        }
+    // Reset main category to the default value
+    $_POST["main_category"] = "";
+    displayOrderTable();
+}
 
-        date_default_timezone_set('Asia/Colombo');
-        $localTime = date('Y-m-d');
+// Function to handle confirming an order
+function handleConfirmOrder($connection)
+{
+    include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+    $orderDetails = $_SESSION['order_details'] ?? [];
 
-        $routes_id = $_SESSION['selectRoute'];
+    // Get necessary data for redirection
+    $mainCategory = $_POST['main_category'];
+    $subcategories = $_POST['subcategories'] ?? '';
+    $counts = $_POST['counts'] ?? '';
+    date_default_timezone_set('Asia/Colombo');
+    $currentDateTime = new DateTime(); // Get the current date and time
 
-        $feed_query = "INSERT INTO feed (route_id, feed_date) VALUES ($routes_id, '$localTime')";
-        $result = mysqli_query($connection, $feed_query);
+    $cur_date = $currentDateTime->format('Y-m-d');
 
-        // Check for database query failure
-        if (!$result) {
-            die("Feed insertion query failed: " . mysqli_error($connection));
+    $route_id_name = $_POST["route"];
+
+    list($selected_route_id, $selected_route_name) = explode('-', $route_id_name);
+    $_SESSION['selectRouteName'] = $selected_route_name;
+
+    try {
+        $pdo->beginTransaction();
+
+        // Insert into feed table
+        $feed_query = "INSERT INTO feed (route_id, feed_date) VALUES (:route_id, :feed_date)";
+        $stmt3 = $pdo->prepare($feed_query);
+        $stmt3->bindParam(':route_id', $selected_route_id);
+        $stmt3->bindParam(':feed_date', $cur_date);
+
+        if ($stmt3->execute()) {
+            echo "<script>alert('Product allocated to Route Name: $selected_route_name is Successful.');</script>";
         }
 
         // Get the feed_id of the inserted record
-        $feed_id = mysqli_insert_id($connection);
+        $feed_id = $pdo->lastInsertId();
 
         $orderDetails = $_SESSION['order_details'];
 
@@ -198,66 +186,113 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
             $subCategory = $orderDetail['sub_category'];
             $count = $orderDetail['count'];
 
+            // Insert into feed_item table
             $query2 = "INSERT INTO feed_item (feed_id, main_cat, sub_cat, count) 
-                   VALUES ($feed_id, '$mainCategory', '$subCategory', $count)";
-            $result2 = mysqli_query($connection, $query2);
+                       VALUES (:feed_id, :main_cat, :sub_cat, :count)";
+            $stmt = $pdo->prepare($query2);
+            $stmt->bindParam(':feed_id', $feed_id);
+            $stmt->bindParam(':main_cat', $mainCategory);
+            $stmt->bindParam(':sub_cat', $subCategory);
+            $stmt->bindParam(':count', $count);
 
-            // Check for database query failure
-            if (!$result2) {
-                die("Feed item insertion query failed: " . mysqli_error($connection));
-            }
+            $stmt->execute();
+
+            // Update product table
+            $query3 = "UPDATE product SET count = count - :count WHERE main_cat = :main_cat AND sub_cat = :sub_cat";
+            $stmt1 = $pdo->prepare($query3);
+            $stmt1->bindParam(':count', $count);
+            $stmt1->bindParam(':main_cat', $mainCategory);
+            $stmt1->bindParam(':sub_cat', $subCategory);
+
+            $stmt1->execute();
         }
 
-        // Clear order details from session
-        unset($_SESSION['order_details']);
-        session_write_close();
-
-        // Redirect to a success page or perform any other action
-        echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
-    <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
-    </div>';
-        mysqli_close($connection);
-        exit();
+        $pdo->commit();
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an error
+        $pdo->rollBack();
+        echo '<script>alert("' . $e->getMessage() . '");</script>';
     }
-    function displayOrderTable()
-    {
-        if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
-            echo "<table>";
-            echo "<thead>";
-            echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
-            echo "</thead>";
-            echo "<tbody>";
 
-            foreach ($_SESSION['order_details'] as $index => $order) {
-                echo "<tr>";
-                echo "<td><input type='checkbox' name='remove_order[]' value='$index'></td>";
-                echo "<td><b>{$order['main_category']}</td>";
-                echo "<td><b>{$order['sub_category']}</td>";
-                echo "<td><b>{$order['count']}</td>";
-                echo "</tr>";
-            }
+    // Clear order details from session
+    unset($_SESSION['order_details']);
+    unset($_SESSION['selectRouteName']);
+    unset($_SESSION['pre_order']);
+    session_write_close();
+    header("Location: Admin_feed.php");
+    // Redirect to a success page or perform any other action
+    exit();
+}
 
-            echo "</tbody>";
-            echo "</table>";
+// Function to display the orders table
+function displayOrderTable()
+{
+    if (isset($_SESSION['order_details']) && !empty($_SESSION['order_details'])) {
+        echo "<table>";
+        echo "<thead>";
+        echo '<tr><th id="leftth">Check</th><th>Products</th><th>Item</th><th id="rightth">Units</th></tr>';
+        echo "</thead>";
+        echo "<tbody>";
+
+        foreach ($_SESSION['order_details'] as $index => $order) {
+            echo "<tr>";
+            echo "<td><input type='checkbox' name='remove_order[]' value='$index'></td>";
+            echo "<td><b>{$order['main_category']}</td>";
+            echo "<td><b>{$order['sub_category']}</td>";
+            echo "<td><b>{$order['count']}</td>";
+            echo "</tr>";
         }
+
+        echo "</tbody>";
+        echo "</table>";
     }
-    ?>
+}
+
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Distribute produccts</title>
+    <link rel="icon" href="/images/tab_icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/style/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/style/style.css">
+    <link rel="stylesheet" type="text/css" href="/style/divs.css">
+    <style>
+        .subcategory-container {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
     <!-- Simulate a smartphone / tablet -->
     <div class="mobile-container">
+
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">disrtibute products</span></a>
-        </div>
-        <div class="order-form">
-            <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
+
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">distrubute products</span></a>
+        </div>
+        <div id="popup" class="popup" onclick="closePopup()">
+            <div class="popup-content">
+                <span class="close" style="font-size: 14px;" onclick="closePopup()">&#10005;</span>
+                <label id="message" style="font-size: 14px;"></label>
+            </div>
+        </div>
+        <div class="order-form" id="order-form">
+            <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <label for="Route_name"><b>Route<b></label>
                 <select name="route" id="route" required>
                     <option value="">Select Route</option>
                     <?php
-                    while ($row = mysqli_fetch_assoc($result1)) {
-                        $selected = (isset($_POST['route']) && $_POST['route'] == $row['route']) ? 'selected' : '';
-                        echo "<option value='{$row['route_id']}' $selected>{$row['route']}</option>";
+                    while ($row = mysqli_fetch_assoc($result2)) {
+                        $selected = ($_SESSION['selectRouteName'] == $row['route']) ? 'selected' : '';
+                        echo "<option value='{$row['route_id']}-{$row['route']}' $selected>{$row['route']}</option>";
                     }
 
                     ?>
@@ -268,7 +303,7 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
                     <select name="main_category" id="main_category">
                         <option value="">Select Main Product</option>
                         <?php
-                        while ($row = mysqli_fetch_assoc($result)) {
+                        while ($row = mysqli_fetch_assoc($result1)) { //setting query result to cmain product
                             $selected = (isset($_POST['main_category']) && $_POST['main_category'] == $row['main_cat']) ? 'selected' : '';
                             echo "<option value='{$row['main_cat']}' $selected>{$row['main_cat']}</option>";
                         }
@@ -277,31 +312,35 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
                 </div>
 
                 <div class="subcategory-container" id="subcategory-container">
-                    <?php
-                    // Display subcategories based on the selected main category
-                    if (isset($_POST['main_category'])) {
-                        $selectedMainCategory = $_POST['main_category'];
-                        $subcategories = getSubcategories($selectedMainCategory, $connection); // Display the main category only once
-                    }
-                    ?>
                 </div>
-
-                <button type="submit" name="add_order">Add Products</button>
+                <button type="submit" name="add_order" id="orderButton"><i class="fa fa-plus" style="font-size: 14px;"></i>&nbsp;&nbsp;Add Items</button>
 
                 <?php displayOrderTable(); ?>
                 <br>
+
                 <!-- Display Confirm Order button if there are items in the order -->
                 <?php
                 if (!empty($_SESSION['order_details'])) {
-                    echo "<button class='confirm-order-button' type='submit' name='confirm_order'><b>Confirm Order</button>";
+                    $route_name = $_SESSION['selectRouteName'];
+                    echo "<button type='submit' class='confirm-order-button' name='confirm_order' onclick='showrouteMethod($route_name)>
+                    <i class='fa fa-check' style='font-size: 14px;'></i>&nbsp;&nbsp;Confirm Order</button>";
                 }
                 ?>
                 <?php
                 if (!empty($_SESSION['order_details'])) {
                     echo "<button type='button' name='clear_order' style='color:green; background-color:transparent;'><i class='fa fa-minus'></i>&nbsp;&nbsp;Remove Items</button>";
                 }
+                ?>
 
-                echo '<div style="border:1px solid green;font-weight:normal; color:green;background-color:#d9fcd2; " class="order-form" id="advertise">
+                <!-- Confirm Order button -->
+
+            </form>
+
+
+        </div>
+        <?php
+        if (!isset($_SESSION["ad_state"])) {
+            echo '<div style="border:1px solid green;font-weight:normal; color:green;background-color:#d9fcd2; " class="order-form" id="advertise">
             <p style="color: green; font-weight: normal; -webkit-user-select: none;">Note<a onclick="closeintro()" style="float:right;font-size:15px; color:green; "><i class="fa fa-close" style="cursor:pointer;"></i></a><br><br>
             a). First select Route name from dropdown <br><br>
             b). Click "Add Product" this will Automatically load Items to table according route based on Customer orders<br><br>
@@ -310,29 +349,41 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
             e). Again you can perform c). And d). steps to add multiple items to order. 
             <br><br>if You want remove any Items from order click check box and click "Remove Item" Button to remove that entry And You can Remove muliple Entry at time by checking multiple entry. </p>
         </div>';
-                ?>
+        }
+        ?>
 
-            </form>
-        </div>
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/test1.js"></script>
     <script>
-        document.getElementById('main_category').addEventListener('change', function() {
-            var mainCategory = this.value;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('subcategory-container').innerHTML = this.responseText;
-                }
-            };
-            xhttp.open('GET', '/common/get_subcategories.php?main_category=' + mainCategory, true);
-            xhttp.send();
-        });
+        function closeintro() {
+            document.getElementById("advertise").style.display = "none";
 
-        function validateNumber(input) {
-            input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
         }
+
+        function showmain() {
+            const details = document.getElementById("showmaincat");
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function validateNumber(input, availableCount) {
+            const value = parseInt(input.value);
+            const errorSpan = document.getElementById('error_' + input.id.split('[')[1].split(']')[0]);
+
+            if (isNaN(value) || value <= 0) {
+                errorSpan.textContent = 'Please enter a valid number.';
+                input.value = '';
+                document.getElementById('orderButton').disabled = true;
+            } else if (value > availableCount) {
+                errorSpan.textContent = `The available count for this subcategory is ${availableCount}.`;
+                document.getElementById('orderButton').disabled = true;
+            } else {
+                errorSpan.textContent = '';
+                document.getElementById('orderButton').disabled = false;
+            }
+        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             var form = document.querySelector('form'); // Adjust the selector if you have multiple forms
@@ -350,42 +401,27 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
             });
         });
 
-        function showSuccess() {
-            var overlay = document.getElementById('overlay');
-            var successModal = document.getElementById('successModal');
+        function showrouteMethod(route_name) {
+            var message = "Products are allocated Route Name :" + route_name + " is sucessfull.";
+            showPopup(message);
 
-            overlay.style.display = 'block';
-            successModal.style.display = 'block';
         }
 
-        function hideSuccess() {
-            var overlay = document.getElementById('overlay');
-            var successModal = document.getElementById('successModal');
 
-            overlay.style.display = 'none';
-            successModal.style.display = 'none';
-        }
-
-        function redirectToIndex() {
-            hideSuccess();
-            // Redirect to index.php
-            window.location.href = '/common/option.php';
-        }
-
-        function back() {
+        function back() { //back link
             window.history.back();
         }
-    </script>
-    <script>
-        function showmain() {
-            const details = document.getElementById("showmaincat");
-            details.style.display = details.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function closeintro() {
-            document.getElementById("advertise").style.display = "none";
-
-        }
+        document.getElementById('main_category').addEventListener('change', function() { //load subcategoried from file using request
+            var mainCategory = this.value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('subcategory-container').innerHTML = this.responseText;
+                }
+            };
+            xhttp.open('GET', '/common/get_subcategories.php?main_category=' + mainCategory, true);
+            xhttp.send();
+        });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -434,10 +470,12 @@ if (!isset($_SESSION['option_visit']) || !$_SESSION['option_visit'] || $_SESSION
                         }
                     };
                     xhr.send('selectedIndexes=' + JSON.stringify(selectedIndexes)); //send request
+
                 });
             }
         });
     </script>
+
 
 </body>
 

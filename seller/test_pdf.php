@@ -39,6 +39,19 @@ function getPaymentMethodPriced($mainCategory, $subCategory, $connection)
     return mysqli_fetch_assoc($result);
 }
 
+function determinePriceRange($price)
+{
+    if ($price >= 10 && $price <= 500) {
+        return '100-500';
+    } elseif ($price > 500 && $price <= 1500) {
+        return '500-1500';
+    } elseif ($price > 1500 && $price <= 5000) {
+        return '1500-5000';
+    } else {
+        return 'other'; // Default case or handle other ranges as needed
+    }
+}
+
 
 
 function generateDetailedOrderReceipt($orderDetails, $totalAmount, $selectedPaymentMethod, $connection)

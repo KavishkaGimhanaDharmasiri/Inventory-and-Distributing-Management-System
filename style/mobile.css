@@ -204,3 +204,11 @@ body {
   font-size: 14px;
   color: #4e5052;
 }
+
+.notfound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 75vh;
+  background-size: cover;
+}

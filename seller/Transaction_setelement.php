@@ -37,9 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ord_id = $_SESSION['settleord_id'];
 
         // Fetch remaining balance and other details
-        $selectTpNumber = "SELECT c.sto_tep_number, p.balance, p.payment_date 
+        $selectTpNumber = "SELECT u.email, c.sto_tep_number, p.balance, p.payment_date 
                            FROM customers c 
                            LEFT JOIN payment p ON p.user_id = c.user_id 
+						    LEFT JOIN users u ON c.user_id = u.user_id  
                            WHERE DATE_FORMAT(payment_date, '%Y-%m') = ? 
                            AND p.store_name = ? 
                            AND c.route_id = ?";
@@ -55,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $stmt->get_result();
 
         if ($result && $roq = $result->fetch_assoc()) {
+            $user_email = $roq['email'];
             $rem_balance = $roq['balance'];
             $payDate = $roq['payment_date'];
             $sto_tep = $roq['sto_tep_number'];
@@ -90,10 +92,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $connection->commit();
 
                 echo '<script>alert("Amount was settled");</script>';
+                $Subject = "Transaction settlement";
+                $sbody = "\nDear Customer,\n\nThe Purchase that $storename made on $payDate is Total Balance is Rs. $rem_balance And You have Paid Rs $settle_amount on $curentdate.\n Your Remaining Balance is : Rs. $new_balance on $curentdate.\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+                $ebody = "<br>Dear Customer,<br><br>The Purchase that $storename made on $payDate is Total Balance is Rs. $rem_balance And You have Paid Rs $settle_amount on $curentdate. <br>Your Remaining Balance is : Rs. $new_balance on $curentdate.<br><br>Thank You!...<br><br>Regards,<br>Lotus Electicals (PVT)LTD.";
 
-                $body = "\n\nDear Customer,\n\nThe Purchase that $storename made on $payDate is Total Balance is Rs. $rem_balance And You have Paid Rs $settle_amount on $curentdate. Your Remaining Balance is : Rs. $new_balance on $curentdate.\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
-                $smsbody = urlencode($body);
-                // sendsms($modifiedNumber, $smsbody);
+                $smsbody = urlencode($sbody);
+                sendsms($modifiedNumber, $smsbody); //send sms
+
+
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                sendmail($Subject, $ebody, $user_email, $storename); //send mail
+
+
+
                 echo '<script>alert("Message sent Successfully");</script>';
                 header("Location: " . $_SERVER['PHP_SELF']);
                 exit();
@@ -122,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="mobile-container">
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">settlement</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">settlement</span></a>
         </div>
         <div class="container" id="order-form">
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
