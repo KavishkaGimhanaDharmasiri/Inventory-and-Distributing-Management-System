@@ -111,18 +111,22 @@ $dateResult = $stmt->get_result();
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">summery</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">summery</span></a>
 
         </div>
         <?php
+
+        date_default_timezone_set('Asia/Colombo');
+        $currentDateTime = new DateTime(); // Get the current date and time
+
+        $cur_month = $currentDateTime->format('Y-m');
         $routeId = $_SESSION['route_id'];
-        $currentMonthYear = date('Y-m');
 
         if ($_SESSION["state"] === "seller") {
-            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND route_id=$routeId AND DATE_FORMAT(ord_date, '%Y-%m') = '$currentMonthYear'";
+            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND route_id=$routeId AND DATE_FORMAT(ord_date, '%Y-%m') = '$cur_month'";
         }
         if ($_SESSION["state"] === "admin") {
-            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND  DATE_FORMAT(ord_date, '%Y-%m') = '$currentMonthYear'";
+            $sql = "SELECT DISTINCT(store_name),order_state FROM primary_orders WHERE order_type = 'sale' AND  DATE_FORMAT(ord_date, '%Y-%m') = '$cur_month'";
         }
         //order_state = 'complete'
 
@@ -131,7 +135,7 @@ $dateResult = $stmt->get_result();
         $result1 = mysqli_query($connection, $sql1);
 
         if ($_SESSION["state"] === "seller") {
-            $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, SUM(CASE WHEN balance >= 0 THEN balance ELSE 0 END) AS sum3 FROM payment p left join route r on p.route_id=r.route_id WHERE p.route_id=$routeId AND DATE_FORMAT(payment_date, '%Y-%m') = '$currentMonthYear'";
+            $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, SUM(CASE WHEN balance >= 0 THEN balance ELSE 0 END) AS sum3 FROM payment p left join route r on p.route_id=r.route_id WHERE p.route_id=$routeId AND DATE_FORMAT(payment_date, '%Y-%m') = '$cur_month'";
         }
         if ($_SESSION["state"] === "admin") {
             $sql3 = "SELECT r.route, sum(total) sum1,sum(payment_amout) as sum2, SUM(CASE WHEN balance >= 0 THEN balance ELSE 0 END) AS sum3 FROM payment p left join route r on p.route_id=r.route_id GROUP BY p.route_id";
@@ -173,10 +177,10 @@ $dateResult = $stmt->get_result();
         $sql = "";
         $result2 = "";
         if ($_SESSION["state"] === "seller") {
-            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE f.route_id = $routeId AND DATE_FORMAT(feed_date, '%Y-%m') =  '$currentMonthYear'";
+            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE f.route_id = $routeId";
         }
         if ($_SESSION["state"] === "admin") {
-            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id WHERE DATE_FORMAT(f.feed_date, '%Y-%m') = '$currentMonthYear'";
+            $sql2 = "SELECT r.route, f.feed_id, f.route_id, f.feed_date, i.sub_cat, i.main_cat, i.count FROM feed f LEFT JOIN feed_item i ON i.feed_id = f.feed_id LEFT JOIN route r ON f.route_id = r.route_id";
         }
 
         $result2 = mysqli_query($connection, $sql2);
@@ -226,24 +230,26 @@ $dateResult = $stmt->get_result();
 
                     foreach ($mainCategories as $mainCat => $subProducts) {
                         echo "<div class='main-category'>";
-                        echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:black;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px"></i></h4>';
-                        echo "<ul class='sub-categories' style='color:black;display: none;'>";
+                        if ($mainCat != null or $mainCat != "") {
+                            echo '<h4 class="main-category-name" style="padding:8px; cursor:pointer; color:black;">' . $mainCat . '<i class="fa fa-angle-down" style="float:right;font-size:20px"></i></h4>';
+                            echo "<ul class='sub-categories' style='color:black;display: none;'>";
 
-                        foreach ($subProducts as $subProduct) {
-                            echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['count']}</label></li>";
+                            foreach ($subProducts as $subProduct) {
+                                echo "<li>{$subProduct['sub_cat']} <label style='float:right;'>{$subProduct['count']}</label></li>";
+                            }
+
+                            echo "</ul>";
+                            echo "</div>";
                         }
-
-                        echo "</ul>";
-                        echo "</div>";
                     }
 
-                    echo "</div>";
+                    echo "</div><br>";
                 }
             } else {
                 echo "<label style='color:indianred;text-align:center;'>No Details Found</label>";
             }
 
-            echo '</div>';
+            echo '</div></div>';
         }
         echo '<br>';
         echo '<div class="box">';
@@ -252,7 +258,7 @@ $dateResult = $stmt->get_result();
                      <select name="dateselect" id="date" required style="background-color:transparent;font-weight:bold;" required>
                         <option value="">Select Month</option>';
             while ($dateRow = $dateResult->fetch_assoc()) {
-                if ($currentMonthYear == $dateRow['formatted_date']) {
+                if ($cur_month == $dateRow['formatted_date']) {
                     echo "<option value='{$dateRow['formatted_date']}' $select selected><b>Current Month</option>";
                 }
                 echo "<option value='{$dateRow['formatted_date']}' $select><b>{$dateRow['formatted_date']}</option>";
@@ -263,7 +269,7 @@ $dateResult = $stmt->get_result();
 
         if ($result3) {
             if ($_SESSION["state"] === "admin")
-                echo '<h4 style="text-align:center;text-decoration:underline 2px;">Sales of Current month&nbsp;&nbsp;&nbsp;(' . $currentMonthYear . ')</h4>';
+                echo '<h4 style="text-align:center;text-decoration:underline 2px;">Sales of Current month&nbsp;&nbsp;&nbsp;(' . $cur_month . ')</h4>';
             while ($row3 = mysqli_fetch_assoc($result3)) {
 
                 if ($row3['route'] != null || $row3['route'] != "") {

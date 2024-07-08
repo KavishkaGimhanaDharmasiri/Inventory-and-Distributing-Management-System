@@ -10,11 +10,14 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
 } else {
     $_SESSION['add_customer_visit'] = true;
 }
+date_default_timezone_set('Asia/Colombo');
+$currentDateTime = new DateTime(); // Get the current date and time
+
+$cur_date = $currentDateTime->format('Y-m-d');
+$curdate = $currentDateTime->format('Y-m-d g:i a'); // Format the date and time in 12-hour format
 
 
 $orderDetails = $_SESSION['order_details'] ?? [];
-
-
 
 if (!isset($_SESSION['process_payment'])) {
     try {
@@ -24,7 +27,7 @@ if (!isset($_SESSION['process_payment'])) {
         $route_id = $_SESSION["route_id"];
         $store_name = $_SESSION['selected_store'];
         $total = $_SESSION['totalAmount'];
-        $payment_date = date('Y-m-d');
+        $payment_date = $cur_date;
         $payment_method = $_SESSION['selected_payment_method'];
         $payment_amount = $_SESSION['paymentAmount'];
         $pay_period = ($payment_method == 'credit') ?  $_SESSION['pay_period'] : null;
@@ -48,7 +51,7 @@ if (!isset($_SESSION['process_payment'])) {
                 // Successful update
             } else {
                 // Error occurred while updating the database
-                echo '<script>alert("Error: Unable to update product quantity.\n\nContact Adminstrator");</script>';
+                echo '<script>alert("Unable to update product quantity.\n\nContact Adminstrator");</script>';
                 return; // Exit function
             }
         }
@@ -56,7 +59,7 @@ if (!isset($_SESSION['process_payment'])) {
         // Insert into primary_orders table
         $ord_type = "sale";
         $ord_state = "complete";
-        $ord_date = date('Y-m-d');
+        $ord_date = $cur_date;
         $query3 = "INSERT INTO primary_orders (route_id, ord_date, store_name, order_type, order_state)
        VALUES (:route_id, :ord_date, :store_name, :order_type, :order_state)";
 
@@ -110,7 +113,7 @@ if (!isset($_SESSION['process_payment'])) {
         echo '<script>alert(' . $e->getMessage() . ');</script>';
     }
 
-
+    $firstnames = $_SESSION['firstname'];
     $telephone = $_SESSION['telephone'];
     $modifiedNumber = '94' . substr($telephone, 0);
     $email = $_SESSION['email'];
@@ -119,20 +122,22 @@ if (!isset($_SESSION['process_payment'])) {
     $balance = $_SESSION['balance'];
     $select_store = $_SESSION['selected_store'];
     $selectedPaymentMethod = $_SESSION['selected_payment_method'];
-    $localTime = date("Y-m-d H:i:s");
+
+
     $Subject = "Order Details";
 
     // Email body
-    $body = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $localTime . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+    $sbody = "\n\nDear Customer,\n\nThe Purchase that " . $select_store . " make on " . $curdate . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "\n\nThank You!...\n\nRegards,\nLotus Electicals (PVT)LTD.";
+    $ebody = "<br>Dear Customer,<br><br>The Purchase that " . $select_store . " make on " . $curdate . " is Total Amount is : Rs." . $totalAmount . " And You have Paid Rs." . $paymentAmout . " And Your Outstanding Balance is : Rs. " . $balance . "<br><br>Thank You!...<br><br>Regards,<br>Lotus Electicals (PVT)LTD.";
 
     // Send email
-    // sendmail($Subject, $body, $_SESSION['email'], $_SESSION['firstname']);
+    // sendmail($Subject, $ebody, $email, $firstnames);
 
     // Prepare SMS body
-    $smsbody = urlencode($body);
+    $smsbody = urlencode($sbody);
 
     // Send SMS
-    //sendsms($modifiedNumber, $smsbody);
+    // sendsms($modifiedNumber, $smsbody);
     $_SESSION['process_payment'] = true;
+    header('Location:test_pdf.php');
 }
-header('Location:test_pdf.php');

@@ -91,10 +91,19 @@ if ($_SESSION["state"] == 'seller') {
 
 
             $pdo->commit();
-            $modifiedNumber = '94' . substr($telephone, 1);
+            $modifiedNumber = '94' . substr($telephone, 0);
 
             $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
-            $body = "\nDear $firstname,\n\n"
+            $ebody = "Dear $firstname,<br><br>"
+                . "Thank you for registering with Lotus Electricals(PVT). LTD.<br>"
+                . "<br>Your username is: $firstname<br>"
+                . "Your generated password is: $lastFiveDigits<br>"
+                . "<br>Please keep your login details secure.<br>"
+                . "To Easy Access to Services you can download The Application from here: "
+                . "<a href='https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file'>Download App</a><br><br>"
+                . "Best regards,<br>Lotus Electicals (PVT) LTD";
+
+            $sbody = "\nDear $firstname,\n\n"
                 . "Thank you for registering with Lotus Electricals(PVT).LTD.\n"
                 . "\nYour username is: $firstname\n"
                 . "Your generated password is: $lastFiveDigits\n"
@@ -104,9 +113,9 @@ if ($_SESSION["state"] == 'seller') {
 
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            sendmail($Subject, $body, $email, $firstname);
+            sendmail($Subject, $ebody, $email, $firstname);
 
-            $message = $Subject . $body;
+            $message = $Subject . $sbody;
             $smsbody = urlencode($message);
 
             //sending sms to customer
@@ -124,23 +133,6 @@ if ($_SESSION["state"] == 'seller') {
             echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
                             <button onclick="redirectToIndex()" class="sucess">OK</button>
                             </div>';
-            /*else {
-                echo '<div id="overlay"></div><div id="successModel">
-        <div class="j">
-        <p style="color: indianred; font-size: 13pt; font-weight: bold; font-family: Calibri; margin-top: 0px; text-align: center;">Customer is Already Availble under Entered Telephone Number or Email Address<br>Please Check Whether Entered Details are Correct.</p></div>
-        <button onclick="redirectTonormal()" class="fail">OK</button>
-        </div>';
-
-                $_POST['firstname'] = $_SESSION['firstname'];
-                $_POST['lastname'] = $_SESSION['lastname'];
-                $_POST['telephone'] = $_SESSION['telephone'];
-                $_POST['address'] = $_SESSION['address'];
-                $_POST['email'] = $_SESSION['email'];
-                $_POST['storename'] = $_SESSION['storename'];
-                $_POST['storeregno'] = $_SESSION['storeregno'];
-                $_POST['storeaddress'] = $_SESSION['storeaddress'];
-                $_POST['location'] = $_SESSION['location'];
-            }*/
         } catch (Exception $e) {
             // Rollback the transaction in case of an error
             $pdo->rollBack();
@@ -212,7 +204,7 @@ if ($_SESSION["state"] == 'seller') {
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add salesperson</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add salesperson</span></a>
         </div>
         <div class="container">
             <h3 id="sales_data">Sales Person Details</h3>

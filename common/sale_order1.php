@@ -97,13 +97,18 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">sale orders</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">sale orders</span></a>
 
 
 
         </div>
         <?php
         $route_id = $_SESSION['route_id'];
+        date_default_timezone_set('Asia/Colombo');
+        $currentDateTime = new DateTime(); // Get the current date and time
+
+        $cur_date = $currentDateTime->format('Y-m');
+
         $query = "";
         if ($_SESSION["state"] === 'seller') {
             $query = "SELECT * FROM payment where route_id=$route_id ORDER BY ord_id DESC";
@@ -122,7 +127,7 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit'])) {
         }
 
         $result = mysqli_query($connection, $query);
-        $currentmonth = date('Y-m');
+        $currentmonth = $cur_date;
         // Check if there are any orders
         if (mysqli_num_rows($result) > 0) {
             echo '<input type="text" id="orderSearch" onkeyup="searchOrders()" placeholder="Search for Order Date Try Like This 2020-04-12..." style="margin-top:5%;background-color:transparent;">';

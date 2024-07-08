@@ -34,6 +34,10 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             text-align: center;
             color: black;
         }
+
+        input:-webkit-autofill {
+            -webkit-box-shadow: inset 0 0 0px 9999px white;
+        }
     </style>
 </head>
 
@@ -46,9 +50,16 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         <div class="topnav">
 
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">payment</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">payment</span></a>
 
         </div>
+        <div id="popup" class="popup" onclick="closePopup()">
+            <div class="popup-content">
+                <span class="close" style="font-size: 14px;" onclick="closePopup()">&#10005;</span>
+                <label id="message" style="font-size: 14px;"></label>
+            </div>
+        </div>
+
 
         <?php
         $query = "SELECT DISTINCT main_cat FROM product"; //silecting main product from product table
@@ -234,8 +245,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
 
 
-        if (isset($_POST['confirm'])) {
-
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm'])) {
             echo '<div id="overlay"></div><div id="successModal"><div class="gif"></div>
             <a href="/common/option.php"><button type="button" class="sucess">OK</button></a>
             </div>';
@@ -257,9 +267,11 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 $remamout = $rem_bal_of_La_Mo;
                 $fomatrem = number_format($remamout, 2, '.', ',');
             }
-            echo '<label for="rem_amount" style="color: indianred;">Prepaid Amount of Last Month  : Rs.' . abs($fomatrem) . '</label><br>';
+            echo '<label for="rem_amount" style="color: indianred;">Prepaid Amount of Last Month  : Rs.' . abs($fomatrem) . '</label>';
+            echo '<hr style="background-color:black;">';
             $totalAmount = $totalAmount + $rem_bal_of_La_Mo;
-            echo '<label for="new_total_amount" style="color: indianred;">New Total Amount of Bill : ' . $totalAmount . '</label><br>';
+
+            echo '<label for="new_total_amount" style="color: indianred;">New Total Amount of Bill : Rs.' . $totalAmount . '</label><br>';
         }
 
         ?>
@@ -267,13 +279,13 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         <span id="error-message" style="color: red; display: none;font-size:12px;">Please enter a valid Payment Amount..</span>
         <?php
         if (!isset($_SESSION['process_payment'])) {
-            echo '<input type="text" name="payment_amount" id="payment_amount" min="0" oninput="calculateBalance(),validateAndToggleLink(event)" value="" style="color: red;font-size:14px;font-weight:bold;" placeholder="0.00">';
+            echo "<input type='text' name='payment_amount' id='payment_amount' min='0' oninput='calculateBalance(),validateNumber(this)' value='$totalAmount' style='font-weight:bold;' placeholder='0.00'>";
         } else {
-            echo '<input type="text" name="payment_amount" id="payment_amount" min="0"  value="Once you click Download Sales Receipt This Can\'t be Reversed" style="color: red;font-size:14px;font-weight:bold;" disabled';
+            echo '<input type="text" name="payment_amount" id="payment_amount" min="0"  value="Once you click Download Sales Receipt This Can\'t be Reversed" style="font-weight:bold;" disabled>';
         }
         ?>
 
-        <label for="balance" style="color: indianred;">Balance : Rs.</b><span id="remainBalance">Rs.0.00</span></label>
+        <label for="balance" style="color: indianred;">Balance :<span id="remainBalance" style="color: indianred;">Rs.0.00</span></label>
 
         <table>
             <tr style="background-color:white;">
@@ -284,49 +296,54 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
             </tr>
         </table>
         <br>
-        <button type="submit" id="confirmButton" name="confirm" style="display: block;" onclick="handleSubmit(event)">
+        <button type="submit" name="confirm" onclick="handleSubmit(event)">
             <i class="fa fa-check" style="font-size: 14px;"></i>&nbsp;&nbsp;Confirm Order
         </button>
         </form>
     </div>
     <script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/javascript/test1.js"></script>
     <script>
         function back() {
             window.history.back();
         }
-        document.addEventListener('keydown', function(event) {
-            if ((event.ctrlKey && event.key === 'r') || event.key === 'F5') {
-                event.preventDefault();
-            }
-        });
 
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-        });
-
-        document.addEventListener('submit', function(event) {
-            event.preventDefault();
-        }, true);
-
+        function validateNumber(input) {
+            input.value = input.value.replace(/\D/g, ''); // Remove any non-numeric characters
+        }
 
         let linkClicked = false;
+        let step = 0;
 
         function markLinkAsClicked(event) {
             var paymentMethod = document.getElementById("payment_amount").value;
-            if (paymentMethod === "") {
+            var totalAmount = <?php echo isset($totalAmount) ? $totalAmount : 0; ?>;
+            if (paymentMethod == totalAmount) {
                 event.preventDefault(); // Prevent link from being followed
-                alert("Please enter amount in Total Amount field or if you don't make any Payment just leave 0");
-            } else {
+                var message = "Payment Amount is set as Default Total amount. Are You sure About Payment Amount";
+                showPopup(message);
+                step++;
+            } else if (paymentMethod == "" || paymentMethod == null) {
+                event.preventDefault(); // Prevent link from being followed
+                var message = "Please Enter Amount in total Field or if You don't make any payment just leave 0";
+                showPopup(message);
+            }
+            /*  if (paymentMethod != "" && step === 0) {
+                  event.preventDefault(); // Prevent link from being followed
+                  var message = "Payment Amount is set as Default Total amount. Are You sure About Payment Amount";
+                  showPopup(message);
+                  step++;
+              }*/
+            else {
                 linkClicked = true;
+                calculateBalance();
                 document.getElementById("payment_amount").disabled = true;
+                document.getElementById("myLink").style.display = 'none'
+                event.preventDefault();
                 document.getElementById("payment_amount").value = "Once you click Download Sales Receipt This Can't be Reversed";
-                history.replaceState(null, null, 'redirect.html');
-
-                // Add new state for this navigation
-                history.pushState(null, null, event.target.href);
-
-                // Navigate to the new URL
-                window.location.href = event.target.href; //replce history with redirect another page
+                history.replaceState(null, null, 'redirect.html'); // Add new state for this navigation
+                history.pushState(null, null, event.target.href); // Navigate to the new URL
+                window.location.href = event.target.href; //replce history with redirect another page*/
 
 
             }
@@ -336,7 +353,9 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         function handleSubmit(event) {
             if (!linkClicked) {
                 event.preventDefault();
-                alert('Please click the Download Sales Receipt Before Confirm Order.');
+                var message = 'Please click the Download Sales Receipt Before Confirm Order.';
+                showPopup(message);
+                //alert();
             }
         }
 
@@ -361,8 +380,10 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
         function validatePaymentMethod(event) {
             var paymentMethod = document.getElementById("payment_amount").value;
             if (paymentMethod === "") {
-                event.preventDefault() // Prevent form submission
-                alert("Please Enter Amount in total Field or if You don't make any payment just leave 0");
+                event.preventDefault()
+                var message = "Please Enter Amount in total Field or if You don't make any payment just leave 0";
+                showPopup(message); // Prevent form submission
+                //alert();
             }
         }
 
@@ -374,6 +395,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
 
             var paymentAmount = parseFloat(paymentAmountInput.value) || 0;
             var balance = totalAmount - paymentAmount; //calculate balance
+            var remainBalance = parseFloat(balanceElement.textContent.replace("Rs.", "").trim()) || 0;
 
             var minusBalance = balance; //get minus balance
 
@@ -383,7 +405,7 @@ if (!isset($_SESSION['new_sale_order_visit']) || !isset($_SESSION['index_visit']
                 balance = balance.toFixed(2);
             }
 
-            balanceElement.textContent = balance;
+            balanceElement.textContent = "Rs. " + balance;
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'set_session_variables.php', true); //setting total and other things to session

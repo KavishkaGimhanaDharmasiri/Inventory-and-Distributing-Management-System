@@ -1,15 +1,14 @@
 <?php
 session_start();
-include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/common/db_connection.php"); // Include database connection file
 require_once($_SERVER['DOCUMENT_ROOT'] . "/common/den_fun.php");
 if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !isset($_SESSION["user_id"]) || !isset($_SESSION["state"]) || $_SESSION["state"] != 'admin') {
-
     acess_denie();
     exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
-    // Include your database connection file
+
 
     try {
         $pdo->beginTransaction();
@@ -60,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
 
 
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add route</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add route</span></a>
 
 
         </div>
@@ -76,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
                 </div>
                 <button type="submit">Add Route to System</button>
                 <br>
-                <button type="reset">Clear Data</button>
+                <button type="reset" style="background-color: transparent;color:green;">Clear Data</button>
             </form>
         </div>
     </div>
@@ -85,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"  && $_SESSION["state"] == 'admin') {
     <script>
         function redirectToIManage() {
             hideSuccess();
-            // Redirect to index.php
             window.location.href = 'System_Manage.php';
         }
 

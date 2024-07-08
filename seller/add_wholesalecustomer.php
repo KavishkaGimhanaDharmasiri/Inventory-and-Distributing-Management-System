@@ -103,10 +103,10 @@ if ($_SESSION["state"] == 'seller') {
 
 
             $pdo->commit();
-            $modifiedNumber = '94' . substr($telephone, 1);
+            $modifiedNumber = '94' . substr($telephone, 0);
 
             $Subject = 'Welcome to Lotus Electicals (PVT)LTD';
-            $body = "\nDear $firstname,\n\n"
+            $sbody = "\nDear $firstname,\n\n"
                 . "Thank you for registering with Lotus Electricals(PVT).LTD.\n"
                 . "\nYour username is: $firstname\n"
                 . "Your generated password is: $lastFiveDigits\n"
@@ -114,11 +114,21 @@ if ($_SESSION["state"] == 'seller') {
                 . "Best regards,\nLotus Electicals (PVT)LTD";
 
 
+            $ebody = "Dear $firstname,<br><br>"
+                . "Thank you for registering with Lotus Electricals(PVT). LTD.<br>"
+                . "<br>Your username is: $firstname<br>"
+                . "Your generated password is: $lastFiveDigits<br>"
+                . "<br>Please keep your login details secure.<br>"
+                . "To Easy Access to Services you can download The Application from here: "
+                . "<a href='https://www.mediafire.com/file/9msvx2fc25hragd/app-release.apk/file'>Download App</a><br><br>"
+                . "Best regards,<br>Lotus Electicals (PVT) LTD";
+
+
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            sendmail($Subject, $body, $email, $firstname);
+            sendmail($Subject, $ebody, $email, $firstname);
 
-            $message = $Subject . $body;
+            $message = $Subject . $sbody;
             $smsbody = urlencode($message);
 
             //sending sms to customer
@@ -227,7 +237,7 @@ if ($_SESSION["state"] == 'seller') {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add customer</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">add customer</span></a>
 
         </div>
         <div class="container">

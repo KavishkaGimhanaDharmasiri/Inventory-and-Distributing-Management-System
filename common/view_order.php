@@ -79,10 +79,15 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
         <!-- Top Navigation Menu -->
         <div class="topnav">
 
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">customer orders</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">customer orders</span></a>
 
         </div>
         <?php
+
+        date_default_timezone_set('Asia/Colombo');
+        $currentDateTime = new DateTime(); // Get the current date and time
+
+        $cur_date = $currentDateTime->format('Y-m');
         // Assuming $route_id is already defined
         $route_id = $_SESSION["route_id"]; // Example route ID
 
@@ -94,7 +99,7 @@ if (!isset($_SESSION['index_visit']) ||  !isset($_SESSION['option_visit']) || !i
             $search_input = $search;
             $search_query = "AND p.store_name LIKE '%$search%'";
         }
-        $currentmonth = date('Y-m');
+        $currentmonth = $cur_date;
         $sql = "";
         $select_store = "";
 

@@ -61,16 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">OTP validation</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">OTP validation</span></a>
 
 
 
         </div>
         <div class="container">
-            <h3>OTP Validation</h3>
+            <h3>OTP Validation </h3>
 
             <?php
             $otpcode = $_SESSION['code'];
+            echo $_SESSION['code'];
             // Display error message if set
             if (isset($error_message)) {
                 echo '<div class="alert alert-danger">' . $error_message . '</div>';

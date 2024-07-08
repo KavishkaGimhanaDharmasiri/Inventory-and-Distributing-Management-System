@@ -11,6 +11,12 @@ if (!isset($_SESSION['option_visit']) || !isset($_SESSION['index_visit']) || !is
     $_SESSION['Return_Item_visit'] = true;
 }
 
+date_default_timezone_set('Asia/Colombo');
+// Get the current date and time
+$currentDateTime = new DateTime();
+
+$cur_date = $currentDateTime->format('Y-m');
+
 $route_id = $_SESSION['route_id'];
 $customerQuery = "SELECT sto_name FROM customers WHERE route_id=$route_id";
 $customerResult = mysqli_query($connection, $customerQuery);
@@ -57,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirm"]) && $_SESSIO
     $selectedStore = $_POST["customers"];
     $selectedcount = $_POST["pcount"];
     $product_id = $_SESSION['product_id'];
-    $localTime = date('Y-m-d h:i');
+    $localTime = $cur_date;
     try {
 
         $pdo->beginTransaction();
@@ -157,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["resetitem"])) {
 
         <!-- Top Navigation Menu -->
         <div class="topnav">
-            <a href="javascript:void(0)" onclick="back()" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">return products</span></a>
+            <a href="javascript:void(0)" class="back-link" style="font-size: 20px;"><i class="fa fa-angle-left" onclick="back()" style="float:left;font-size:25px;"></i><b>&nbsp;&nbsp;&nbsp;<span style="font-size: 17px;">return products</span></a>
 
 
             </a>
