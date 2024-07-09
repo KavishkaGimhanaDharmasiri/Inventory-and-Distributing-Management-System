@@ -22,9 +22,10 @@ $un=$_SESSION['email'];
 	}
 
 	.popup img{
-		width: 100px;
+		width: 200px;
+		height: 200px;
 		margin-top:-50px;
-		border-radius: 50px;
+		border-radius: 100px;
 		box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 	}
 
@@ -52,7 +53,7 @@ $un=$_SESSION['email'];
 </head>
 <body>
 	<div class="popup">
-		<img src="Images/Decoration/right.png">
+		<img src="Images/Decoration/check.gif">
 		<h2>Thank you!</h2>
 		<p>Your order has been successfully placed. Thank you for shopping with us.</p>
 		<!-- <a href="Cart.php"><button type="button">OK</button></a> -->
@@ -124,7 +125,7 @@ $conn = new mysqli($host, $username, $password, $database);
 											$stmt->bind_param(
 											    "iss", $cus_id,$date,$total,);
 											    if ($stmt->execute()) {
-											    	
+
 } else {
     echo "Error: " . $stmt->error;
 }
