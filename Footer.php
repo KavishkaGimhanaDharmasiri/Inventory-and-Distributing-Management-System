@@ -27,11 +27,10 @@
         </div>
 
         <div class="footer-box">
-            <h2>Customer Care</h2>
-            <a href="#">Help Center</a>
-            <a href="#">How to Buy</a>
-            <a href="#">Return and Refund</a>
-            <a href="#">Contact Us</a>
+            <h2>Contact us</h2>
+            <a href="#">034-2256124</a>
+            <a href="#">034-2256356</a>
+            <a href="#">NO.188,<br>Horana Road,<br>Handapangoda.</a>
         </div>
         <div class="footer-box">
             <h2>Usefull Links</h2>
