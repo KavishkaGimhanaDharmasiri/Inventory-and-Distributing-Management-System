@@ -46,7 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["username"] = $row["username"];
                 $_SESSION["state"] = $row["state"];
                 $_SESSION['route_id'] = $row["route_id"];
-
+                if ($_SESSION["state"] === 'admin') {
+                    header("Location:/Inventory/AddRawMaterials.php");
+                }
                 // Redirect to a secure page after successful login
                 header("Location:/common/option.php");
                 exit();
