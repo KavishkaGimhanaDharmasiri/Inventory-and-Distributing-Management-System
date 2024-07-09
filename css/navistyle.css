@@ -1,0 +1,260 @@
+* {
+    font-family: 'poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    scroll-padding-top: 2rem;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --green-color: #3cb815;
+    --light-green-color: #c0eb7b;
+    --orange-color: #ff7e00;
+    --light-orange-color: #f75f1d;
+    --text-color: #1a2428;
+    --bg-color: #fff;
+}
+
+section {
+    padding: 4.5rem 0 1.5rem;
+}
+
+img {
+    width: 100px;
+}
+
+body {
+    color: var(--text-color);
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* background: var(--bg-color); */
+    box-shadow: 0 8px rgb(14 55 54/15%, );
+    padding: 0px 100px;
+    transition: 0.5s;
+}
+
+/* #Sbar {
+    border-radius: 15px;
+    padding: 8px 15px;
+    width: 300px;
+    border:none;
+} */
+
+/* #Navibtn {
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 0.4em 0.8em 0.4em 0.8em;
+    color: white;
+    background: var(--green-color);
+    border: none;
+    box-shadow: 0 0.7em 1.5em -0.5em #14a73e98;
+    letter-spacing: 0.05em;
+    border-radius: 20em;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+} */
+
+/* .cart-profile .bx .bxs-cart{
+    position: absolute;
+    right: 10;
+    bottom: 0;
+    padding: 10px;
+    font-size: 20px;
+} */
+
+.index-body{
+    background-color: white;
+    box-shadow: rgb(100,100,111,0.2)0 7px 29px 0;
+}
+
+.index-body .logo{
+    color:#046307;
+    font-size: 50px;
+}
+
+/* .profile {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    cursor: pointer;
+} */
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+
+}
+
+.profile span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    column-gap: 0.5rem;
+
+}
+
+.logo .bx {
+    font-size: 24px;
+    color: var(--orange-color);
+}
+
+.navbar {
+    display: flex;
+    column-gap: 4rem;
+}
+
+.navbar a {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-color);
+    padding: 0.5rem 1 rem;
+}
+
+.navbar a:hover {
+    padding: 15px;
+    background: var(--light-green-color);
+    border-radius: 5rem;
+    color: var(--bg-color);
+    transition: 0.5s;
+}
+
+.navbar h2{
+    color: #66c234;
+    position:relative;
+}
+
+.bx-cart{
+    color: #004225;
+    font-size: 50;
+}
+
+#menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10001;
+    display: none;
+
+}
+
+/* Footer style */
+
+
+.footer{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,auto));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    background: #fef4ea;
+    border-radius: 0.5rem;
+    padding: 20px;
+}
+
+.footer-box{
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-box p{
+    font-size: 0.938;
+    margin: 0.5rem 0 1rem;
+}
+
+.social{
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+
+.social .bx{
+    padding: 10px;
+    background: var(--bg-color);
+    color: var(--green-color);
+    border-radius: 5rem;
+    font-size: 20px;
+}
+
+.social .bx:hover{
+    background: var(--green-color);
+    color: var(--bg-color);                     
+    transition: 0.2s all linear;
+
+}
+
+.footer-box h2{
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-box a{
+    color: #868a92;
+    margin-bottom: 1rem;
+}
+
+.footer-box h5{
+    color: #868a92;
+    margin-bottom: 1rem;
+    font-size: 15px;
+}
+
+.footer-box a:hover{
+    color: var(--light-orange-color);
+}
+
+.footer-box form{
+    border-bottom: 1px solid var(--text-color);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+
+.footer-box form input{
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.footer-box form .bx{
+    font-size: 20px;
+    color: var(--light-orange-color);
+    cursor: pointer;
+}
+
+.footer-box form .bxs-envelope{
+    color: var(--green-color);
+}
+
+.copyright{
+    text-align: center;
+    padding: 20px;
+}
+

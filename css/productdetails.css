@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans',sans-serif;
+}
+
+:root {
+    --green-color: #3cb815;
+    --light-green-color: #c0eb7b;
+    --orange-color: #ff7e00;
+    --light-orange-color: #f75f1d;
+    --text-color: #1a2428;
+    --bg-color: #fff;
+}
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+body{
+    line-height: 1.5;
+}
+
+.card{
+    padding-top: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+
+}
+.about .about_main {
+    position: relative;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.about .about_main .about_image {
+    display: flex;
+    margin-top: 50px;
+}
+
+.about .about_main .image_contaner {
+    padding: 10px;
+    display: flex;
+} 
+
+.about .about_main .image_contaner img {
+    border: 3px;
+    height: 410px;
+    width: 410px;
+    padding: 5px;
+    box-shadow: 0 0 8px #000000;
+}
+
+.product-content{
+    padding: 2rem 1rem;  
+    padding-left: 50px;
+}
+
+.product-title{
+    font-size: 2rem;
+    text-transform: capitalize;
+    font-weight: 600;
+    position: relative;
+    color: #12263a;
+    margin: 1rem 0;
+}
+
+/* .product-title::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 80px;
+    background: #12263a;
+} */
+.product-link{
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    background: #256eff;
+    color: #fff;
+    padding: 0 0.3rem;
+    transition: all 0.5s ease;
+}
+.description{
+    font-size: 1rem;
+    text-transform: capitalize;
+    font-weight: 100;
+    position: relative;
+    color: #12263a;
+    margin: 1rem 0;
+}
+.new-product-price{
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.product-price span{
+    font-weight: 300;
+}
+
+.last-price span{
+    color: #f64747;
+    text-decoration: line-through;
+}
+.new-price span{
+    color: var(--green-color);
+}
+.product-detail h2{
+    background-color: #c0eb7b;
+}
+.product-detail h2{
+    text-transform: capitalize;
+    color: #12263a;
+    padding-bottom: 0.6rem;
+}
+.product-detail p{
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    opacity: 0.8;
+}
+
+.purchase-info{
+    margin: 1.5rem 0;
+}
+
+.purchase-info input{
+    border: 1.5px solid #ddd;
+    border-radius: 25px;
+    text-align: center;
+    padding: 0.8rem 0.7rem;
+    outline: 0;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.purchase-info .btn{
+    border: 1.5px solid #ddd;
+    border-radius: 35px;
+    font-size: 20px;
+    font-weight: 400;
+    height: 50px;
+    width: 350px;
+    text-align: center;
+}
+
+.purchase-info input{
+    width: 60px;
+}
+
+.purchase-info .btn{
+    cursor: pointer;
+    color: #fff;
+}
+
+.purchase-info .btn:first-of-type{
+    background: var(--green-color)
+}
+
+.purchase-info .btn:hover{
+    opacity: 0.9;
+    background: var(--orange-color);
+}
+
+.social-links a:hover{
+    background: #000;
+    border-color: transparent;
+    color: #fff;
+}
+
+@media screen and (min-width: 992px){
+    .card{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1.5rem;
+       
+    }
+
+    .product-imgs{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .product-content{
+        padding-top: 0;
+    }
+}
