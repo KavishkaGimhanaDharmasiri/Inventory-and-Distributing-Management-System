@@ -1,0 +1,200 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Products</title>
+    <!--CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!--CDN-->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+      
+
+</head>
+<body>
+
+
+    <!--nav bar  -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item ">
+              <a class="nav-link" href="Add Suppilers.html">Add Suppilers</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="Add customer.html">Add Customer</a>
+              </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="Add Products.html">Add Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="View Stocks.html">View Stocks</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="grn.html">GRN</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Billing.html">Billing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="View Balance.html">View Balance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="View Summery.html">View Summery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Back Ups.html">Back Ups</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown link
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="Add Suppilers.html">Add Suppilers</a>
+                <a class="dropdown-item" href="Add Products.html">Add Products</a>
+                <a class="dropdown-item" href="View Stocks.html">View Stocks</a>
+                <a class="dropdown-item" href="Billing.html">Billing</a>
+                <a class="dropdown-item" href="View Balance.html">View Balance</a>
+                <a class="dropdown-item" href="View Summery.html">View Summery</a>
+                <a class="dropdown-item" href="Back Ups.html">Back Ups</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+          <!--close nav bar  -->
+
+          <div class="container"><h1>Add Products</h1></div>
+
+                            <!--center container-->
+                            <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+
+                                <form id="myForm" action="addproduct.php" method="post" class="row g-3"><!--
+                                    <div class="col-md-6">
+                                      <label for="inputEmail4" class="form-label">Product ID</label>
+                                      <input type="text" name="productId" class="form-control" id="inputcustomername">
+                                    </div>
+                                -->
+                                    <div class="col-md-6">
+                                    <label for="id">ID:</label>
+                                    <input type="text" id="productId" class="form-label" name="productId" value="<?php echo $nextID; ?>" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                      <label for="inputPassword4" class="form-label">Product Name</label>
+                                      <input type="text" name="productName" class="form-control" id="inputshopname">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="inputMainCategory" class="form-label">Main Category</label>
+                                      <input type="text" name="MainCategory" class="form-control" id="inputMainCategory">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="inputSubCategory" class="form-label">Sub Category</label>
+                                      <input type="text" name="SubCategory" class="form-control" id="inputSubCategory">
+                                    </div>
+              
+                                    <div class="col-md-6">
+                                      <label for="inputCity" class="form-label">Cost Price</label>
+                                      <input type="text" name="costPrice" class="form-control" id="costPrice">
+                                    </div>
+            
+                                    <div class="col-md-6">
+                                        <label for="inputCashPrice" class="form-label">Cash Price</label>
+                                        <input type="text" name="CashPrice" class="form-control" id="CashPrice">
+                                      </div>
+                                      <!--margin-->
+                                      <p id="result">result</p>
+
+                                      <script>
+                                        function addNumbers() {
+                                          // Get values from input fields
+                                          var num1 = parseFloat(document.getElementById('costPrice').value);
+                                          var num2 = parseFloat(document.getElementById('CashPrice').value);
+                                    
+                                          // Check if input is valid
+                                          if (isNaN(num1) || isNaN(num2)) {
+                                            alert("Please enter valid numbers");
+                                            return;
+                                          }
+                                    
+                                          // Perform addition
+                                          var sum = num1 + num2;
+                                    
+                                          // Display the result
+                                          document.getElementById('result').innerText = "Result: " + sum;
+                                        }
+                                      </script>
+                                      <!--
+                                      <script>
+
+                                        var costPrice = costPrice;
+                                        var CashPrice = CashPrice;
+                                        var sum = (((CashPrice-costPrice)/costPrice)*100);
+                                        document.write("Cash Margin = " + sum);
+                                      </script>
+
+                                      -->
+
+                                      <div class="col-md-6">
+                                        <label for="inputCreditPrice" class="form-label">Credit Price</label>
+                                        <input type="text" name="CreditPrice" class="form-control" id="inputCreditPrice">
+                                      </div>
+
+                                      <div class="col-md-6">
+                                        <label for="inputChequePrice" class="form-label">Cheque Price</label>
+                                        <input type="text" name="ChequePrice" class="form-control" id="inputChequePrice">
+                                      </div>
+                                      <!---Calculation-->
+
+
+
+            
+                                    <div class="col-2">
+                                      <button type="submit" class="btn btn-primary">Add Product</button>
+                                    </div>
+
+                                    <div class="col-1">
+                                        <button type="reset" class="btn btn-danger">Clear</button>
+                                    </div>
+
+                                    <div class="col-1">
+                                      <button type="edit" class="btn btn-Warning">Edit</button>
+                                  </div>
+
+                                  <div class="col-1">
+                                    <button type="delect" class="btn btn-dark">Delete</button>
+                                </div>
+
+                                  </form>
+
+                                  <script>
+                                    document.getElementById("myForm").addEventListener("submit", function() {
+                                        // Clear form fields after submission
+                                        document.getElementById("myForm").reset();
+                                    });
+                                    </script>
+            
+                                
+            
+            
+            
+                              </div>
+
+
+
+
+
+
+<!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
