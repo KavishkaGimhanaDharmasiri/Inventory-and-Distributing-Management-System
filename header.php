@@ -3,16 +3,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lotus Inventory</title>
-  
+    <!--CDN link-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <!--css-->
     <style>
       .col-3{
         width: 200px;
       }
-
+      
       body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -85,8 +86,27 @@
             <li class="nav-item">
               <a class="nav-link" href="viewOutsourcer.php"><b>View Outsourcer</b></a>
             </li>
-
-
+            <li class="nav-item">
+              <a class="nav-link" href="productGrn.php"><b>Product Grn</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="productGrnView.php"><b>View Pro Grn</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="deductRawQty.php"><b>deduct Raw Qty</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="viewOutsourcerStock.php"><b>view Out Stock</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="productDeduct.php"><b>Pro Deduct</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="rawInHouseCal.php"><b>Raw INh Cal</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="rawOutCal.php"><b>Raw Out Cal</b></a>
+            </li>
             
           </ul>
         </div>

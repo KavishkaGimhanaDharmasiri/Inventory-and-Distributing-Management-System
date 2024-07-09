@@ -9,7 +9,7 @@ include('header.php');
                             <!--center container-->
                             <div class="container min-vh-100 d-flex justify-content-center align-items-center">
 
-                                <form action="addproduct.php" method="POST"class="row g-3">
+                                <form action="saveProduct.php" method="POST"class="row g-3">
                                   <!--
                                     <div class="col-md-6">
                                       <label for="inputEmail4" class="form-label">Product ID</label>
@@ -52,7 +52,7 @@ include('header.php');
                                     <div class="col-md-6">
                                     <label for="inputSubCategory" class="form-label">Supplier Name</label>
                                     <!--getting supplier from supplier table-->
-                                    <select name="supplier">
+                                    <select name="supplier" class="form-select">
                                       <?php
                                         include('connection.php');
                                         $suppliers = mysqli_query($conn, "select * from suppliers");
@@ -67,19 +67,15 @@ include('header.php');
 
                                       <div class="col-md-6"></br>
                                         <label for="">Product Type</label></br>
-                                        <input type="radio" name="productTpye" value="Inhouse Product" required> Inhouse Product </br>
-                                        <input type="radio" name="productTpye" value="Outsourcer Product" required> Outsourcer Product </br>
-                                        <input type="radio" name="productTpye" value="Import Complete Product" required> Import Complete Product </br>
+                                        <input type="radio" input class="form-check-input" name="productTpye" value="Inhouse Product" required> Inhouse Product </br>
+                                        <input type="radio" input class="form-check-input" name="productTpye" value="Outsourcer Product" required> Outsourcer Product </br>
+                                        <input type="radio" input class="form-check-input" name="productTpye" value="Import Complete Product" required> Import Complete Product </br>
                                       </div>
                                      
-            
-                                    <div class="md-6">
-                                      <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-
-                                    <div class="md-6">
-                                        <button type="reset" class="btn btn-danger">Clear</button>
-                                      </div>
+                                      <div class="col-md-6">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="reset" class="btn btn-danger">Clear</button>
+        </div>
                                   </form>
 
 

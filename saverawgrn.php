@@ -28,7 +28,7 @@ if(isset($_POST['rawmaterials']) && isset($_POST['supplier']) && isset($_POST['Q
             header("Location: ViewRawStocks.php");
 
         } else {
-            // Error occurred while updating quantity
+            // Error occurred while updating qty
             echo "Error: " . $updateQuery . "<br>" . $conn->error;
         }
     } else {
