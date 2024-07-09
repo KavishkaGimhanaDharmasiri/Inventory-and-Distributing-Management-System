@@ -6,7 +6,6 @@ include 'Navibar.php';
 
  $un=$_SESSION['email'];
 
-
 ?>
 <html>
 
@@ -106,7 +105,6 @@ $total2=0;
 $total=0;
 $ship=0;
 $shipping=0;
-
 if ($result) { // Check if the query was successful
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -118,29 +116,55 @@ if ($result) { // Check if the query was successful
             $discount = $row["Discount"];
             $shipping=$row["Shipping"];
             $_SESSION['shipping']=$shipping;
+            $_SESSION['usname']=$un;
 
-            $subtotal=$price*$quantity;
-            $ship=$ship+$shipping;
+            // $subtotal=$value*$quantity;
+            // $ship=$ship+$shipping;
 
+             
             echo '<div class="center-container">
-        <div class="box">
-            <input type="checkbox" name="item1_quantity[]" value="1" class="checkbox">
-            <img src="data:image;base64,'. base64_encode($img) .'" alt="">
-            <div class="content">
-                <h3>'.$sub_cat.'</h3>
-                <h4>Price: Rs. '.$subtotal.'</h4>
-                <p class="unit">Quantity: '.$quantity.'</p>
-                <p class="btn-area">
-                    <button onclick="toggle('.$p_id.')"><i class="bx bxs-trash"></i></button>
-                </p>
-            </div>
-        </div>
-    </div>';
-
-                $total=$total+$subtotal;
+    <div class="box">
+        
+        <img src="data:image;base64,'. base64_encode($img) .'" alt="">
+        <div class="content">
+            <h3>'.$sub_cat.'</h3>';
+            if ($discount != '' && $discount != NULL) { 
+                    $p = ($discount * $price) / 100;
+                    $newprice = $price - $p;
+                    $newprice2 = $newprice*$quantity;
+            echo'<h4>Price: Rs. '.$newprice2.'</h4>';
         }
+            else{
+                $newprice2=$price*$quantity;
+                echo'<h4>Price: Rs. '.$newprice2.'</h4>';
+            }
+           echo' <p class="unit">Quantity: '.$quantity.'</p>
+            <p class="btn-area" onclick="toggleBlur()">
+                
+                <a href="removecartitems.php?id='.$p_id.'" onclick="toggle()"><i class="bx bxs-trash"></i></a>
+            </p>
+        </div>
+    </div>
+</div>';
+
+                $total=$total+$newprice2;
+        }
+        $shipping=200;
         $total2=$total+$shipping;
         $_SESSION['total']=$total2;
+
+        echo '</div>   
+            <div class="right-bar">
+                <p><span>Subtotal</span><span>Rs.'.$total.'</span></p>
+                <hr>
+                
+                <p><span>Shipping</span><span>Rs.'.$shipping.'</span></p>
+                <hr>
+                <p><span>Total</span><span>Rs.'.$total2.'</span></p><br>
+                <a href="select.php"><input type="submit" class="submit" value="Checkout" ></a>
+                
+            </div>';
+
     } else {
         echo "<div class='empty-cart'>
                         <span>Oops! Your cart is lonely. Add some items to make it happy!</span>
@@ -151,22 +175,10 @@ if ($result) { // Check if the query was successful
     echo "Query failed: " . $conn->error; // Error message if query fails
 }
 
-echo '</div>   
-            <div class="right-bar">
-                <p><span>Subtotal</span><span>Rs.'.$total.'</span></p>
-                <hr>
-                
-                <p><span>Shipping</span><span>Rs.'.$shipping.'</span></p>
-                <hr>
-                <p><span>Total</span><span>Rs.'.$total2.'</span></p><br>
-                <a href="carddetails.php"><input type="button" class="submit" value="Checkout" ></a>
-                
-            </div>';
-
 $conn->close(); 
 ?>            
         </div>
-        <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe> 
+      
     </div>
     
    <script type="text/javascript">
@@ -195,6 +207,6 @@ $conn->close();
 
             <button value="cancel" id="cancel" class="btn" name="cancel" onclick="toggle()">Cancel</button>      
 </div>
-
+  <iframe src="Footer.php" frameborder="0" width="100%" height="250"></iframe> 
 </body>
 </html>

@@ -113,9 +113,9 @@ session_start();
 
                 <span id = "pwd1_msg" style="color:red"> </span>
                 <input type="password" placeholder="Password" id="password1" name="password1" >
-                <label for="showPassword">
+               <!--  <label for="showPassword">
                 <input type="checkbox" id="showPassword"> Show Password
-                </label>
+                </label> -->
 
                 <span id = "pwd2_msg" style="color:red"> </span>
                 <input type="password" placeholder="Confirm Password" id="password2" name="password2"><br>

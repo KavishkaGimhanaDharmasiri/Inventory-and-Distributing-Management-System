@@ -118,26 +118,67 @@ $conn = new mysqli($host, $username, $password, $database);
      <div class="review" id="Review">
         <h1>Why Choose Us</h1>
         <div class="customer-container">
-            <div class="box">
-                <i class='bx bxs-quote-alt-left'></i>
+
+
+
+
+        <?php
+
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'retail_website';
+
+$conn = new mysqli($host, $username, $password, $database);
+
+    if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+    }
+
+   $sql = "
+    SELECT 
+        u.first_name, 
+        f.feedbacks 
+    FROM 
+        user_details u
+    INNER JOIN 
+        feedback f ON u.userid = f.cus_id
+";
+
+$result = $conn->query($sql);
+
+// Check if there are results and output them
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $name=$row['first_name'];
+        $feedback=$row['feedbacks'];
+
+
+            echo '<div class="box">
+                <i class="bx bxs-quote-alt-left"></i>
                 <div class="stars">
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star-half'></i>
+                    <i class="bx bxs-star"></i>
+                    <i class="bx bxs-star"></i>
+                    <i class="bx bxs-star"></i>
+                    <i class="bx bxs-star"></i>
+                    <i class="bx bxs-star-half"></i>
                 </div>
-                <p>Extensive Product Range: From wire
-                    cords to antennas, we offer a comprehensive selection of electrical essentials, eliminating the need
-                    to search elsewhere.</p>
+                <p>'.$feedback.'</p>
 
-                <div class="review-profile">
-                    <img src="Images/Customer_Img/cus1.jpg" alt="">
-                    <h3>Charli</h3>
-                </div>
-            </div>
+            </div>';
+        }
+        
+    } else {
+    echo "0 results";
+}
+?>
 
-            <div class="box">
+
+
+        
+            
+
+            <!-- <div class="box">
                 <i class='bx bxs-quote-alt-left'></i>
                 <div class="stars">
                     <i class='bx bxs-star'></i>
@@ -189,7 +230,7 @@ $conn = new mysqli($host, $username, $password, $database);
                     <img src="Images/Customer_Img/cus4.jpg" alt="">
                     <h3>Siri</h3>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 

@@ -75,11 +75,13 @@ $productid=$_GET['categoryid'];
                           <div class="new-product-price">
                             <p class="new-price"><span>Rs. ' . number_format($newprice, 2) . '</span></p>
                           </div>';
+                          $_SESSION['price']=$newprice;
                 } else {
                     echo '<div class="new-product-price">
                             <p class="new-price"><span>Rs. '. number_format($price, 2) .'</span></p>
 
                           </div>';
+                          $_SESSION['price']=$price;
                 }
 
                 echo '<div>

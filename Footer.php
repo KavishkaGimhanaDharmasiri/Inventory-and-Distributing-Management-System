@@ -85,10 +85,12 @@ if(isset($_POST['send']))
     // Execute the statement
     if ($stmt->execute() === TRUE) {
         
+    }
     } else {
         echo "Error: " . $stmt->error;
-    }   
-   }
+    } 
+    
+   
 
     // Prepare the SQL statement using a prepared statement
     

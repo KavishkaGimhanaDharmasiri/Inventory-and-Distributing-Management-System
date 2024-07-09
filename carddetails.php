@@ -25,8 +25,6 @@ $email=$_SESSION['email'];
             margin-top: 100px;
         }
 
-       
-
         #table-logo{
              display: flex;
             align-items: center;
@@ -44,9 +42,9 @@ $email=$_SESSION['email'];
                 0 10px 10px rgba(0, 0, 0, 0.22);
             top: 10%;
             bottom: 50%;
-            left: 35%;
+            left: 32%;
             transform: translate(-50%, -20%);
-            width: 900px;
+            width: 800px;
             height:900px;
             max-width: 100%;
             margin-top: 100px;
@@ -62,13 +60,13 @@ $email=$_SESSION['email'];
             padding-bottom: 50px; 
         }
 
-        #text {
+        .text {
             background-color: #eee;
             border: none;
             border-radius: 10px;
             padding: 12px 15px;
             margin: 8px 0;
-            width: 400px;
+            width: 300px;
         }
 
         #button {
@@ -125,7 +123,7 @@ $email=$_SESSION['email'];
         }
 
         .right-bar{
-            position: absolute; top: 170px; right: 150px;
+            position: absolute; top: 170px; right: 80px;
   
     padding: 20px;
     height: 400px;
@@ -174,87 +172,172 @@ $email=$_SESSION['email'];
                     </table>
 
         <div id="div1">
-            
-                <form action="" method="post" id="form">
-                    
-                    <h2 style="color: black;" align="center">Ship to</h1>
+            <form action="" method="post" id="form" onsubmit="return validateShippingForm()">
+            <h2 style="color: black;" align="center">Ship to</h2>
+            <table class="tab2">
+                <tr>
+                    <td><input type="text" placeholder="<?php echo $name; ?>" id="name" name="name" value="<?php echo $name; ?>" class="text"></td>
+                    <td><input type="text" placeholder="<?php echo $email; ?>" id="email" name="email" value="<?php echo $email; ?>" class="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" placeholder="Street address" id="street_address" name="Street_address" class="text"></td>
+                    <td><input type="text" placeholder="Street address (optional)" id="street_address2" name="Street_address2" class="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" placeholder="Address" id="address" name="address" class="text"></td>
+                </tr>
+            </table>
+            <table class="tab3">
+                <tr>
+                    <td><input type="text" placeholder="City" id="city" name="city" class="text"></td>
+                    <td><input type="text" placeholder="Province" id="province" name="province" class="text"></td>
+                    <td><input type="text" placeholder="Zip Code" id="zip" name="zip" class="text"></td>
+                </tr>
+            </table>
+            <br><br>
+            <button type="submit" value="Sign Up" id="button" class="button" name="add_shipping_details">Done</button><br>
+        </form>
+    </div>
 
-                    <table class="tab2">
+    <div id="div2">
+        <form action="" method="post" id="form" onsubmit="return validatePaymentForm()">
+            <h2 style="color: black;" align="center">Pay with</h2>
+            <table class="tab2">
+                <tr>
+                    <td>
+                        <label for="bank">Bank:</label>
+                        <select name="bank" id="bank">
+                            <option value="BOC">BOC</option>
+                            <option value="COM">Commercial Bank</option>
+                            <option value="HNB">Hatton National Bank</option>
+                            <option value="NSB">National Savings Bank</option>
+                            <option value="Peoples">Peoples Bank</option>
+                            <option value="Sampath">Sampath Bank</option>
+                        </select>
+                    </td>
+                    <td><h6>Payment Types: </h6><img src="Images/Decoration/cards.png"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" placeholder="Card number" id="cardnumber" name="cardnumber" class="text"></td>
+                    <td><input type="text" placeholder="cvv" id="cvv" name="cvv" class="text"></td>
+                </tr>
+            </table>
+            <table class="tab3">
+                <tr>
+                    <td><input type="text" placeholder="Expiration date" id="expD" name="expD" class="text"></td>
+                    <td><input type="text" placeholder="Expiration Month" id="expM" name="expM" class="text"></td>
+                </tr>
+            </table>
+            <br><br>
+            <button type="submit" value="Sign Up" id="button" class="button" name="Card_details">Done</button><br>
+        </form>
 
-                    <tr>
-                        <td> <input type="text" placeholder="<?php echo $name; ?>" id="text" name="name" value=<?php echo $name; ?>></td><td> <input type="text" placeholder=<?php echo $email; ?> id="text" name="email" value=<?php echo $email; ?>></td>
-                    </tr>
+        <script>
+        function validateShippingForm() {
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let streetAddress = document.getElementById('street_address').value;
+            let address = document.getElementById('address').value;
+            let city = document.getElementById('city').value;
+            let province = document.getElementById('province').value;
+            let zip = document.getElementById('zip').value;
 
-                    <tr>
-                        <td> <input type="text" placeholder="Street address" id="text" name="Street_address"></td><td><input type="text" placeholder="Street address (optional)" id="text" name="Street_address2"></td>
-                    </tr>
+            if (name === "") {
+                alert("Name must be filled out");
+                return false;
+            }
+            if (email === "" || !validateEmail(email)) {
+                alert("Valid email must be filled out");
+                return false;
+            }
+            if (streetAddress === "") {
+                alert("Street address must be filled out");
+                return false;
+            }
+            if (address === "") {
+                alert("Address must be filled out");
+                return false;
+            }
+            if (city === "") {
+                alert("City must be filled out");
+                return false;
+            }
+            if (province === "") {
+                alert("Province must be filled out");
+                return false;
+            }
+            if (zip === "") {
+                alert("Zip code must be filled out");
+                return false;
+            }
+            return true;
+        }
 
-                    <tr>
-                        <td><input type="text" placeholder="Address" id="text" name="address"></td>
-                    </tr>
-                    </table>
+        function validatePaymentForm() {
+            let cardNumber = document.getElementById('cardnumber').value;
+            let cvv = document.getElementById('cvv').value;
+            let expD = document.getElementById('expD').value;
+            let expM = document.getElementById('expM').value;
 
-                    <table class="tab3">
-                        <tr>
-                            <td><input type="text" placeholder="City" class="text" name="city"></td>
-                            <td> <input type="text" placeholder="Province" class="text" name="province"></td>
-                            <td> <input type="text" placeholder="Zip Code" class="text" name="zip"></td>
-                            </tr>
-                    </table>
-           
-                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="add_shipping_details">Done</button><br>
-                        
-                </form>
+            if (cardNumber === "" || !validateCardNumber(cardNumber)) {
+                alert("Valid card number must be filled out");
+                return false;
+            }
+            if (cvv === "" || !validateCVV(cvv)) {
+                alert("Valid CVV must be filled out");
+                return false;
+            }
+            if (expD === "" || !validateExpirationDate(expD)) {
+                alert("Valid expiration date must be filled out");
+                return false;
+            }
+            if (expM === "" || !validateExpirationMonth(expM)) {
+                alert("Valid expiration month must be filled out");
+                return false;
+            }
+            return true;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validateCardNumber(cardNumber) {
+            const re = /^\d{16}$/;
+            return re.test(cardNumber);
+        }
+
+        function validateCVV(cvv) {
+            const re = /^\d{3,4}$/;
+            return re.test(cvv);
+        }
+
+        function validateExpirationDate(expD) {
+            const re = /^\d{2}\/\d{2}$/;
+            return re.test(expD);
+        }
+
+        function validateExpirationMonth(expM) {
+            const re = /^\d{2}$/;
+            return re.test(expM);
+        }
+    </script>
+
+
         </div>
 
-        <div id="div2">
-            <form action="" method="post" id="form">
-                    
-                    <h2 style="color: black;" align="center">Pay with</h1>
+        <form class="right-bar" onsubmit="return validatePaymentForm()">
 
-                    <table class="tab2">
-
-                    <tr>
-                        <td><label for="bank">Bank:</label>
-                              <select name="bank" id="bank" name="bank">
-                                <option value="BOC">BOC</option>
-                                <option value="COM">Commercial Bank</option>
-                                <option value="HNB">Hatton National Bank</option>
-                                <option value="NSB">National Savings Bnak</option>
-                                <option value="Peoples">Peoples Bank</option>
-                                <option value="Sampath">Sampath Bnak</option>
-                              </select></td>
-                    <td> <h6>Payment Types: </h6> <img src="Images/Decoration/cards.png"></td>
-                    </tr>
-
-                     <tr>
-                        <td><input type="text" placeholder="Card number" id="text" name="cardnumber"></td><td> <input type="text" placeholder="cvv" id="text" name="cvv"></td>
-                    </tr>
-
-                    </table>
-
-                    <table class="tab3">
-                        <tr>
-                            <td><input type="text" placeholder="Expiration date" class="text" name="expD"></td>
-                            <td> <input type="text" placeholder="Expiration Month" class="text" name="expM"></td>
-                            </tr>
-                    </table>
-           
-                       <br><br> <button type="submit" value="Sign Up" id="button" class="button" name="Card_details">Done</button><br>
-                        
-                </form>
-        </div>
-
-        <div class="right-bar">
                 <p><span>Subtotal</span><span>Rs.<?php echo $subtotal?></span></p>
                 <hr>
                 
-                <p><span>Shipping</span><span>Rs.<?php echo $shipping?></span></p>
+                <p><span>Shipping</span><span>Rs.<?php echo 200?></span></p>
                 <hr>
                 <p><span>Total</span><span>Rs.<?php echo $total?></span></p><br>
-                <input type="submit" class="submit" value="Confirm and pay" name="add_card_details"></a>
+                <a href="select.php"><input type="submit" class="submit" value="Confirm and pay" name="add_card_details" ></a>
                 
-            </div>
+            </form>
 
 </body>
 </html>
